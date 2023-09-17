@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "clean-webpack-plugin": "^4.0.0",
-    "firebase": "^10.4.0"
+    "firebase": "^10.4.0",
+    "firebase-tools": "^12.5.4"
   }
 }
