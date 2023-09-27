@@ -121,7 +121,7 @@ window.addEventListener('scroll', function () {
             `
             <div class = "post">
             <div class="header_content">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/640px-SpongeBob_SquarePants_character.svg.png" alt = "" class = "prof-pic">
+                <img src="https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg" alt = "" class = "prof-pic">
                 <h4>Hello</h4>
                 <i class='bx bx-dots-vertical'></i>
             </div>
@@ -129,7 +129,31 @@ window.addEventListener('scroll', function () {
                 <h6>hello world</h6>
             </div>
             <div class="info">
-               <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/640px-SpongeBob_SquarePants_character.svg.png">
+               <img src="https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg">
+            </div>
+            <div class = "interact_content">
+                <i class='bx bx-heart' ></i>
+                
+                <script>
+                    
+
+                </script>
+                <i class='bx bx-comment-detail' ></i>
+                
+            </div>
+        </div>
+
+        <div class = "post">
+            <div class="header_content">
+                <img src="https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg" alt = "" class = "prof-pic">
+                <h4>Hello</h4>
+                <i class='bx bx-dots-vertical'></i>
+            </div>
+            <div class="post_caption">
+                <h6>hello world</h6>
+            </div>
+            <div class="info">
+               <img src="https://www.rappler.com/tachyon/r3-assets/612F469A6EA84F6BAE882D2B94A4B421/img/F00BE1B08EDF40CAAEB9CF788ACC8FA1/ust_F00BE1B08EDF40CAAEB9CF788ACC8FA1.jpg">
             </div>
             <div class = "interact_content">
                 <i class='bx bx-heart' ></i>
