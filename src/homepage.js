@@ -66,6 +66,21 @@ const data =
         "username": "lafayette",
         "userImageSrc": "https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg",
         "comment": "wow"
+      },
+      {
+        "username": "Aktibo User 2023",
+        "userImageSrc": "https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg",
+        "comment": "very nice dude"
+      },
+      {
+        "username": "User234234",
+        "userImageSrc": "https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg",
+        "comment": "good good"
+      },
+      {
+        "username": "lafayette",
+        "userImageSrc": "https://images.summitmedia-digital.com/esquiremagph/images/2021/12/01/Untitled%20design.jpg",
+        "comment": "wow"
       }
     ]
   }
@@ -82,7 +97,7 @@ function showAllMoments(){
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
     // console.log(doc.id, " => ", doc.data());
-
+    //console.log(querySnapshot.docs.length) check length sana
     var userImageSrc = doc.data().userImageSrc
     var imageSrc = doc.data().imageSrc
     var caption = doc.data().caption
@@ -147,7 +162,7 @@ console.log("Ran " ,currentPostNumber)
   })
   const commentBtn = document.getElementById(commentBtnId)
   commentBtn.addEventListener('click',function(){
-    displayComments(commentSectionId)
+    displayComments(commentSectionId,commentBtnId)
   })
 
   // add new comment
@@ -254,7 +269,7 @@ const container = document.getElementById('main_content');
 // let imageSrc = data.imageSrc
 // let caption = data.caption
 // let likes = data.likes
-// let comments = data.comments
+//  let comments = data.comments
 
 // for (const n of comments) {
 //   let username = n.username
@@ -280,52 +295,54 @@ function toggleLike(likeBtn){
 }
 
 // JavaScript functions to open, close, and add comments
-function displayComments(commentSectionID) {
-  commentSectionID = String(commentSectionID)
-  console.log(commentSectionID)
+function displayComments(commentSectionID, commentBtnId) {
+  commentBtnId = document.getElementById(String(commentBtnId));
+  commentSectionID = String(commentSectionID);
   var commentsContainer = document.getElementById(commentSectionID);
+  let comments = data.comments;
 
-  let comments = data.comments
-  if(commentsContainer != null){
-    for (const n of comments) {
-  commentsContainer.innerHTML += `
-  <div class = "usr-profile"style="display: flex; align-items: center; align-items: flex-start; ">
-                 <img src="${n.userImageSrc}" alt = "" class = "prof-pic">
-                   <div>
-                   <p class = "usr-name"> ${n.username}</p>
-                   <div class = "usr-comment" style="display: flex; align-items: center; justify-content: space-between;">
-                        <p> ${n.comment}</p>
-                    </div>
-                 </div>
-                   
-                </div>               
-  `
-}
+  if (commentBtnId.classList.contains('open')) {
+    // If the comment section is open, revert it to the initial state
+    commentsContainer.innerHTML = '';
+    showFirstComment(commentSectionID);
+    commentBtnId.classList.remove('open');
+  } else {
+    commentBtnId.classList.add('open');
+
+    // Clear any existing comments before adding new ones
+    commentsContainer.innerHTML = '';
+
+    if (commentsContainer != null) {
+      // Display a maximum of 4 comments
+      const maxComments = 4;
+      console.log(comments.length);
+      for (let i = 0; i < comments.length; i++) {
+        console.log(i)
+        const n = comments[i];
+        commentsContainer.innerHTML += `
+        <div class="usr-profile" style="display: flex; align-items: center; align-items: flex-start;">
+          <img src="${n.userImageSrc}" alt="" class="prof-pic">
+          <div>
+            <p class="usr-name">${n.username}</p>
+            <div class="usr-comment" style="display: flex; align-items: center; justify-content: space-between;">
+              <p>${n.comment}</p>
+            </div>
+          </div>
+        </div>
+        `;
+      // If there are more comments, make the comment section scrollable
+        if (i === 3) {
+                commentsContainer.style.maxHeight = "18rem"; // Set a maximum height for scrolling
+                commentsContainer.style.overflowY = "auto";  // Enable vertical scrolling
+            }
+
+      }
+
+
+    }
   }
-
-
-  
 }
 
-//add comment
-function addComment(commentSectionDiv,textAreaId){
-  let commentInput = document.getElementById(textAreaId)
-  let commentText = commentInput.value;
-  console.log(commentText);
-  let commentSection = document.getElementById(commentSectionDiv);
-  commentSection.innerHTML+=  `
-  <div class = "usr-profile"style="display: flex; align-items: center; align-items: flex-start; ">
-                 <img src="https://as2.ftcdn.net/v2/jpg/02/66/72/41/1000_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg" alt = "" class = "prof-pic">
-                   <div>
-                   <p class = "usr-name"> 4vanteguard</p>
-                   <div class = "usr-comment" style="display: flex; align-items: center; justify-content: space-between;">
-                        <p>${commentText}</p>
-                    </div>
-                 </div>
-  `
-  commentInput.value = "";
-
-}
 
 
 //show 1 comment
@@ -352,6 +369,29 @@ function showFirstComment(commentSectionID){
     break;
   }
 }
+
+//add comment
+function addComment(commentSectionDiv,textAreaId){
+  let commentInput = document.getElementById(textAreaId)
+  let commentText = commentInput.value;
+  console.log(commentText);
+  let commentSection = document.getElementById(commentSectionDiv);
+  commentSection.innerHTML+=  `
+  <div class = "usr-profile"style="display: flex; align-items: center; align-items: flex-start; ">
+                 <img src="https://as2.ftcdn.net/v2/jpg/02/66/72/41/1000_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg" alt = "" class = "prof-pic">
+                   <div>
+                   <p class = "usr-name"> 4vanteguard</p>
+                   <div class = "usr-comment" style="display: flex; align-items: center; justify-content: space-between;">
+                        <p>${commentText}</p>
+                    </div>
+                 </div>
+  `
+  commentInput.value = "";
+
+}
+
+
+
  
 // Function to increment likes
 async function incrementLikes(docId) {
