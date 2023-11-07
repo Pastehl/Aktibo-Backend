@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc   } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment} from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -18,7 +18,7 @@ const auth = getAuth();
 const db = getFirestore(app);
 
 
-import "../styles/style.css"
+import '../scss/styles.scss';
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -85,58 +85,72 @@ const data =
     ]
   }
 
-  var main_content = document.getElementById("main_content")
- // main_content.innerHTML = ""
-
+var main_content = document.getElementById("main_content")
+main_content.innerHTML = ""
 
 
 const q = query(collection(db, "moments"));
 
-const querySnapshot = await getDocs(q);
-function showAllMoments(){
+
+
+async function showAllMoments(){
+  let currentPostNumber = 1
+
+  const querySnapshot = await getDocs(q);
+
   querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    // console.log(doc.id, " => ", doc.data());
-    //console.log(querySnapshot.docs.length) check length sana
+
+    var usrName = doc.data().username
     var userImageSrc = doc.data().userImageSrc
     var imageSrc = doc.data().imageSrc
     var caption = doc.data().caption
     var likeCount = doc.data().likes
-    let currentPostNumber = 1
+    var commentCount
     let likeBtnId = 'likeBtn' + currentPostNumber
     let commentBtnId = 'commentBtn' + currentPostNumber
     let commentSectionId = 'commentSectionId' + currentPostNumber
     let commenSectionBtn = 'formBtnId' +currentPostNumber
     let textAreaId = 'textAreaId' +currentPostNumber
+    let postSpanLikeId = "postSpanId" +currentPostNumber
+    let postSpanCommentId = "postSpanCommentId" +currentPostNumber
+
+    if (commentCount = doc.data().commentsLlist == null || commentCount == doc.data().commentsLlist == undefined) {
+      commentCount = "0"
+    }
+
+    let docId = doc.id
     if (!isNaN(likeCount) == false) {
       likeCount = ""
+    }
+    if (!isNaN(commentCount) == false) {
+      commentCount = ""
+      console.log(commentCount)
+    }  
+    let imageHTML = ""
+    if(imageSrc != null && imageSrc != ""){
+      imageHTML = `<img src="`+imageSrc+`">`
     }
 
     main_content.innerHTML +=
     `
-  <div class = "post">
-              <div class="header_content">
-                  <img src="`+userImageSrc+`" alt = "" class = "prof-pic">
-                  <h4>Hello</h4>
-                  <i class='bx bx-dots-vertical'></i>
+    <div class = "post">
+              <div class="header_content d-flex justify-content-end">
+                <img src="`+userImageSrc+`" alt="" class="prof-pic">
+                <h4 class="expand-width">`+usrName+`</h4>
+                <i class='bx bx-dots-vertical'></i>
               </div>
               <div class="post_caption">
                   <h6>`+caption+`</h6>
               </div>
               <div class="info">
-                <img src="`+imageSrc+`">
+                `+imageHTML+`
               </div>
               <div class = "interact_content">
-                  <i id = '`+likeBtnId+`'class='bx bx-heart' ></i>
-                  <span class="button-number">`+likeCount+`</span>
+                  <i class='bx bx-heart likeButton' data-doc-id ="`+docId+`"></i>
+                  <span id = "`+postSpanLikeId+`"class="button-number">`+likeCount+`</span>
 
-                  
-                  <script>
-                      
-
-                  </script>
-                  <i id = '`+commentBtnId+`' class='bx bx-comment-detail' ></i>
-                  <span class="button-number">`+likeCount+`</span>
+                  <i id = '`+commentBtnId+`' class='bx bx-comment-detail showCommentButton' data-doc-id ="`+docId+`" ></i>
+                  <span class="button-number" id = "`+postSpanCommentId+`">`+commentCount+`</span>
 
                   
               </div>
@@ -151,42 +165,71 @@ function showAllMoments(){
                   </div>
               </div>
           </div>
-  `
-showFirstComment(commentSectionId)
-console.log("Ran " ,currentPostNumber)
-  currentPostNumber+=1
-  // like button press
-  const likeBtn = document.getElementById(likeBtnId)
-  likeBtn.addEventListener('click',function(){
-      toggleLike(likeBtn)
-  })
-  const commentBtn = document.getElementById(commentBtnId)
-  commentBtn.addEventListener('click',function(){
-    displayComments(commentSectionId,commentBtnId)
+    `
+    // showFirstComment(commentSectionId)
+
+    // setupEventListeners(likeBtnId, commentBtnId, commenSectionBtn, commentSectionId, textAreaId, docId,postSpan);
+
+    // currentPostNumber++
+
+    // console.log(likeBtnId)
+
+    // document.getElementById(likeBtnId).addEventListener('click', function(e){
+    //   console.log(e.target.id)
+    // })
+
+    currentPostNumber++
   })
 
-  // add new comment
-  const sendComment = document.getElementById(commenSectionBtn)
-  sendComment.addEventListener('click',function(){
-    addComment(commentSectionId,textAreaId)
-  })
-    
-
-  });  
 }
-showAllMoments()
 
-var test = false
-function hello(){
-  if(test){
-    console.log("1234")
-    return
-  }
-
-  console.log("4321")
-  
+function addLikeButtonEventListeners(){
+  let likeButtons = document.getElementsByClassName('likeButton');
+  for (let index = 0; index < likeButtons.length; index++) {
+    const element = likeButtons[index];
+    const docID = element.dataset.docId; // Get the data-doc-id attribute
+    const postSpan = element.nextElementSibling; // Get the <span> element    
+    element.addEventListener('click', function (e) {
+      // Your code here, you can use docID, postSpan, likeCount, and elementId as needed
+      let likeCount = postSpan.textContent; // Get the content of the <span>
+      console.log('OG likeCount:', likeCount);
+      toggleLike(element,docID,postSpan,likeCount)
+    });
+ }
 }
-hello()
+function addShowCommentButtonEventListeners(){
+   let showCommentButton = document.getElementsByClassName('showCommentButton');
+
+  for (let index = 0; index < showCommentButton.length; index++) {
+    const element = showCommentButton[index];
+    const docID = element.dataset.docId; // Get the data-doc-id attribute
+    const postSpan = element.nextElementSibling; // Get the <span> element
+    const commentCount = postSpan.textContent; // Get the content of the <span>
+
+
+    element.addEventListener('click', function (e) {
+      // Your code here, you can use docID, postSpan, likeCount, and elementId as needed
+    const commentSection = element.parentNode // Find the closest parent with class "interactive_content"
+    const commentSectionId = commentSection.querySelector('.showCommentButton').id
+    console.log(commentSectionId)
+      displayComments(commentSectionId,element)
+    });
+ }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Your code that depends on the DOM being fully loaded goes here
+  showAllMoments().then(() => {
+    addLikeButtonEventListeners();
+    addShowCommentButtonEventListeners()
+  }).catch((error) => {
+    console.log(error);
+  });
+
+  // Any other code that interacts with the DOM can be placed here.
+});
+
+
 
 // Get a reference to the content element
 const container = document.getElementById('main_content');
@@ -277,20 +320,38 @@ const container = document.getElementById('main_content');
 // }
 
 
-function toggleLike(likeBtn){
+function toggleLike(likeBtn,docId,postSpan,likeCount){
  if (likeBtn.classList.contains('liked')) {
     likeBtn.classList.remove('liked');
     likeBtn.classList.remove('bxs-heart');
     likeBtn.classList.add('bx-heart');
     console.log('removed 1 like')
-    decrementLikes('doc2')
+    console.log("Toggle likecount decrease:",likeCount)
+    decrementLikes(docId)
+    console.log(postSpan)
+    let likeCtr = parseInt(likeCount)
+    likeCtr --
+    console.log(likeCtr)
+
+    postSpan.innerText = likeCtr;
+
 
   } else {
     likeBtn.classList.add('liked');
     likeBtn.classList.remove('bx-heart');
     likeBtn.classList.add('bxs-heart');
     console.log('added 1 like')
-    incrementLikes('doc2')
+    console.log("Toggle likecount increase:",likeCount)
+
+    incrementLikes(docId)
+    console.log(postSpan)
+    //const spanElement = document.getElementById(postSpan); // why is this null lol
+    let likeCtr = parseInt(likeCount)
+    likeCtr ++
+    console.log(likeCtr)
+
+    //console.log(spanElement)
+    postSpan.innerText = likeCtr;
   }
 }
 
@@ -299,6 +360,7 @@ function displayComments(commentSectionID, commentBtnId) {
   commentBtnId = document.getElementById(String(commentBtnId));
   commentSectionID = String(commentSectionID);
   var commentsContainer = document.getElementById(commentSectionID);
+  console.log(commentsContainer)
   let comments = data.comments;
 
   if (commentBtnId.classList.contains('open')) {
@@ -351,7 +413,6 @@ function showFirstComment(commentSectionID){
   var commentsContainer = document.getElementById(commentSectionID);
 
    for (const n of comments) {
-      console.log(n)
 
     commentsContainer.innerHTML += `
       <div class="usr-profile" style="display: flex; align-items: center; align-items: flex-start;">
@@ -364,7 +425,6 @@ function showFirstComment(commentSectionID){
         </div>
       </div>
     `;
-    console.log("Reach")
     // Exit the loop after the first iteration
     break;
   }
@@ -374,7 +434,6 @@ function showFirstComment(commentSectionID){
 function addComment(commentSectionDiv,textAreaId){
   let commentInput = document.getElementById(textAreaId)
   let commentText = commentInput.value;
-  console.log(commentText);
   let commentSection = document.getElementById(commentSectionDiv);
   commentSection.innerHTML+=  `
   <div class = "usr-profile"style="display: flex; align-items: center; align-items: flex-start; ">
@@ -391,44 +450,51 @@ function addComment(commentSectionDiv,textAreaId){
 }
 
 
-
  
 // Function to increment likes
 async function incrementLikes(docId) {
-  const docRef = doc(db, "moments", docId);
-  const docSnap = await getDoc(docRef);
-  console.log(docSnap.data())
-  var likes = docSnap.data().likes
-  
-  console.log(likes)
-  if(!isNaN(likes) == false ){
-    await updateDoc(docRef, {
-    likes: 1
-  });
-  }
-  else{
-    await updateDoc(docRef, {
-    likes: likes + 1
-  });
-  }
-  // main_content.innerHTML = ""
-  //  showAllMoments()
+  const momentRef = doc(db, "moments", docId);
+  await updateDoc(momentRef, {
+    likes: increment(1)
+  })
 }
 
 // Function to decrement likes
 async function decrementLikes(docId) {
-  const docRef = doc(db, "moments", docId);
-  const docSnap = await getDoc(docRef);
-  console.log(docSnap.data())
-  var likes = docSnap.data().likes
-  if(likes -1 == 0){
-    await updateDoc(docRef, {
-    likes: ""
-  });}
-  else{
-    await updateDoc(docRef, {
-    likes: likes - 1
+  const momentRef = doc(db, "moments", docId);
+
+  await updateDoc(momentRef, {
+    likes: increment(-1)
+  })
+}
+
+function addNewExercise(){
+  let category = document.getElementById("category").value
+  let name = document.getElementById("name").value
+  let instructions = ["asdf","sadf"]
+
+  createNewExerciseDocument(category)
+  .then(() => {
+    // show user message of success
+  }).catch((error) => {
+    // show user message of failure
   });
-  }
-  
+}
+
+async function createNewExerciseDocument(category, est_time, instructions, intensity, name, reps_duration, sets, tags, video) {
+  // Add a new document with a generated id.
+  const docRef = await addDoc(collection(db, "exercises"), {
+    category: category,
+    est_time: est_time,
+    instructions: instructions,
+    intensity: intensity,
+    name: name,
+    reps_duration: reps_duration,
+    sets: sets,
+    tags: tags,
+    video: video
+
+  });
+  console.log("Document written with ID: ", docRef.id);
+
 }

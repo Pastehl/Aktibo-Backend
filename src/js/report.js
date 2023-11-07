@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
-import "../styles/style.css"
+import '../scss/styles.scss';
 
 onAuthStateChanged(auth, (user) => {
     if (user) {

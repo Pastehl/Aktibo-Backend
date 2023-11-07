@@ -1,0 +1,614 @@
+@import "bootstrap/scss/bootstrap";
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+
+html {
+    font-family: 'Roboto', sans-serif;
+    font-size:20px;
+}
+
+ul.nav li a, ul.nav li a:visited {
+    color: white !important;
+}
+
+ul.nav li a:hover, ul.nav li a:active {
+    color: white !important;
+}
+
+ul.nav li.active a {
+    color: white !important;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link{
+    background-color: #63A91F;
+}
+
+#logout_btn{
+    padding-left: 1rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Set the container height to the viewport height */
+}
+
+.header {
+  background-color: lightgray;
+  padding: 10px;
+}
+
+.main_content {
+  flex: 1; /* This makes the main_content div expand to fill the remaining free space */
+  background-color: #e7e6e6;
+  padding: 10px;
+}
+
+.footer {
+  background-color: lightgray;
+  padding: 10px;
+}
+
+.header_content > h4{
+    display: inline-block;
+    width: auto;
+    font-weight: bold;
+    padding: 0.5rem 0rem 0rem 0rem;
+    color:#000;
+    font-size:0.8rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.post_caption > h6 {
+    font-size: 0.7rem;
+    font-weight: 600;
+    
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    list-style: none;
+    text-decoration: none;
+}
+
+#body_index {
+    min-height: 100vh;
+    display: flex;
+    min-width: 30rem;
+    justify-content: center;
+    align-items: center;
+
+    background: #F0F7EE;
+}
+
+.parent-container {
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.wrapper {
+    margin-top: 10rem;
+    position: relative;
+    width: 28rem;
+    height: 30rem;
+    background: #F0F7EE;
+    color: #191919;
+    border-radius: 0.5rem;
+    padding: 1.5rem 2rem;
+}
+
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background: #F0F7EE;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: #63A91F;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #F0F7EE;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: #F0F7EE;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    color: #F0F7EE;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.wrapper .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remember-forgot label input {
+    accent-color: #63A91F;
+    margin-right: 3px;
+}
+
+.remember-forgot a {
+    color: #191919;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #191919;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #F0F7EE;
+    font-weight: 600;
+}
+
+.wrapper .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    color: #191919;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
+
+.login_head {
+    text-align: center;
+}
+
+/*Home Page*/
+#body_home {
+    background: #F0F7EE;
+}
+
+header {
+    background-color: #F0F7EE;
+    /* background-color:yellow; */
+    padding: 0.1rem;
+    text-align: center;
+    font-size: 35px;
+    color: black;
+    border-bottom: 2px solid;
+    position:fixed;
+    width:100%;
+    z-index:2;
+  }
+
+#Aktibo_Logo {
+    padding-top: 0.5rem;
+}
+
+.wrapper_home {
+    display: flex;
+    position: relative;
+}
+
+/* Add some basic styling for the sidebar */
+.sidebar {
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            background-color: #333; /* Change as needed */
+            color: #fff; /* Change as needed */
+            overflow-y: auto;
+        }
+
+        /* Styling for the main content */
+#main_content {
+    height: 100vh;
+    margin-left: 280px; /* Make sure it matches the sidebar width */
+    padding: 20px;
+}
+
+/* Add some basic styling for the content area */
+.content {
+  margin-left: 280px; /* Make sure it matches the sidebar width */
+  padding: 20px;
+}
+.main_content{
+    padding-top:1rem;
+    text-align:center;
+    min-width: 25rem;
+    font-size: 0.7rem;
+}
+
+.container-b{
+    height:auto;
+    background-color:pink;
+    position:absolute;
+    top:100%;
+}
+
+.post{
+    width:25rem;
+    height:auto;
+    margin:0 auto 1rem;
+    border-bottom:0.02rem solid #000;
+    background-color: #FFFFFB;
+    
+    /* background-color:#fff; */
+}
+
+.exercises-container {
+    display: inline-block;
+    justify-content: center;
+    text-align: center;
+    width:15rem;
+    margin:0 0.5rem 1rem;
+}
+
+.exercises_pic{
+    text-align: center;
+    justify-content: center;
+    width: 15rem;
+    background-color: red;
+}
+
+.article-body {
+    text-align: left;
+    height: 12rem;
+}
+
+.header_content{
+    height:3rem;
+    box-sizing:border-box;
+    text-align:left;
+    width:100%;
+    padding:0.4rem 0.6rem;
+}
+
+.containerA,.containerB{
+    text-align:center;
+    background-color:red;
+    height:6rem;
+    width:10rem;
+    font-size:1.3rem;
+    color:#fff;
+    margin-top:20px;
+    /*display:block;*/
+    display:inline-block;
+}
+
+.prof-pic {
+    display: inline-block;
+    vertical-align: middle;
+    background-color: black;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit:cover;
+}
+
+.header_content > .bx-dots-vertical {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: x-large;
+    padding-top: 0.5rem;
+}
+.header_content .expand-width {
+  flex-grow: 1;
+}
+.bx-dots-vertical:hover {
+    color: #63A91F;
+}
+
+.post_caption{
+    // height:2rem;
+    box-sizing:border-box;
+    text-align:left;
+    width:100%;
+    padding:0.4rem 0.6rem;
+   
+}
+
+.info {
+    // min-height: 1.5rem;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.info > img{
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.interact_content{
+    margin: 0;
+    height:3rem;
+    box-sizing:border-box;
+    text-align:left;
+    width:100%;
+    padding:0.4rem 0.6rem;
+    /* background-color:; */
+}
+
+.bx-heart,.bxs-heart , .bx-comment-detail {
+    cursor: pointer;
+    margin-left: 1rem;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: xx-large;
+    padding-top: 0.3rem;
+    /* background-color:; */
+    transition: .5s;
+}
+
+
+
+.bx-heart:hover {
+    color: red;
+    transform: scale(1.15);
+  }
+.bxs-heart{
+    color: red;
+}
+.bx-comment-detail {
+    margin-left: 5rem;
+}
+
+.bx-comment-detail:hover{
+    color: #63A91F;
+    transform: scale(1.15);
+}
+
+.containerB{
+    background-color:blue;
+}
+
+article {
+    --img-scale: 1.001;
+    --title-color: black;
+    --link-icon-translate: -20px;
+    --link-icon-opacity: 0;
+    position: relative;
+    border-radius: 16px;
+    box-shadow: none;
+    background: #fff;
+    transform-origin: center;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+  }
+  
+  article a::after {
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0;
+    cursor: pointer;
+    content: "";
+  }
+  
+  /* basic article elements styling */
+  article h2 {
+    margin: 0 0 18px 0;
+    font-family: "Bebas Neue", cursive;
+    font-size: 1.9rem;
+    letter-spacing: 0.06em;
+    color: var(--title-color);
+    transition: color 0.3s ease-out;
+  }
+  
+  figure {
+    margin: 0;
+    padding: 0;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  
+  article img {
+    max-width: 100%;
+    transform-origin: center;
+    transform: scale(var(--img-scale));
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  .article-body {
+    padding: 24px;
+  }
+  
+  article a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #28666e;
+  }
+  
+  article a:focus {
+    outline: 1px dotted #28666e;
+  }
+  
+  article a .icon {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+    transform: translateX(var(--link-icon-translate));
+    opacity: var(--link-icon-opacity);
+    transition: all 0.3s;
+  }
+  
+  /* using the has() relational pseudo selector to update our custom properties */
+  article:has(:hover, :focus) {
+    --img-scale: 1.1;
+    --title-color: #28666e;
+    --link-icon-translate: 0;
+    --link-icon-opacity: 1;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+
+@media screen and (max-width:720px){
+    .containerA,.containerB{
+        width:7rem;
+        background-color:yellow;
+        font-size:2rem;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    
+    .main_content {
+        padding-left: 0;
+    }
+
+  
+   
+
+
+}
+
+@media screen and (max-width:540px){
+    
+    .wrapper{
+        padding-top: 20%;
+        
+        
+        box-sizing: border-box;
+    }
+    
+    .post {
+        width: 22rem;
+    }    
+
+
+}
+
+@media screen and (max-width:400px){
+    
+
+
+    .wrapper{
+        padding-top: 10rem;
+        
+        box-sizing: border-box;
+    }
+    
+}
+
+
+.comments-list {
+  margin-top: 20px;
+}
+
+/* Styles for the comment input */
+.comment-input {
+  margin-top: 10px;
+  display: flex;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 5px;
+}
+
+.comment-input button {
+  background-color: #3897f0;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.comment-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
+}
+
+.comment-section {
+    text-align: left;
+    font-size: 0.7rem;
+
+    
+}
+
+.usr-profile{
+    padding: 1rem 1rem 0rem 1rem;
+}
+
+
+.usr-name{
+    padding: 0rem 1rem 0rem 0.5rem;
+    margin-bottom: 0.2rem;
+    font-weight: bold;
+}
+
+.usr-comment{
+    padding: 0rem 1rem 0.5rem 0.5rem;
+    text-align: center;
+}
+
+.bx-send:hover {
+  transform: scale(1.2); /* Enlarge the icon on hover */
+  animation: tada 0.5s infinite; /* Apply the tada animation */
+}
+@keyframes tada {
+  0% { transform: scale(1); }
+  10%, 20% { transform: scale(1.3) rotate(-3deg); }
+  30%, 50%, 70%, 90% { transform: scale(1.3) rotate(3deg); }
+  40%, 60%, 80% { transform: scale(1.3) rotate(-3deg); }
+  100% { transform: scale(1); }
+}
+
+.comment-box{
+    padding: 1rem;
+    text-align: center;
+}
+
+.comment-section{
+    max-height: 20rem; 
+    overflow-y: auto;
+}
+
+//ExerciseForms Styling
+.formPage {
+    padding: 20px; /* Add padding for spacing inside the box */
+    border: 1px solid #000; /* Add a border for the box */
+    border-radius: 5px; /* Add rounded corners to the box */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+    width: 80%;
+    height: 80%;
+}

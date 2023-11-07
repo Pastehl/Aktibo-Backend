@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
-import "../styles/style.css"
+import '../scss/styles.scss';
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -40,3 +40,9 @@ document.getElementById("logout_btn").addEventListener("click",function(){
       });
       
 })
+
+document.getElementById('newExerciseButton').addEventListener('click',function(){
+    window.location.href = "exerciseForms.html";
+
+})
+
