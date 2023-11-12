@@ -1,6 +1,8 @@
+
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment} from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment, orderBy, limit, startAfter} from "firebase/firestore";
+import * as bootstrap from 'bootstrap'
 
 
 const firebaseConfig = {
@@ -93,43 +95,37 @@ const q = query(collection(db, "moments"));
 
 
 
-async function showAllMoments(){
-  let currentPostNumber = 1
+async function showAllMoments(doc,currentPostNumber){
+  var usrName = doc.data().username
+  var userImageSrc = doc.data().userImageSrc
+  var imageSrc = doc.data().imageSrc
+  var caption = doc.data().caption
+  var likeCount = doc.data().likes
+  var commentCount
+  let likeBtnId = 'likeBtn' + currentPostNumber
+  let commentBtnId = 'commentBtn' + currentPostNumber
+  let commentSectionId = 'commentSectionBoxId' + currentPostNumber
+  let commenSectionBtn = 'formBtnId' +currentPostNumber
+  let textAreaId = 'textAreaId' +currentPostNumber
+  let postSpanLikeId = "postSpanId" +currentPostNumber
+  let postSpanCommentId = "postSpanCommentId" +currentPostNumber
 
-  const querySnapshot = await getDocs(q);
+  if (commentCount = doc.data().commentsLlist == null || commentCount == doc.data().commentsLlist == undefined) {
+    commentCount = "0"
+  }
 
-  querySnapshot.forEach((doc) => {
-
-    var usrName = doc.data().username
-    var userImageSrc = doc.data().userImageSrc
-    var imageSrc = doc.data().imageSrc
-    var caption = doc.data().caption
-    var likeCount = doc.data().likes
-    var commentCount
-    let likeBtnId = 'likeBtn' + currentPostNumber
-    let commentBtnId = 'commentBtn' + currentPostNumber
-    let commentSectionId = 'commentSectionBoxId' + currentPostNumber
-    let commenSectionBtn = 'formBtnId' +currentPostNumber
-    let textAreaId = 'textAreaId' +currentPostNumber
-    let postSpanLikeId = "postSpanId" +currentPostNumber
-    let postSpanCommentId = "postSpanCommentId" +currentPostNumber
-
-    if (commentCount = doc.data().commentsLlist == null || commentCount == doc.data().commentsLlist == undefined) {
-      commentCount = "0"
-    }
-
-    let docId = doc.id
-    if (!isNaN(likeCount) == false) {
-      likeCount = ""
-    }
-    if (!isNaN(commentCount) == false) {
-      commentCount = ""
-      console.log(commentCount)
-    }  
-    let imageHTML = ""
-    if(imageSrc != null && imageSrc != ""){
-      imageHTML = `<img src="`+imageSrc+`">`
-    }
+  let docId = doc.id
+  if (!isNaN(likeCount) == false) {
+    likeCount = ""
+  }
+  if (!isNaN(commentCount) == false) {
+    commentCount = ""
+    console.log(commentCount)
+  }  
+  let imageHTML = ""
+  if(imageSrc != null && imageSrc != ""){
+    imageHTML = `<img src="`+imageSrc+`">`
+  }
 
     main_content.innerHTML +=
     `
@@ -166,10 +162,7 @@ async function showAllMoments(){
               </div>
           </div>
     `
-
-    currentPostNumber++
-  })
-
+  showFirstComment(commentSectionId)
 }
 
 function addLikeButtonEventListeners(){
@@ -224,43 +217,101 @@ function addPostCommentButtonEventListeners(){
 
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Your code that depends on the DOM being fully loaded goes here
-  showAllMoments().then(() => {
-    addLikeButtonEventListeners();
-    addShowCommentButtonEventListeners()
-    addPostCommentButtonEventListeners()
-  }).catch((error) => {
-    console.log(error);
-  });
+function refreshEventListeners(){
 
-  // Any other code that interacts with the DOM can be placed here.
-});
+  addLikeButtonEventListeners();
+  addShowCommentButtonEventListeners()
+  addPostCommentButtonEventListeners()
+}
 
 
 
-// Get a reference to the content element
+
+// Pagination
+
 const container = document.getElementById('main_content');
 
 // Add a scroll event listener to the window
 window.addEventListener('scroll', function () {
-    // Get the last child of the container
-    const lastChild = container.lastElementChild;
+  const lastChild = container.lastElementChild;
 
-    if (lastChild) {
-        // Get the position of the last child relative to the viewport
-        const rect = lastChild.getBoundingClientRect();
+  if (lastChild) {
+    // Get the position of the last child relative to the viewport
+    const rect = lastChild.getBoundingClientRect();
 
-        // Check if the last child is fully visible on the screen
-        if (rect.bottom <= window.innerHeight) {
-            // Last child is visible on the screen
-            console.log('Last child is visible on the screen.');
-            // You can perform actions here based on the visibility of the last child.
+    // Check if the last child is fully visible on the screen
+    // console.log(rect.bottom)
+    // console.log(window.innerHeight)
+
+    // rect.bottom shows float, so keep that -1
+    if (rect.bottom-1 <= window.innerHeight) {
+      // You can perform actions here based on the visibility of the last child.
+      showMoreMoments(3)
+    }
             
-            }
-            
-        }
+  }
 });
+
+let momentsRef = collection(db, "moments");
+let idCounters = 1
+let lastVisible = null
+
+showFirstMoments(3)
+
+let hasNotShowedMessage = true
+
+async function showFirstMoments(amount){
+  const first = query(momentsRef, orderBy("datePosted", "desc"), limit(amount));
+  const documentSnapshots = await getDocs(first);
+  lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+
+  documentSnapshots.forEach((doc) => {
+    const data = doc.data();
+    showAllMoments(doc,idCounters)
+    idCounters++
+  // move show ALL Moments here
+    console.log(doc.id);
+  });
+  refreshEventListeners()
+
+}
+
+async function showMoreMoments(amount){
+  const next = query(momentsRef,
+    orderBy("datePosted", "desc"),
+    startAfter(lastVisible),
+    limit(amount));
+
+  const documentSnapshots = await getDocs(next);
+  documentSnapshots.forEach((doc) => {
+    const data = doc.data();
+
+    showAllMoments(doc,idCounters)
+    idCounters++
+
+    console.log(doc.id);
+  });
+  refreshEventListeners()
+
+  if (documentSnapshots.docs.length > 0){
+    lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+  } else {
+    // show message to user
+    
+    if(hasNotShowedMessage){
+      console.log("no more posts")
+      const toastLiveExample = document.getElementById('liveToast')
+      const toast = new bootstrap.Toast(toastLiveExample)
+
+      toast.show()
+      
+      hasNotShowedMessage = false
+    }
+    
+
+  }
+  
+}
 
 
 function toggleLike(likeBtn,docId,postSpan,likeCount){
@@ -444,3 +495,5 @@ async function createNewExerciseDocument(category, est_time, instructions, inten
   console.log("Document written with ID: ", docRef.id);
 
 }
+
+
