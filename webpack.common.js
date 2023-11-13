@@ -4,7 +4,7 @@ const path = require("path");
 const autoprefixer = require('autoprefixer')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let pages = ["index", "homepage", "report", "exercise","test","exerciseForms"];
+let pages = ["index", "homepage", "report", "exercise","test","exerciseForms",'dashboard'];
 
 // let pages = ["test"];
 
