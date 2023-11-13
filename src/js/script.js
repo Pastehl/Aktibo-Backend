@@ -1,5 +1,7 @@
 import * as bootstrap from 'bootstrap'
 import * as Chart from 'chart.js'
+import '../scss/styles.scss';
+
     const ctx = document.getElementById('myChart');
     const ctx2 = document.getElementById('myChart2');
     const ctx3 = document.getElementById('myChart3');
