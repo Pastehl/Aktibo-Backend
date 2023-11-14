@@ -769,3 +769,78 @@ article {
     font-weight: 600;
     width: 150px;
 }
+
+// Styles For 3 Dots
+
+.more {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.more span {
+  display: block;
+  width: .25rem;
+  height: .25rem;
+  background: #363636;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.more span:not(:last-child) {
+  margin-bottom: .125rem;
+}
+
+.dropout {
+  z-index: 9001;
+  width: fit-content;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dropout ul {
+  position: absolute;
+  top: -1.1rem;
+  right: 1.5rem;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.12s ease;
+}
+
+.dropout.active ul {
+  border:#000;
+  border-width: 1px;
+  border-style: solid;
+  transform: scaleX(1);
+}
+
+// from gpt
+#dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    right: 1px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+#dropdown-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#dropdown-content ul li {
+    padding: 8px;
+    text-align: left;
+}
+
+#dropdown-content ul li:hover {
+    background-color: #ddd;
+}
+
+.bx-dots.vertical {
+    cursor: pointer;
+    
+}

@@ -109,6 +109,8 @@ async function showAllMoments(doc,currentPostNumber){
   let textAreaId = 'textAreaId' +currentPostNumber
   let postSpanLikeId = "postSpanId" +currentPostNumber
   let postSpanCommentId = "postSpanCommentId" +currentPostNumber
+  let reportBtnId = "reportBtnId" 
+
 
   if (commentCount = doc.data().commentsLlist == null || commentCount == doc.data().commentsLlist == undefined) {
     commentCount = "0"
@@ -133,7 +135,14 @@ async function showAllMoments(doc,currentPostNumber){
               <div class="header_content d-flex justify-content-end">
                 <img src="`+userImageSrc+`" alt="" class="prof-pic">
                 <h4 class="expand-width">`+usrName+`</h4>
-                <i class='bx bx-dots-vertical'></i>
+                 <div class="dropdown-container" id="dropdown-container">
+                      <i class='bx bx-dots-vertical bx-sm' ></i>
+                  </div>
+                  <div class="dropdown-content" id="dropdown-content">
+                      <ul>
+                          <div><li class="reportBtn" id="`+reportBtnId+`" data-doc-id ="`+docId+`">Report</li></div>
+                      </ul>
+                  </div>
               </div>
               <div class="post_caption">
                   <h6>`+caption+`</h6>
@@ -216,12 +225,42 @@ function addPostCommentButtonEventListeners(){
  }
 
 }
+function addOpenReportButtonEventListeners(){
+    let reportBtn = document.getElementsByClassName('bx-dots-vertical')
+    for (let index = 0; index < reportBtn.length; index++) {
+    const element = reportBtn[index];
+    element.addEventListener('click', function (e) {
+      console.log(element)
+      const dropDownContentContainerDiv = element.parentNode.nextElementSibling // get the
+      console.log(dropDownContentContainerDiv)
+      if (dropDownContentContainerDiv.style.display === "block") {
+            console.log("Close")
+            dropDownContentContainerDiv.style.display = "none";   
+        } else {
+            console.log("Open")
+            dropDownContentContainerDiv.style.display = "block" || dropDownContentContainerDiv.style.display == "";
 
+        }
+    });
+ }
+}
+function addReportButtonEventListeners(){
+    let reportBtn = document.getElementsByClassName('reportBtn')
+    for (let index = 0; index < reportBtn.length; index++) {
+    const element = reportBtn[index];
+    element.addEventListener('click', function (e) {
+      flagMomentsPost(element.dataset.docId,element.parentNode.parentNode)
+      toastMessage("Post has been reported.")
+    });
+ }
+ }
 function refreshEventListeners(){
 
   addLikeButtonEventListeners();
   addShowCommentButtonEventListeners()
   addPostCommentButtonEventListeners()
+  addOpenReportButtonEventListeners()
+  addReportButtonEventListeners()
 }
 
 
@@ -300,10 +339,7 @@ async function showMoreMoments(amount){
     
     if(hasNotShowedMessage){
       console.log("no more posts")
-      const toastLiveExample = document.getElementById('liveToast')
-      const toast = new bootstrap.Toast(toastLiveExample)
-
-      toast.show()
+      toastMessage("No more additional posts.")
       
       hasNotShowedMessage = false
     }
@@ -496,4 +532,27 @@ async function createNewExerciseDocument(category, est_time, instructions, inten
 
 }
 
+async function flagMomentsPost(docId,dropDownContentContainerDiv){
+  const momentRef = doc(db, "moments", docId);
+    console.log(docId)
+    await updateDoc(momentRef, {
+    isReported: true
+  })
+   dropDownContentContainerDiv.style.display = "none";   
 
+}
+
+function toastMessage(message){
+    // Get the toast element by its ID
+  const toastElement = document.getElementById('liveToast');
+
+  // Get the .toast-body element within the toast
+  const toastBodyElement = toastElement.querySelector('.toast-body');
+
+  // Update the content of the .toast-body element
+  toastBodyElement.textContent = message;
+
+  // Show the toast
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+}
