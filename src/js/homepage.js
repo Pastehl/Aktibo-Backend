@@ -1,7 +1,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment, orderBy, limit, startAfter} from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment, orderBy, limit, startAfter, arrayUnion} from "firebase/firestore";
 import * as bootstrap from 'bootstrap'
 
 
@@ -101,7 +101,8 @@ async function showAllMoments(doc,currentPostNumber){
   var imageSrc = doc.data().imageSrc
   var caption = doc.data().caption
   var likeCount = doc.data().likes
-  var commentCount
+  var isDisabled = doc.data().isDisabled
+  var commentCount = doc.data().comments;
   let likeBtnId = 'likeBtn' + currentPostNumber
   let commentBtnId = 'commentBtn' + currentPostNumber
   let commentSectionId = 'commentSectionBoxId' + currentPostNumber
@@ -111,6 +112,13 @@ async function showAllMoments(doc,currentPostNumber){
   let postSpanCommentId = "postSpanCommentId" +currentPostNumber
   let reportBtnId = "reportBtnId" 
 
+  // if(isDisabled == null || isDisabled == undefined){
+  //   isDisabled = false
+  // }
+
+  if(isDisabled === true){
+    return
+  }
 
   if (commentCount = doc.data().commentsLlist == null || commentCount == doc.data().commentsLlist == undefined) {
     commentCount = "0"
@@ -159,7 +167,7 @@ async function showAllMoments(doc,currentPostNumber){
 
                   
               </div>
-              <div id = '`+commentSectionId+`' class="comment-section">
+              <div id = '`+commentSectionId+`' class="comment-section" data-doc-id ="`+docId+`">
 
 
               </div>
@@ -171,7 +179,7 @@ async function showAllMoments(doc,currentPostNumber){
               </div>
           </div>
     `
-  showFirstComment(commentSectionId)
+  showFirstComment(commentSectionId)  
 }
 
 function addLikeButtonEventListeners(){
@@ -218,9 +226,8 @@ function addPostCommentButtonEventListeners(){
       // Your code here, you can use docID, postSpan, likeCount, and elementId as needed
       const commentSectionDiv = element.parentNode.parentNode.previousElementSibling.id
       const commentSectionTextArea = document.querySelector(".commentTextArea").id
-      console.log(commentSectionDiv);
-      console.log(commentSectionTextArea);
-      addComment(commentSectionDiv,commentSectionTextArea)
+      const commentSectionDocId = element.parentNode.parentNode.previousElementSibling.dataset.docId
+      addComment(commentSectionDiv,commentSectionTextArea,commentSectionDocId)
     });
  }
 
@@ -462,12 +469,13 @@ function showFirstComment(commentSectionID){
 }
 
 //add comment
-function addComment(commentSectionDiv,textAreaId){
+function addComment(commentSectionDiv,textAreaId,commentSectionDocId){
   let commentInput = document.getElementById(textAreaId)
   let commentText = commentInput.value;
   console.log(commentText)
   let commentSection = document.getElementById(commentSectionDiv);
   console.log(commentSection)
+  addCommentPost(commentSectionDocId,commentText)
   commentSection.innerHTML+=  `
   <div class = "usr-profile"style="display: flex; align-items: center; align-items: flex-start; ">
                  <img src="https://as2.ftcdn.net/v2/jpg/02/66/72/41/1000_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg" alt = "" class = "prof-pic">
@@ -540,6 +548,17 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv){
   })
    dropDownContentContainerDiv.style.display = "none";   
 
+}
+
+async function addCommentPost(docId,text){
+  const momentRef = doc(db, "moments", docId);
+    console.log(docId)
+
+    await updateDoc(momentRef, {
+    
+    comment:increment(1),
+    commentList: arrayUnion(text)
+  })
 }
 
 function toastMessage(message){

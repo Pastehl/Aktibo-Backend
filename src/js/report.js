@@ -62,7 +62,6 @@ async function showAllMoments(doc,currentPostNumber){
   let textAreaId = 'textAreaId' +currentPostNumber
   let postSpanLikeId = "postSpanId" +currentPostNumber
   let postSpanCommentId = "postSpanCommentId" +currentPostNumber
-  let reportBtnId = "reportBtnId" 
   let isReported = doc.data().isReported
 if(isReported == false || isReported ==undefined || isReported == null){
   return
@@ -96,7 +95,10 @@ if(isReported == false || isReported ==undefined || isReported == null){
                   </div>
                   <div class="dropdown-content" id="dropdown-content">
                       <ul>
-                          <div><li class="reportBtn" id="`+reportBtnId+`" data-doc-id ="`+docId+`">Report</li></div>
+                          <div data-doc-id ="`+docId+`">
+                          <li class = "disableBtn"> Disable </li>
+                          <li class="unflagBtn"> Unflag Post </li>
+                          </div>
                       </ul>
                   </div>
               </div>
@@ -106,25 +108,6 @@ if(isReported == false || isReported ==undefined || isReported == null){
               <div class="info">
                 `+imageHTML+`
               </div>
-              <div class = "interact_content">
-                  <i class='bx bx-heart likeButton' data-doc-id ="`+docId+`"></i>
-                  <span id = "`+postSpanLikeId+`"class="button-number">`+likeCount+`</span>
-
-                  <i id = '`+commentBtnId+`' class='bx bx-comment-detail showCommentButton' data-doc-id ="`+docId+`" ></i>
-                  <span class="button-number" id = "`+postSpanCommentId+`">`+commentCount+`</span>
-
-                  
-              </div>
-              <div id = '`+commentSectionId+`' class="comment-section">
-
-
-              </div>
-              <div class="comment-box">
-                  <div class = "usr-comment-box" style="display: flex; align-items: center; justify-content: space-between;">
-                  <textarea class= "commentTextArea" id="`+textAreaId+`" type="text" placeholder="Leave a comment.." style = "width: 95%; border-radius: 0.4rem; height: 1.5rem; padding-left: 0.5rem;" maxlength="500" ></textarea>
-                  <i id ='`+commenSectionBtn+`' class='bx bx-send postCommentButton data-doc-id ="`+docId+`"'></i>
-                  </div>
-              </div>
           </div>
     `
   }
@@ -133,10 +116,91 @@ if(isReported == false || isReported ==undefined || isReported == null){
 
   const docSnap = await getDocs(momentsRef);
 
-  docSnap.forEach((doc) => {
+async function showFlaggedPosts(){
+    docSnap.forEach((doc) => {
     const data = doc.data();
     showAllMoments(doc,idCounters)
     idCounters++
   // move show ALL Moments here
     console.log(doc.id);
   });
+}
+
+showFlaggedPosts()
+addOpenReportButtonEventListeners()
+disablePostButtonEventListener()
+unflagPostButtonEventListener()
+//Event Listeners
+function addOpenReportButtonEventListeners(){
+    let reportBtn = document.getElementsByClassName('bx-dots-vertical')
+    for (let index = 0; index < reportBtn.length; index++) {
+    const element = reportBtn[index];
+    element.addEventListener('click', function (e) {
+      console.log(element)
+      const dropDownContentContainerDiv = element.parentNode.nextElementSibling // get the
+      console.log(dropDownContentContainerDiv)
+      if (dropDownContentContainerDiv.style.display === "block") {
+            console.log("Close")
+            dropDownContentContainerDiv.style.display = "none";   
+        } else {
+            console.log("Open")
+            dropDownContentContainerDiv.style.display = "block" || dropDownContentContainerDiv.style.display == "";
+
+        }
+    });
+ }
+}
+ function disablePostButtonEventListener(){
+    let reportBtn = document.getElementsByClassName('disableBtn')
+    for (let index = 0; index < reportBtn.length; index++) {
+    const element = reportBtn[index];
+    element.addEventListener('click', function (e) {
+      console.log(element.parentNode.dataset.docId)
+      flagMomentsPost(element.parentNode.dataset.docId,element.parentNode.parentNode,"disabled")
+      toastMessage("Post has been disabled")
+    });
+ }
+ }
+ function unflagPostButtonEventListener(){
+    let reportBtn = document.getElementsByClassName('unflagBtn')
+    for (let index = 0; index < reportBtn.length; index++) {
+    const element = reportBtn[index];
+    element.addEventListener('click', function (e) {
+      console.log(element.parentNode.dataset.docId)
+      flagMomentsPost(element.parentNode.dataset.docId,element.parentNode.parentNode,false)
+      toastMessage("Flag tag has been removed.")
+    });
+ }
+ }
+
+
+async function flagMomentsPost(docId,dropDownContentContainerDiv,status){
+  const momentRef = doc(db, "moments", docId);
+    console.log(docId)
+    if(status === "disabled"){
+      status = true
+      await updateDoc(momentRef, {
+    isDisabled: status
+      })
+    }
+    await updateDoc(momentRef, {
+    isReported: status
+  })
+   dropDownContentContainerDiv.style.display = "none";   
+
+}
+
+function toastMessage(message){
+    // Get the toast element by its ID
+  const toastElement = document.getElementById('liveToast');
+
+  // Get the .toast-body element within the toast
+  const toastBodyElement = toastElement.querySelector('.toast-body');
+
+  // Update the content of the .toast-body element
+  toastBodyElement.textContent = message;
+
+  // Show the toast
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+}
