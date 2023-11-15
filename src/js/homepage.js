@@ -289,6 +289,7 @@ function refreshEventListeners(){
   addPostCommentButtonEventListeners()
   addOpenReportButtonEventListeners()
   addReportButtonEventListeners()
+  hasEventListenerInvoked = true
 }
 
 
