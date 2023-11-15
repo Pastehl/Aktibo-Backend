@@ -270,20 +270,20 @@ function selectElementsLoop(e){
 }
 let hasEventListenerInvoked = false
 function refreshEventListeners(){
-  if(hasEventListenerInvoked === true){
-    let likeButtons = document.getElementsByClassName('likeButton');
-    let showCommentButton = document.getElementsByClassName('showCommentButton');
-    let postComment = document.getElementsByClassName('postCommentButton')
-    let openReportBtn = document.getElementsByClassName('bx-dots-vertical')
-    let reportBtn = document.getElementsByClassName('reportBtn')
-    let allVar = [likeButtons,showCommentButton,postComment,openReportBtn,reportBtn,allVar]
-    for (let index = 0; index < allVar.length; index++) {
-      const element = array[index];
-      selectElementsLoop(element)
+  // if(hasEventListenerInvoked === true){
+  //   let likeButtons = document.getElementsByClassName('likeButton');
+  //   let showCommentButton = document.getElementsByClassName('showCommentButton');
+  //   let postComment = document.getElementsByClassName('postCommentButton')
+  //   let openReportBtn = document.getElementsByClassName('bx-dots-vertical')
+  //   let reportBtn = document.getElementsByClassName('reportBtn')
+  //   let allVar = [likeButtons,showCommentButton,postComment,openReportBtn,reportBtn,allVar]
+  //   for (let index = 0; index < allVar.length; index++) {
+  //     const element = array[index];
+  //     selectElementsLoop(element)
       
-    }
+  //   }
     
-  }
+  // }
   addLikeButtonEventListeners();
   addShowCommentButtonEventListeners()
   addPostCommentButtonEventListeners()
