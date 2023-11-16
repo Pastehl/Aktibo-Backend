@@ -67,3 +67,36 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Video URL:', videoValue);
   });
 });
+
+async function createNewExerciseDocument(category, est_time, instructions, intensity, name, reps_duration, sets, tags, video) {
+  // Add a new document with a generated id.
+  const docRef = await addDoc(collection(db, "exercises"), {
+    category: category,
+    est_time: est_time,
+    instructions: instructions,
+    intensity: intensity,
+    name: name,
+    reps_duration: reps_duration,
+    sets: sets,
+    tags: tags,
+    video: video
+
+  });
+  console.log("Document written with ID: ", docRef.id);
+
+}
+
+function toastMessage(message){
+    // Get the toast element by its ID
+  const toastElement = document.getElementById('liveToast');
+
+  // Get the .toast-body element within the toast
+  const toastBodyElement = toastElement.querySelector('.toast-body');
+
+  // Update the content of the .toast-body element
+  toastBodyElement.textContent = message;
+
+  // Show the toast
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+}

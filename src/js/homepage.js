@@ -173,7 +173,7 @@ async function showAllMoments(doc,currentPostNumber){
               </div>
               <div class="comment-box">
                   <div class = "usr-comment-box" style="display: flex; align-items: center; justify-content: space-between;">
-                  <textarea class= "commentTextArea" id="`+textAreaId+`" type="text" placeholder="Leave a comment.." style = "width: 95%; border-radius: 0.4rem; height: 1.5rem; padding-left: 0.5rem;" maxlength="500" ></textarea>
+                  <textarea class= "commentTextArea" id="`+textAreaId+`" type="text" placeholder="Leave a comment.." style = "width: 95%; border-radius: 0.4rem; height: 1.5rem; padding-left: 0.5rem; padding-top: 0.2rem;" maxlength="500" ></textarea>
                   <i id ='`+commenSectionBtn+`' class='bx bx-send postCommentButton data-doc-id ="`+docId+`"'></i>
                   </div>
               </div>
@@ -261,29 +261,37 @@ function addReportButtonEventListeners(){
     });
  }
  }
-function selectElementsLoop(e){
-  for (let index = 0; index < e.length; index++) {
-    const element = e[index];
-    element.removeEventListener('click', function (e) {
-    });
+ function removeEventListener(elements){
+  const removeEventListener = (elements) => {
+  elements.forEach((element) => {
+    // Clone the element to remove all event listeners
+    const clonedElement = element.cloneNode(true);
+    element.parentNode.replaceChild(clonedElement, element);
+
+    // If you have specific event types to remove, you can do something like this:
+    // element.removeEventListener('click', yourClickListenerFunction);
+    // Replace 'click' with the actual event type and provide the function reference accordingly.
+  });
+};
  }
-}
+
 let hasEventListenerInvoked = false
 function refreshEventListeners(){
-  // if(hasEventListenerInvoked === true){
-  //   let likeButtons = document.getElementsByClassName('likeButton');
-  //   let showCommentButton = document.getElementsByClassName('showCommentButton');
-  //   let postComment = document.getElementsByClassName('postCommentButton')
-  //   let openReportBtn = document.getElementsByClassName('bx-dots-vertical')
-  //   let reportBtn = document.getElementsByClassName('reportBtn')
-  //   let allVar = [likeButtons,showCommentButton,postComment,openReportBtn,reportBtn,allVar]
-  //   for (let index = 0; index < allVar.length; index++) {
-  //     const element = array[index];
-  //     selectElementsLoop(element)
+  if(hasEventListenerInvoked === true){
+    console.log("invoked")
+    let likeButtons = document.getElementsByClassName('likeButton');
+    let showCommentButton = document.getElementsByClassName('showCommentButton');
+    let postComment = document.getElementsByClassName('postCommentButton')
+    let openReportBtn = document.getElementsByClassName('bx-dots-vertical')
+    let reportBtn = document.getElementsByClassName('reportBtn')
+    removeEventListener(likeButtons);
+    removeEventListener(showCommentButton);
+    removeEventListener(postComment);
+    removeEventListener(openReportBtn);
+    removeEventListener(reportBtn);
       
-  //   }
+    }
     
-  // }
   addLikeButtonEventListeners();
   addShowCommentButtonEventListeners()
   addPostCommentButtonEventListeners()
@@ -300,6 +308,7 @@ function refreshEventListeners(){
 const container = document.getElementById('main_content');
 
 // Add a scroll event listener to the window
+let lastPost = false
 window.addEventListener('scroll', function () {
   const lastChild = container.lastElementChild;
 
@@ -314,9 +323,14 @@ window.addEventListener('scroll', function () {
     // rect.bottom shows float, so keep that -1
     if (rect.bottom-1 <= window.innerHeight) {
       // You can perform actions here based on the visibility of the last child.
-      showMoreMoments(3)
+      if(lastPost == false){
+              delay(500).then(() => {
+        showMoreMoments(3)
+        refreshEventListeners()
+        lastPost = true
+      });
     }
-            
+      }        
   }
 });
 
@@ -359,7 +373,6 @@ async function showMoreMoments(amount){
 
     console.log(doc.id);
   });
-  refreshEventListeners()
 
   if (documentSnapshots.docs.length > 0){
     lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
@@ -369,13 +382,13 @@ async function showMoreMoments(amount){
     if(hasNotShowedMessage){
       console.log("no more posts")
       toastMessage("No more additional posts.")
-      
       hasNotShowedMessage = false
     }
     
 
   }
-  
+  refreshEventListeners()
+
 }
 
 
@@ -596,4 +609,10 @@ function toastMessage(message){
   // Show the toast
   const toast = new bootstrap.Toast(toastElement);
   toast.show();
+}
+
+function delay(milliseconds) {
+  return new Promise(resolve => {
+    setTimeout(resolve, milliseconds);
+  });
 }
