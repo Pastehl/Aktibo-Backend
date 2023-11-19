@@ -4,6 +4,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
 
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #65a054 #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #65a054;
+    border-radius: 10px;
+    border: 0px solid #ffffff;
+  }
+  
 html {
     font-family: 'Roboto', sans-serif;
     font-size:20px;
@@ -236,7 +258,7 @@ header {
 
         /* Styling for the main content */
 #main_content {
-    height: 100vh;
+    // height: 100vh;
     margin-left: 280px; /* Make sure it matches the sidebar width */
     padding: 20px;
 }
@@ -570,7 +592,7 @@ article {
 }
 
 .usr-profile{
-    padding: 1rem 1rem 0rem 1rem;
+    padding: 0.5rem 1rem 0rem 1rem;
 }
 
 

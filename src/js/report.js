@@ -180,7 +180,8 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,status){
     if(status === "disabled"){
       status = true
       await updateDoc(momentRef, {
-    isDisabled: status
+    isDisabled: status,
+    disableStrikeCount: increment(1)
       })
     }
     await updateDoc(momentRef, {
