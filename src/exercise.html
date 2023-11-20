@@ -1,54 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <script src="https://kit.fontawesome.com/f4143d744b.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <script src="https://kit.fontawesome.com/f4143d744b.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body id="body_home">
-    <div class = "wrapper_home">
-        
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" style="width: 280px; height: 100vh;">
-        <a href="homepage.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <span class="fs-4"><img src="../assets/Aktibo x200.png" alt="Sidebar Logo" width="100%" ></span>
-        </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto" id="navList">
-  <li class="nav-item">
-    <a href="homepage.html" class="nav-link" data-page="homepage">
-      Moments
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="report.html" class="nav-link" data-page="flagged">
-      Flagged
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="exercise.html" class="nav-link active" data-page="exercise">
-      Exercise
-    </a>
-  </li>
-</ul>
-    <hr>
-          <a  id ="logout_btn" href="index.html" class="nav-link active d-flex align-items-center text-center" aria-current="page">
-                Logout
-                </a>
+  <div class="wrapper_home">
+
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" style="width: 280px; height: 100vh;">
+      <a href="homepage.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <span class="fs-4"><img src="../assets/Aktibo x200.png" alt="Sidebar Logo" width="100%"></span>
+      </a>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto" id="navList">
+        <li class="nav-item">
+          <a href="homepage.html" class="nav-link" data-page="homepage">
+            Moments
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="report.html" class="nav-link" data-page="flagged">
+            Flagged
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="exercise.html" class="nav-link active" data-page="exercise">
+            Exercise
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <a id="logout_btn" href="index.html" class="nav-link active d-flex align-items-center text-center"
+        aria-current="page">
+        Logout
+      </a>
+    </div>
+    <div id="main_content" class="main_content">
+      <!-- Button trigger modal -->
+
+      <button type="button" class="btn btn-primary" id="addbtn">
+        New Exercise
+      </button>
+      </a>
+
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close"></span>
+          <h2>Add Exercise</h2>
+          <form id="exerciseForm">
+            <div class="row">
+              <div class="form-column">
+                <div class="form-group">
+                  <label for="exerciseName">Exercise Name:</label>
+                  <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="reps_duration">Repetitions/Duration:</label>
+                  <input type="text" id="reps_duration" name="reps_duration" required>
+                </div>
+                <div class="form-group">
+                  <label for="sets">Sets:</label>
+                  <input type="number" id="sets" name="sets" required>
+                </div>
+                <div class="form-group">
+                  <label for="est_time">Estimated Time (minutes):</label>
+                  <input type="number" id="est_time" name="est_time" required>
+                </div>
+                <div class="form-group">
+                  <label for="category">Category:</label>
+                  <select class="form-control" id="category" name="category">
+                    <option value="upper">Upper Body</option>
+                    <option value="lower">Lower Body</option>
+                    <option value="whole">Whole Body</option>
+                    <!-- Add more categories as needed -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="intensity">Intensity:</label>
+                  <select class="form-control" id="intensity" name="intensity">
+                    <option value="light">Light</option>
+                    <option value="morderate">Moderate</option>
+                    <option value="intense">Intense</option>
+                    <option value="stretching">Stretching</option>
+                    <!-- Add more intensities as needed -->
+                  </select>
+                </div>
+              </div>
+              <div class="form-column">
+                <div class="form-group">
+                  <label for="instructions">Instructions:</label>
+                  <div class="tag-box">
+                    <ul class="tag-list">
+                      <li>1. Each week, you will increase the number of sets and repetitions to gradually increase the intensity of your workouts.<i class='bx bxs-x-circle'></i></li>
+                      <li>2. warmup<i class='bx bxs-x-circle'></i></li>
+                      <input type="text" class ="instruction-input" id="instructions" spellcheck="false">
+                    </ul>
+                  </div>
+                  <div class="ins-details">
+                    <button>Remove All</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- <img src="/assets/tag.svg" alt="icon"> -->
+                  <label for="tags">Tags:</label>
+                  <p>Press enter or add comma after each tag</p>
+                  <div class="tag-box">
+                    <ul class="tag-list">
+                      <li>test exercise<i class='bx bxs-x-circle'></i></li>
+                      <li>warmup<i class='bx bxs-x-circle'></i></li>
+                      <input type="text" class = "tag-input" spellcheck="false">
+                    </ul>
+                  </div>
+                  <div class="details">
+                    <p><span>10</span> tags are remaining</p>
+                    <button>Remove All</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="exerciseName">Video:</label>
+                  <input type="file" id="video" name="video">
+                </div>
+              </div>
+            </div>
+            <div class="button-group">
+              <button type="button" class="cancel-button">Cancel</button>
+              <button type="submit" class="save-button">Save</button>
+            </div>
+          </form>
         </div>
-        <div id="main_content" class="main_content">
-              <!-- Button trigger modal -->
-                <a href="exerciseForms.html">
-                  <button type="button" class="btn btn-primary">
-                    New Exercise
-                  </button>
-                </a>
+      </div>
 
 
 
-        </div>
+    </div>
 </body>
+
 </html>

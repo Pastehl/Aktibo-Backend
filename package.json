@@ -2,7 +2,6 @@
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js --open",
     "build": "webpack --config webpack.prod.js"
-
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
@@ -22,14 +21,13 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.9.0"
-
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
     "chart.js": "^4.4.0",
     "clean-webpack-plugin": "^4.0.0",
-    "firebase": "^10.4.0",
+    "firebase": "^10.6.0",
     "firebase-tools": "^12.5.4"
   }
 }
