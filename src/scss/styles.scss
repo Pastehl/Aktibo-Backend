@@ -64,7 +64,7 @@ ul.nav li.active a {
 
 .main_content {
   flex: 1; /* This makes the main_content div expand to fill the remaining free space */
-  background-color: #e7e6e6;
+  background-color: #F0F7EE;
   padding: 10px;
 }
 
@@ -846,7 +846,8 @@ article {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    right: 1px;
+    margin-top: 35px;
+    margin-right: 10px;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
@@ -870,3 +871,182 @@ article {
     cursor: pointer;
     
 }
+
+
+//modal exercise
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2; /* Sit on top */
+    padding-top: 50px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  /* Modal Styles */
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 1200px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+}
+.form-column {
+    flex: 50%;
+    padding: 10px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    text-align: left;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="url"],
+.form-group input[type="file"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+.button-group {
+    text-align: right;
+}
+
+.cancel-button,
+.save-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.cancel-button {
+    background-color: #ccc;
+    color: #333;
+}
+
+.save-button {
+    background-color: #63A91F;
+    color: #fff;
+}
+
+.tag-box ul{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 7px;
+    margin: 12px 0;
+    border-radius: 5px;
+    border: 1px solid #a6a6a6;
+}
+
+.tag-box ul li{
+    display: flex;
+    color: #333;
+    margin: 4px 3px;
+    list-style: none;
+    border-radius: 5px;
+    background: #F2F2F2;
+    padding: 5px 8px 5px 10px;
+    border: 1px solid #e3e1e1;
+    text-align: left;
+}
+
+.tag-box ul .instruction-input{
+    flex: 1;
+    padding: 5px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+.tag-box ul .tag-input{
+    flex: 1;
+    padding: 5px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+.form-group p{
+    text-align: left;
+}
+.ins-details{
+    padding: 5px;
+    text-align: right;
+}
+.details{
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ins-details button{
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 9px 15px;
+    border-radius: 5px;
+    background: red;
+    transition: background 0.3s ease;
+}
+.details button{
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 9px 15px;
+    border-radius: 5px;
+    background: red;
+    transition: background 0.3s ease;
+}
+
+.tag-box ul li i{
+    display: flex;
+    height: 20px;
+    width: 20px;
+    color: #808080;
+    margin-left: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    background: #dfdfdf;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+  }
