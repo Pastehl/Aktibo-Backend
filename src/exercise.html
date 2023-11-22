@@ -51,96 +51,110 @@
       </button>
       </a>
 
-      <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-          <span class="close"></span>
-          <h2>Add Exercise</h2>
-          <form id="exerciseForm">
-            <div class="row">
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="exerciseName">Exercise Name:</label>
-                  <input type="text" id="name" name="name" required>
+      <div id="myModal" class="modal fade show" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-header">
+            <div class="h5">New Exercise</div>
+            </div>
+            <div class="modal-body">
+              <form id="exerciseForm" onsubmit="return false;" style="display:flex; justify-content: center; align-items: center;">
+              <div class="row" style="width: 80%;">
+                <div class="form-column">
+                  <div class="form-group">
+                    <label for="exerciseName">Exercise Name:</label>
+                    <input type="text" id="name" name="name">
+                  </div>
+                  <div class="form-group">
+                    <label for="reps_duration">Repetitions/Duration:</label>
+                    <input type="text" id="reps_duration" name="reps_duration">
+                  </div>
+                  <div class="form-group">
+                    <label for="sets">Sets:</label>
+                    <input type="number" id="sets" name="sets" >
+                  </div>
+                  <div class="row form-group">
+                  <div class="col">
+                    <label for="est_time_min">Estimated Time (minutes):</label>
+                    <input type="number" id="est_time_min" name="est_time_min">
+                  </div>
+                  <div class="col">
+                   <div class="col">
+                    <label for="est_time_sec">Estimated Time (seconds):</label>
+                    <input type="number" id="est_time_sec" name="est_time_sec">
+                  </div>                 
+                  </div>
+
+                  </div>
+                  <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select class="form-control" id="category" name="category">
+                      <option value="upper">Upper Body</option>
+                      <option value="lower">Lower Body</option>
+                      <option value="whole">Whole Body</option>
+                    
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="intensity">Intensity:</label>
+                    <select class="form-control" id="intensity" name="intensity">
+                      <option value="light">Light</option>
+                      <option value="morderate">Moderate</option>
+                      <option value="intense">Intense</option>
+                      <option value="stretching">Stretching</option>
+                    
+                    </select>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="reps_duration">Repetitions/Duration:</label>
-                  <input type="text" id="reps_duration" name="reps_duration" required>
-                </div>
-                <div class="form-group">
-                  <label for="sets">Sets:</label>
-                  <input type="number" id="sets" name="sets" required>
-                </div>
-                <div class="form-group">
-                  <label for="est_time">Estimated Time (minutes):</label>
-                  <input type="number" id="est_time" name="est_time" required>
-                </div>
-                <div class="form-group">
-                  <label for="category">Category:</label>
-                  <select class="form-control" id="category" name="category">
-                    <option value="upper">Upper Body</option>
-                    <option value="lower">Lower Body</option>
-                    <option value="whole">Whole Body</option>
-                    <!-- Add more categories as needed -->
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="intensity">Intensity:</label>
-                  <select class="form-control" id="intensity" name="intensity">
-                    <option value="light">Light</option>
-                    <option value="morderate">Moderate</option>
-                    <option value="intense">Intense</option>
-                    <option value="stretching">Stretching</option>
-                    <!-- Add more intensities as needed -->
-                  </select>
+                <div class="form-column">
+                  <div class="form-group">
+                    <label for="instructions">Instructions:</label>
+                      <p>Press enter or add comma after each tag</p>
+                    <div class="tag-box">
+                      <ul class="tag-list inst-ul">
+                        <li>1. Each week, you will increase the number of sets and repetitions to gradually increase the intensity of your workouts.<i class='bx bxs-x-circle'></i></li>
+                        <li>2. warmup<i class='bx bxs-x-circle'></i></li>
+                        <input type="text" class ="instruction-input" id="instructions" spellcheck="false">
+                      </ul>
+                    </div>
+                    <div class="ins-details">
+                      <button id="remove-instruction">Remove All</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="tags">Exercise Tags:</label>
+                    <p>Press enter or add comma after each tag</p>
+                    <div class="tag-box">
+                      <ul class="tag-list tags-ul">
+                        <li>test exercise<i class='bx bxs-x-circle'></i></li>
+                        <li>warmup<i class='bx bxs-x-circle'></i></li>
+                        <input type="text" class = "tags-input" id="tags"spellcheck="false">
+                      </ul>
+                    </div>
+                    <div class="details details-tags">
+                      <p><span>10</span> tags are remaining</p>
+                      <div>
+                      <button class="remove-tag" id = "remove-tag">Remove All</button>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exerciseName">Video:</label>
+                    <input type="file" id="video" name="video">
+                  </div>
                 </div>
               </div>
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="instructions">Instructions:</label>
-                  <div class="tag-box">
-                    <ul class="tag-list">
-                      <li>1. Each week, you will increase the number of sets and repetitions to gradually increase the intensity of your workouts.<i class='bx bxs-x-circle'></i></li>
-                      <li>2. warmup<i class='bx bxs-x-circle'></i></li>
-                      <input type="text" class ="instruction-input" id="instructions" spellcheck="false">
-                    </ul>
-                  </div>
-                  <div class="ins-details">
-                    <button>Remove All</button>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <!-- <img src="/assets/tag.svg" alt="icon"> -->
-                  <label for="tags">Tags:</label>
-                  <p>Press enter or add comma after each tag</p>
-                  <div class="tag-box">
-                    <ul class="tag-list">
-                      <li>test exercise<i class='bx bxs-x-circle'></i></li>
-                      <li>warmup<i class='bx bxs-x-circle'></i></li>
-                      <input type="text" class = "tag-input" spellcheck="false">
-                    </ul>
-                  </div>
-                  <div class="details">
-                    <p><span>10</span> tags are remaining</p>
-                    <button>Remove All</button>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="exerciseName">Video:</label>
-                  <input type="file" id="video" name="video">
-                </div>
-              </div>
+            </form>
             </div>
-            <div class="button-group">
-              <button type="button" class="cancel-button">Cancel</button>
-              <button type="submit" class="save-button">Save</button>
+
+            <div class="modal-footer">
+                <button id="cancelBtn" class="btn btn-secondary" type="button" >Cancel</button>
+                <button id="submitBtn" class="btn btn-success"type="button" >Save</button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-
-
-
     </div>
 </body>
 

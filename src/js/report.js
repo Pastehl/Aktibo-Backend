@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment, orderBy, limit, startAfter} from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, increment, orderBy, limit, startAfter, deleteField} from "firebase/firestore";
 import * as bootstrap from 'bootstrap'
 
 const firebaseConfig = {
@@ -185,7 +185,11 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,status){
       })
     }
     await updateDoc(momentRef, {
-    isReported: status
+    isReported: status,
+    reports: deleteField(),
+    reportsCount: deleteField()
+
+    
   })
    dropDownContentContainerDiv.style.display = "none";   
 

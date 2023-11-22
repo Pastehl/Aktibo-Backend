@@ -355,13 +355,20 @@ async function updateLikesCount(docId, num) {
 
 async function flagMomentsPost(docId,dropDownContentContainerDiv){
   const momentRef = doc(db, "moments", docId);
+  onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const momentRef = doc(db, "moments", docId);
     console.log(docId)
     await updateDoc(momentRef, {
-    isReported: true
+      isReported: true,
+      reports: arrayUnion(user.uid),
+      reportsCount: increment(1)
+      })
+    dropDownContentContainerDiv.style.display = "none";
+    }
   })
-   dropDownContentContainerDiv.style.display = "none";
-
 }
+
 
 
  
