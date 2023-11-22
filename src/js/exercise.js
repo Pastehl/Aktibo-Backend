@@ -284,7 +284,7 @@ function validateExercise() {
   // Get the values from the inputs
   var exerciseNameValue = exerciseName.value.trim();
   var repsValue = reps.value.trim(); // Treat reps as a string
-  var setsValue = sets.value.trim(); // Treat sets as a string
+  var setsValue = parseInt(sets.value); // Treat sets as a string
   var minsValue = parseInt(mins.value, 10);
   var secsValue = parseInt(secs.value, 10);
 
@@ -296,8 +296,12 @@ function validateExercise() {
   }
 
   // Check if reps and sets are empty strings
-  if (repsValue === '' || setsValue === '') {
-      showToast('Reps and Sets cannot be empty.');
+  if (repsValue === '' ) {
+      showToast('Repetitions/Duration cannot be empty.');
+      return false;
+  }
+  if (isNaN(setsValue) || setsValue < 0) {
+      showToast('Sets cannot be non-negative numbers.');
       return false;
   }
 
@@ -306,6 +310,47 @@ function validateExercise() {
       showToast('Mins and Secs must be non-negative numbers.');
       return false;
   }
+
+  //check if instructions and exercise tags are empty
+  if(instArr.length === 0) {
+    showToast('No instructions placed');
+     return false;
+
+
+  }
+  if(tags.length === 0) {
+    showToast('Exercise tag is empty');
+    return false;
+  }
+
+
+
+  //Video Validation
+  var fileInput = document.getElementById('video');
+
+  // Set the accept attribute to allow only .mp4 files
+  fileInput.accept = '.mp4';
+  var file = fileInput.files[0]; // Get the selected file
+
+  if (!file) {
+                // No file selected
+                showToast('Please select a file.');
+                return false;
+            }
+  // Add an event listener to check the file size
+  fileInput.addEventListener('change', function() {
+
+    // Check if the file type is .mp4 and the size is within the limit (7 MB)
+    if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
+      console.log('File is valid.');
+      return true
+    } else {
+      // Optionally clear the file input to prevent an invalid file from being selected
+      showToast('Invalid file. Please select a valid video file (MP4) with a size less than or equal to 7 MB.');
+      fileInput.value = '';
+      return false
+    }
+  });
 
   // Clear any previous toast message
   showToast('');
@@ -317,27 +362,29 @@ function validateExercise() {
 }
 
 //Video Validation
-  function configureFileInput() {
-    // Get the file input element by its ID
-    var fileInput = document.getElementById('video');
+function configureFileInput() {
+  // Get the file input element by its ID
+  var fileInput = document.getElementById('video');
 
-    // Set the accept attribute to allow only .mp4 files
-    fileInput.accept = '.mp4';
+  // Set the accept attribute to allow only .mp4 files
+  fileInput.accept = '.mp4';
 
-    // Add an event listener to check the file size
-    fileInput.addEventListener('change', function() {
-      var file = fileInput.files[0]; // Get the selected file
+  // Add an event listener to check the file size
+  fileInput.addEventListener('change', function() {
+    var file = fileInput.files[0]; // Get the selected file
 
-      // Check if the file type is .mp4 and the size is within the limit (7 MB)
-      if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-        console.log('File is valid.');
-      } else {
-        alert('Please select a valid .mp4 file with a size up to 7 MB.');
-        // Optionally clear the file input to prevent an invalid file from being selected
-        fileInput.value = '';
-      }
-    });
-  }
+    // Check if the file type is .mp4 and the size is within the limit (7 MB)
+    if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
+      showToast('File is valid.');
+      return true
+    } else {
+      // Optionally clear the file input to prevent an invalid file from being selected
+      showToast('Invalid file. Please select a valid video file (MP4) with a size less than or equal to 7 MB.');
+      fileInput.value = '';
+      return false
+    }
+  });
+}
 
   
 function showToast(message) {
