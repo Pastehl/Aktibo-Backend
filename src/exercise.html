@@ -10,6 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
+
+
+
+  
 </head>
 
 <body id="body_home">
@@ -44,12 +50,77 @@
       </a>
     </div>
     <div id="main_content" class="main_content">
-      <!-- Button trigger modal -->
+      <!-- exercise list container -->
+      <div class="exercise-list">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <h5 class="card-title"><b>Exercise List</b></h5>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group mb-3 d-flex flex-row">
+              <div class="col-md-4.2">
+                <select class="form-select" aria-label="Default select example" id="exerciseSearchOption">
+                  <option selected value="id">ID</option>
+                  <option value="name">Exercise Name</option>
+                  <option value="category">Category</option>
+                  <option value="intensity">Intensity</option>
+                  <option value="tag">Tags</option>
+                </select>
+              </div>
+  
+              <input type="text" class="form-control" id="productsSearch">
+              <div class="input-group-append"><button class="btn btn-primary" id="productsSearchButton"><i
+                    class="fas fa-search"></i></button></div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+              
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" class="btn btn-primary" id="addbtn">
+                <i class="fa-solid fa-plus"></i> New Exercise
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="">
+              <div class="table-responsive">
+                <table class="table project-list-table table-nowrap align-middle table-hover">
+                  <thead class="table-dark">
+                    <tr>
+                      <th scope="col" style="width:8rem;">Exercise ID</th>
+                      <th scope="col" style="width:12rem;">Exercise Name</th>
+                      <th scope="col" style="width:10rem;">Category</th>
+                      <th scope="col" style="width:10rem;">Intensity</th>
+                      <th scope="col" style="width:10rem;">Tags</th>
+                      <th scope="col" style="width:12rem;">Repetitions/Duration</th>
+                      <th scope="col">Estimated Time(min)</th>
+                      <th scope="col" style="width:10rem;">Instructions</th>
+                      <th scope="col" style="width:10rem;">Video</th>
+                      <th scope="col" style="width:8rem;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="productsListContainer">
+                  
+                    <!-- exercise list content -->
 
-      <button type="button" class="btn btn-primary" id="addbtn">
-        New Exercise
-      </button>
-      </a>
+
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+
+      
 
       <div id="myModal" class="modal fade show" tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
@@ -166,3 +237,4 @@
 </body>
 
 </html>
+
