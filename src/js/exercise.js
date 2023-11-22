@@ -361,31 +361,6 @@ function validateExercise() {
   return true
 }
 
-//Video Validation
-function configureFileInput() {
-  // Get the file input element by its ID
-  var fileInput = document.getElementById('video');
-
-  // Set the accept attribute to allow only .mp4 files
-  fileInput.accept = '.mp4';
-
-  // Add an event listener to check the file size
-  fileInput.addEventListener('change', function() {
-    var file = fileInput.files[0]; // Get the selected file
-
-    // Check if the file type is .mp4 and the size is within the limit (7 MB)
-    if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-      showToast('File is valid.');
-      return true
-    } else {
-      // Optionally clear the file input to prevent an invalid file from being selected
-      showToast('Invalid file. Please select a valid video file (MP4) with a size less than or equal to 7 MB.');
-      fileInput.value = '';
-      return false
-    }
-  });
-}
-
   
 function showToast(message) {
   var toastContainer = document.querySelector('.toast-container');
