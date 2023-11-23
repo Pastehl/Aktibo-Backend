@@ -159,11 +159,12 @@ function removeInst(element, inst){
 
 //Check for enter in Instructions    
 inputInst.addEventListener('keyup', function (e){
-    
+  console.log(e.key+ "*INST*")
   if(e.key === 'Enter'){
-    console.log(e.key+ "*INST*")
+    console.log(e.target.value)
     e.preventDefault()
     inputInst.focus()
+    console.log(inputInst.value)
     addInst(e)
   }
 })
@@ -171,6 +172,7 @@ inputInst.addEventListener('keyup', function (e){
 input.addEventListener("keydown", function (e) {
     console.log(e.key)
     if(e.key === 'Enter'){
+      console.log(e.target.value)
       e.preventDefault()  
       input.focus()
       addTag(e)
@@ -182,8 +184,11 @@ function addInst(e){
     if(e.key == "Enter"){
       console.log("*******")
       console.log(e.target)
+      console.log(e.target.value)
         let inst = e.target.value.replace(/\s+/g, ' ');
+        console.log(typeof(inst))
         console.log(inst)
+
         if(!instArr.includes(inst)){
                 inst.split(',').forEach(inst => {
                   if(inst != ""){
