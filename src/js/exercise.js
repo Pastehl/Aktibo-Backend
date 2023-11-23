@@ -113,6 +113,7 @@ countTags();
 createTag();
 createInst()
 addRemoveTagBtnEventlistener();
+
 function countTags(){
     input.focus();
     tagNumb.innerText = maxTags - tags.length;
@@ -134,6 +135,7 @@ function createInst(){
         let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
         ulInst.insertAdjacentHTML("afterbegin", liInst);
     });
+    inputInst.focus()
 }
 
 
@@ -153,34 +155,20 @@ function removeInst(element, inst){
     element.parentElement.remove();
     console.log(instArr)
 }
-//Add element in Tags []
-function addTag(e){
-  console.log("TAG ADD")
-    if(e.key == "Enter"){
-      console.log(e.target)
-        let tag = e.target.value.replace(/\s+/g, ' ');
-        console.log(tag)
-        if(tag.length > 1 && !tags.includes(tag)){
-            if(tags.length < 10){
-                tag.split(',').forEach(tag => {
-                  if(tag != ""){
-                    tags.push(tag);
-                    createTag();
-                    // Create toast? tag sucessfully added?
-                  }
 
-                });
-            }
-            else{
-              // Create toast maximum number of tags hit
-            }
-        }
-        e.target.value = "";
-    }
-    addRemoveTagBtnEventlistener()
-}
+
+//Check for enter in Instructions    
+inputInst.addEventListener('keyup', function (e){
+    
+  if(e.key === 'Enter'){
+    console.log(e.key+ "*INST*")
+    e.preventDefault()
+    inputInst.focus()
+    addInst(e)
+  }
+})
 //Check for enter in tags
-input.addEventListener("keyup", function (e) {
+input.addEventListener("keydown", function (e) {
     console.log(e.key)
     if(e.key === 'Enter'){
       e.preventDefault()  
@@ -212,16 +200,32 @@ function addInst(e){
         }
         addRemoveTagBtnEventlistener()
 }
-//Check for enter in Instructions    
-inputInst.addEventListener('keyup', function (e){
-    
-  if(e.key === 'Enter'){
-    console.log(e.key+ "*INST*")
-    e.preventDefault()
-    inputInst.focus()
-    addInst(e)
-  }
-})
+//Add element in Tags []
+function addTag(e){
+  console.log("TAG ADD")
+    if(e.key == "Enter"){
+      console.log(e.target)
+        let tag = e.target.value.replace(/\s+/g, ' ');
+        console.log(tag)
+        if(tag.length > 1 && !tags.includes(tag)){
+            if(tags.length < 10){
+                tag.split(',').forEach(tag => {
+                  if(tag != ""){
+                    tags.push(tag);
+                    createTag();
+                    // Create toast? tag sucessfully added?
+                  }
+
+                });
+            }
+            else{
+              // Create toast maximum number of tags hit
+            }
+        }
+        e.target.value = "";
+    }
+    addRemoveTagBtnEventlistener()
+}
 //Remove Btn for Tags
 const removeBtn = document.querySelector(".details button");
 removeBtn.addEventListener("click", () =>{
@@ -333,23 +337,23 @@ function validateExercise() {
   var file = fileInput.files[0]; // Get the selected file
 
   if (!file) {
-                // No file selected
-                showToast('Please select a file.');
-                return false;
-            }
+    // No file selected
+    showToast('Please select a file.');
+    return false;
+  }
   // Add an event listener to check the file size
   fileInput.addEventListener('change', function() {
 
-    // Check if the file type is .mp4 and the size is within the limit (7 MB)
-    if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-      console.log('File is valid.');
-      return true
-    } else {
-      // Optionally clear the file input to prevent an invalid file from being selected
-      showToast('Invalid file. Please select a valid video file (MP4) with a size less than or equal to 7 MB.');
-      fileInput.value = '';
-      return false
-    }
+// Check if the file type is .mp4 and the size is within the limit (7 MB)
+if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
+  console.log('File is valid.');
+  return true
+} else {
+  // Optionally clear the file input to prevent an invalid file from being selected
+  showToast('Invalid file. Please select a valid video file (MP4) with a size less than or equal to 7 MB.');
+  fileInput.value = '';
+  return false
+}
   });
 
   // Clear any previous toast message
