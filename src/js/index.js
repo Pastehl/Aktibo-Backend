@@ -1,6 +1,22 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider} from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc,
+  increment,
+  orderBy,
+  limit,
+  startAfter,
+  arrayUnion,
+  arrayRemove
+} from "firebase/firestore";
 import '../scss/styles.scss';
 
 const firebaseConfig = {
@@ -15,22 +31,33 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db = getFirestore(app);
 
 const provider = new GoogleAuthProvider();
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/auth.user
+    const uid = user.uid;
+    const userRef = collection(db, "users");
+    const docRef = await getDocs(userRef)
+    docRef.forEach((doc) => {
+    onAuthStateChanged(auth, (user) => {
+    if(user.isAdmin){
       window.location.href = "homepage.html";
-      // ...
-    } else {
-      // User is signed out
-      // ...
-      
-    }
+      }
+    });
+    window.location.href = "dashboard.html";
+
   });
+  } 
+  else {
+    // User is signed out
+    // ...
+    
+  }
+});
 
 let googleLoginButton = document.getElementById("googleLoginButton");
 googleLoginButton.addEventListener("click", function(){

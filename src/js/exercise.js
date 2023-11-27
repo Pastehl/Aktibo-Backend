@@ -65,9 +65,18 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 
 //modal
 var modal =new bootstrap.Modal('#myModal',{keyboard:false});
+console.log(modal)
+var videomodal = new bootstrap.Modal('#videoModal');
+console.log(videomodal)
 var openModalBtn = document.getElementById("addbtn");
 var cancelButton = document.getElementById("cancelBtn");
 var submitBtn = document.getElementById('submitBtn')
+var videoModalSrc = document.getElementById('videoModalBody')
+var closeVideoBtn = document.getElementById('closeVideoBtn')
+var searchOptionDropdown = document.getElementById('exerciseSearchOption')
+var exerciseSearchBtn = document.getElementById('exerciseSearchButton')
+var exerciseTextField = document.getElementById('exerciseTextField')
+
 
 
 openModalBtn.addEventListener('click',function(){
@@ -88,13 +97,40 @@ submitBtn.addEventListener('click',function (){
 
 
 })
+closeVideoBtn.addEventListener('click', function (){
+  videomodal.hide()
+})
+exerciseSearchBtn.addEventListener('click', function (){
+  var selectedValue = searchOptionDropdown.value;
 
+  if(selectedValue == "id"){
+    sortBySearchId(exerciseTextField.value)
+  }
+  if(selectedValue == "name"){
+    sortBySearchName(exerciseTextField.value)
+  }
+  if(selectedValue == "category"){
+    sortByCategory()
+  }
+  if(selectedValue == "intensity"){
+    sortByIntensity()
+  }
+  if(selectedValue == "tags"){
+    sortByTags(exerciseTextField.value)
+  } 
+  exerciseTextField.value = ""
+ 
+})
+// editExerciseBtn.addEventListener('click', function() {
+
+// })
 //Instructions Variables
 const ulInst = document.querySelector('.inst-ul')
 var inputInst = document.getElementById('instructions')
-console.log(ulInst)
-console.log(inputInst)
-console.log('-----------------')
+
+// console.log(ulInst)
+// console.log(inputInst)
+// console.log('-----------------')
 let instArr = ['do 1', 'do 2']
 
 //Tags Variables
@@ -102,9 +138,9 @@ const ul = document.querySelector(".tags-ul")
 var input = document.getElementById("tags")
 var tagNumb = document.querySelector(".details-tags span");
 
-console.log(ul)
-console.log(input)
-console.log(tagNumb)
+// console.log(ul)
+// console.log(input)
+// console.log(tagNumb)
 
 let maxTags = 10,
 tags = ["coding", "nepal"];
@@ -122,7 +158,7 @@ function countTags(){
 function createTag(){
     ul.querySelectorAll("li").forEach(li => li.remove());
     tags.slice().reverse().forEach(tag =>{
-      console.log(tag)
+      //console.log(tag)
         let liTag = `<li>${tag} <i class="bx bxs-x-circle tagClose" ></i></li>`;
         ul.insertAdjacentHTML("afterbegin", liTag);
     });
@@ -131,7 +167,7 @@ function createTag(){
 function createInst(){
     ulInst.querySelectorAll("li").forEach(li => li.remove());
     instArr.slice().reverse().forEach(inst =>{
-      console.log(inst)
+      //console.log(inst)
         let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
         ulInst.insertAdjacentHTML("afterbegin", liInst);
     });
@@ -282,7 +318,6 @@ function removeAllListenersFromClass(elements) {
 
 //Text Field Validation
 function validateExercise() {
-  // Get the input elements and error message span
 //TextFields
   var exerciseName = document.getElementById('name')
   var reps = document.getElementById('reps_duration')
@@ -381,4 +416,246 @@ function showToast(message) {
   // Show the toast
   var toast = new bootstrap.Toast(document.getElementById('liveToast'));
   toast.show();
+}
+function showExercise(doc,exerciseListContainer){
+  var exerciseID = doc.id
+  var exerciseName = doc.data().name
+  var category = doc.data().category
+  var intensity = doc.data().intensity
+  var tags = doc.data().tags
+  var reps_duration = doc.data().reps_duration
+  var est_time_min = doc.data().est_time_min
+  var est_time_sec = doc.data().est_time_sec
+  var instructions = doc.data().instructions
+  let instructionsStr = ""
+  let est_time = doc.data().est_time
+  //var video = doc.data().video
+  if(est_time == undefined && est_time_min.length > 0){
+    est_time = est_time_min + " mins"
+  }
+  if(est_time == undefined && est_time_sec.length > 0){
+    est_time = est_time_sec + " secs"
+  } 
+  if(instructions!= null || instructions != undefined)
+    for (let index = 0; index < instructions.length; index++) {
+      const element = instructions[index];
+      instructionsStr += element
+    }
+
+  exerciseListContainer.innerHTML+=
+  `
+  <tr style="background-color: #ffffff;">
+    <th scope="col" style="width:8rem;">`+exerciseID+`</th>
+    <th scope="col" style="width:12rem;">`+exerciseName+`</th>
+    <th scope="col" style="width:10rem;">`+category+`</th>
+    <th scope="col" style="width:10rem;">`+intensity+`</th>
+    <th scope="col" style="width:10rem;">`+tags+`</th>
+    <th scope="col" style="width:12rem;">`+reps_duration+`</th>
+    <th scope="col">`+est_time+`</th>
+    <th scope="col" style="width:10rem;">`+instructionsStr+`</th>
+    <th scope="col" style="width:3rem;"><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id ="`+doc.id+`"><i class='bx bx-video bx-sm'></i></button></th>
+    <th scope="col" style="width:8rem;"><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id ="`+doc.id+`"><i class='bx bx-edit bx-sm'></i></button></th>
+  </tr>
+  `
+
+addOpenVideoPlayerEventListener()
+addEditExercisesEventListener()
+}
+getExercises()
+async function getExercises(){
+const q = query(collection(db, "exercises"))//, orderBy("", "asc"));
+  const querySnapshot = await getDocs(q);
+  let exerciseListContainer = document.getElementById('exerciseListContainer')
+  exerciseListContainer.innerHTML = ""
+  querySnapshot.forEach((doc) =>{
+    showExercise(doc,exerciseListContainer)
+  })
+}
+
+function addOpenVideoPlayerEventListener(){
+  var vidPlayerBtn = document.getElementsByClassName('videoPlayerBtn')
+  removeAllListenersFromClass(vidPlayerBtn)
+
+  for (let index = 0; index < vidPlayerBtn.length; index++) {
+    const element = vidPlayerBtn[index];
+    element.addEventListener('click', function (e) {
+      addExerciseVideoSrc(element.dataset.docId)
+      videomodal.show()
+
+    });
+  }
+}
+function addEditExercisesEventListener(){
+  var vidPlayerBtn = document.getElementsByClassName('editExerciseBtn')
+  removeAllListenersFromClass(vidPlayerBtn)
+
+  for (let index = 0; index < vidPlayerBtn.length; index++) {
+    const element = vidPlayerBtn[index];
+    element.addEventListener('click', function (e) {
+      //fill in the values
+      updateExercises(element.dataset.docId)
+      modal.show()
+
+    });
+  }
+}
+function updateExercises(docId){
+  console.log("executed")
+  clearModal()
+  fillModal(docId)
+}
+
+async function fillModal(docId){
+  var exerciseName = document.getElementById('name')
+  var reps = document.getElementById('reps_duration')
+  var sets = document.getElementById('sets')
+  var est_t = document.getElementById('est_time')
+  //var secs = document.getElementById('est_time_sec')
+  var category = document.getElementById('category')
+  var intensity = document.getElementById('intensity')
+  var heading = document.getElementById('heading')
+  var video = document.getElementById('video')
+
+
+  const docRef = doc(db, "exercises", docId);
+  const docSnap = await getDoc(docRef);  
+
+  //input values
+  exerciseName.value = docSnap.data().name;
+  exerciseName.disabled = true
+  reps.value = docSnap.data().reps_duration;
+  sets.value = docSnap.data().sets;
+  est_t.value = docSnap.data().est_time;
+  category.selectedIndex = 0;
+  for (var i = 0; i < category.options.length; i++) {
+    if (category.options[i].value === docSnap.data().category) {
+        // Set the selectedIndex
+        categorySelect.selectedIndex = i;
+        break;
+    }
+  }
+  intensity.selectedIndex = 0;
+    for (var i = 0; i < intensity.options.length; i++) {
+    if (intensity.options[i].value === docSnap.data().intensity) {
+        // Set the selectedIndex
+        categorySelect.selectedIndex = i;
+        break;
+    }
+  }
+  heading.innerHTML = 'Edit Exercise';
+
+  //video source should be a text box
+  video.type = 'text';
+  video.id = 'videoText';
+  video.name = 'videoText';
+  video.value = docSnap.data().video;
+}
+
+function clearModal(){
+  var exerciseName = document.getElementById('name')
+  var reps = document.getElementById('reps_duration')
+  var sets = document.getElementById('sets')
+  var est_t = document.getElementById('est_time')
+  // var mins = document.getElementById('est_time_min')
+  // var secs = document.getElementById('est_time_sec')
+  var category = document.getElementById('category')
+  var intensity = document.getElementById('intensity')
+  var heading = document.getElementById('heading')
+  var video = document.getElementById('video')
+
+  // Clearing input values
+  exerciseName.value = '';
+  exerciseName.disabled = false
+
+  reps.value = '';
+  sets.value = 0;
+  // mins.value = 0;
+  // secs.value = 0;
+  est_t.value = ''
+  category.selectedIndex = 0;
+  intensity.selectedIndex = 0;
+  heading.innerHTML  = 'New Exercise';
+
+  // Clearing video source
+  video.type = 'file';
+  video.id = 'video';
+  video.name = 'video';
+  video.src = '';
+
+}
+
+async function addExerciseVideoSrc(docId){
+  //get the doc id -> get doc src -> update the modal -> close it src = ""
+  const docRef = doc(db, "exercises", docId);
+  const docSnap = await getDoc(docRef);
+  let src = docSnap.data().video
+  console.log(src)
+  console.log(videoModalSrc.src)
+  if(src.length > 0){
+    
+  }
+  videoModalSrc.src = src
+}
+
+async function sortByCategory(){
+ const q = query(collection(db, "exercises"), orderBy("category","asc"))
+  let exerciseListContainer = document.getElementById('exerciseListContainer')
+  exerciseListContainer.innerHTML = ""
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) =>{
+    showExercise(doc,exerciseListContainer)
+  })
+
+}
+
+async function sortByIntensity(){
+ const q = query(collection(db, "exercises"), orderBy("intensity","asc"))
+  let exerciseListContainer = document.getElementById('exerciseListContainer')
+  exerciseListContainer.innerHTML = ""
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) =>{
+    showExercise(doc,exerciseListContainer)
+  })
+
+}
+
+async function sortByTags(tag){
+ const q = query(collection(db, "exercises"), where("tags", "array-contains-any", [tag]))
+  let exerciseListContainer = document.getElementById('exerciseListContainer')
+  exerciseListContainer.innerHTML = ""
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) =>{
+    showExercise(doc,exerciseListContainer)
+  })
+
+}
+
+async function sortBySearchName(tag){
+  const q = query(collection(db, "exercises"), where("name", "==", tag))
+  let exerciseListContainer = document.getElementById('exerciseListContainer')
+  exerciseListContainer.innerHTML = ""
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) =>{
+    showExercise(doc,exerciseListContainer)
+  })
+
+}
+
+async function sortBySearchId(tag){
+  let exerciseListContainer = document.getElementById('exerciseListContainer')
+  exerciseListContainer.innerHTML = ""
+  if(tag){
+    const docRef = doc(db, "exercises", tag);
+    const docSnap = await getDoc(docRef);
+    showExercise(docSnap,exerciseListContainer)
+  }
+  else{
+    const q = query(collection(db, "exercises", tag))
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) =>{
+    showExercise(doc,exerciseListContainer)
+  })
+  }
+
+
 }

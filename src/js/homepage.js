@@ -146,11 +146,21 @@ function showMoment(doc, uid) {
   var caption = doc.data().caption;
   var likes = doc.data().likes;
   var isDisabled = doc.data().isDisabled;
+  var reports = doc.data().reports;
   var commentsList = doc.data().commentsList;
   var comments = doc.data().comments;
   var usersLiked = doc.data().usersLiked;
-
+  var reportCount = doc.data().reportsCount
   let heartStyle = "bx-heart";
+
+
+  // if(reportCount >= 5){
+  //   return
+  // }
+  // hides report Un comment in regular user  
+  // if(reports.includes(uid)){
+  //   return
+  // }
 
   if (isDisabled) {
     // don't show post if disabled
@@ -211,7 +221,14 @@ function showMoment(doc, uid) {
         <div class="dropdown-content" id="dropdown-content">
           <ul>
             <div>
-              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Report</li>
+              <p>Report Reason:</p>
+              <hr>
+              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Hate Speech or Harassment</li>
+              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Graphic or Violent Content</li>
+              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Misinformation or Fake News</li>
+              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Privacy Violation</li>
+              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Bullying or Cyberbullying</li>
+              <li class="reportBtn" id="`+`"data-doc-id ="`+doc.id+`">Others</li>
             </div>
           </ul>
         </div>
@@ -357,8 +374,13 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv){
   const momentRef = doc(db, "moments", docId);
   onAuthStateChanged(auth, async (user) => {
   if (user) {
-    const momentRef = doc(db, "moments", docId);
-    console.log(docId)
+    const docRef = await getDoc(momentRef)    
+    console.log(docRef)
+
+    if(docRef.data().reports.includes(user.uid)){
+      console.log("already reported")
+      return
+    }
     await updateDoc(momentRef, {
       isReported: true,
       reports: arrayUnion(user.uid),
