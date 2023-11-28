@@ -53,6 +53,7 @@ onAuthStateChanged(auth, async (user) => {
   });
   } 
   else {
+
     // User is signed out
     // ...
     

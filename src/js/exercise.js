@@ -58,11 +58,6 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     });
 });
 
-// document.getElementById('newExerciseButton').addEventListener('click',function(){
-//     window.location.href = "exerciseForms.html";
-
-// })
-
 //modal
 var modal =new bootstrap.Modal('#myModal',{keyboard:false});
 console.log(modal)
@@ -80,13 +75,15 @@ var exerciseTextField = document.getElementById('exerciseTextField')
 
 
 openModalBtn.addEventListener('click',function(){
-    console.log('open')
+    clearModal()
+    addFileUploadStateEventListener()
     modal.show()
 }) 
 
 cancelButton.onclick = function () {
   console.log('close cancel')
   modal.hide()
+  clearModal()
 
 }
 
@@ -143,7 +140,7 @@ var tagNumb = document.querySelector(".details-tags span");
 // console.log(tagNumb)
 
 let maxTags = 10,
-tags = ["coding", "nepal"];
+tags = ["test1", "test2"];
 
 countTags();
 createTag();
@@ -386,7 +383,6 @@ function validateExercise() {
 
 // Check if the file type is .mp4 and the size is within the limit (7 MB)
 if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-  console.log('File is valid.');
   return true
 } else {
   // Optionally clear the file input to prevent an invalid file from being selected
@@ -405,6 +401,25 @@ if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
   return true
 }
 
+function addFileUploadStateEventListener(){
+  var fileInput = document.getElementById('video');
+
+  // Set the accept attribute to allow only .mp4 files
+  fileInput.accept = '.mp4';
+  var file = fileInput.files[0]; // Get the selected file
+
+  // Add an event listener to check the file size
+  removeAllListenersFromClass(fileInput)
+  fileInput.addEventListener('change', function() {
+
+// Check if the file type is .mp4 and the size is within the limit (7 MB)
+if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
+} else {
+  // Optionally clear the file input to prevent an invalid file from being selected
+  fileInput.value = '';
+}
+  });
+}
   
 function showToast(message) {
   var toastContainer = document.querySelector('.toast-container');
@@ -515,7 +530,7 @@ async function fillModal(docId){
   var intensity = document.getElementById('intensity')
   var heading = document.getElementById('heading')
   var video = document.getElementById('video')
-
+  
 
   const docRef = doc(db, "exercises", docId);
   const docSnap = await getDoc(docRef);  
@@ -544,11 +559,19 @@ async function fillModal(docId){
   }
   heading.innerHTML = 'Edit Exercise';
 
+  instArr = docSnap.data().instructions
+  tags = docSnap.data().tags
+
   //video source should be a text box
   video.type = 'text';
   video.id = 'videoText';
   video.name = 'videoText';
   video.value = docSnap.data().video;
+
+  countTags();
+  createTag();
+  createInst()
+  addRemoveTagBtnEventlistener();
 }
 
 function clearModal(){
@@ -556,12 +579,13 @@ function clearModal(){
   var reps = document.getElementById('reps_duration')
   var sets = document.getElementById('sets')
   var est_t = document.getElementById('est_time')
-  // var mins = document.getElementById('est_time_min')
-  // var secs = document.getElementById('est_time_sec')
   var category = document.getElementById('category')
   var intensity = document.getElementById('intensity')
   var heading = document.getElementById('heading')
-  var video = document.getElementById('video')
+  var videoText = document.getElementById('video')
+  if(videoText == null){
+    videoText = document.getElementById('videoText')
+  }
 
   // Clearing input values
   exerciseName.value = '';
@@ -569,18 +593,27 @@ function clearModal(){
 
   reps.value = '';
   sets.value = 0;
-  // mins.value = 0;
-  // secs.value = 0;
   est_t.value = ''
   category.selectedIndex = 0;
   intensity.selectedIndex = 0;
   heading.innerHTML  = 'New Exercise';
 
+  // Clearing Tags and Instructions
+  instArr = ['do 1', 'do 2']
+  tags = ["test1", "test2"];
+
   // Clearing video source
-  video.type = 'file';
-  video.id = 'video';
-  video.name = 'video';
-  video.src = '';
+
+  videoText.type = 'file';
+  videoText.id = 'video';
+  videoText.name = 'video';
+  
+  // video.replaceChild(newFileInput, video);
+  
+  countTags();
+  createTag();
+  createInst()
+  addRemoveTagBtnEventlistener();
 
 }
 

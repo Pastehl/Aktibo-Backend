@@ -36,11 +36,30 @@ const auth = getAuth();
 const db = getFirestore(app);
 
 // redirect user if user is NOT signed in
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // User is signed in
-  } else {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/auth.user
+    const uid = user.uid;
+    const userRef = collection(db, "users");
+    const docRef = await getDocs(userRef)
+    docRef.forEach((doc) => {
+    onAuthStateChanged(auth, (user) => {
+
+    if(doc.data().isAdmin){
+      window.location.href = "homepage.html";
+      }
+    });
+    window.location.href = "dashboard.html";
+
+  });
+  } 
+  else {
     window.location.href = "index.html";
+
+    // User is signed out
+    // ...
+    
   }
 });
 
