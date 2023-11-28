@@ -378,12 +378,17 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
   onAuthStateChanged(auth, async (user) => {
   if (user) {
     const docRef = await getDoc(momentRef)    
-    console.log()
-
-    if(docRef.data().reports!= undefined && docRef.data().reports.includes(user.uid)){
-      console.log("already reported")
-      return
+    let arrObj = docRef.data().reports
+    if(arrObj!= undefined ){
+    for (let index = 0; index < arrObj.length; index++) {
+      const element = arrObj[index].userId;
+        if(element == user.uid){
+        console.log("already reported")
+        return
+        }
+      }      
     }
+
     const userColRef = doc(db, "users", user.uid)
     const userRef = await getDoc(userColRef)
     const myMap = {
