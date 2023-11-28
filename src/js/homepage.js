@@ -15,7 +15,9 @@ import {
   limit,
   startAfter,
   arrayUnion,
-  arrayRemove
+  arrayRemove,
+  serverTimestamp,
+  Timestamp  
 } from "firebase/firestore";
 import * as bootstrap from "bootstrap";
 import "../scss/styles.scss";
@@ -310,8 +312,9 @@ function addReportPostButtonEventListener(){
     const element = reportBtn[index];
     element.addEventListener('click', function (e) {
       console.log(element.dataset.docId)
+      console.log(element.innerHTML)
       console.log(element.parentNode.parentNode)
-      flagMomentsPost(element.dataset.docId,element.parentNode.parentNode)
+      flagMomentsPost(element.dataset.docId,element.parentNode.parentNode,element.innerHTML)
       toastMessage("Post has been reported.")
     });
  }
@@ -370,22 +373,33 @@ async function updateLikesCount(docId, num) {
   })
 }
 
-async function flagMomentsPost(docId,dropDownContentContainerDiv){
+async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
   const momentRef = doc(db, "moments", docId);
   onAuthStateChanged(auth, async (user) => {
   if (user) {
     const docRef = await getDoc(momentRef)    
-    console.log(docRef)
+    console.log()
 
-    if(docRef.data().reports.includes(user.uid)){
+    if(docRef.data().reports!= undefined && docRef.data().reports.includes(user.uid)){
       console.log("already reported")
       return
     }
+    const userColRef = doc(db, "users", user.uid)
+    const userRef = await getDoc(userColRef)
+    const myMap = {
+      time: Timestamp.now(),
+      userId: user.uid,
+      userImageSrc: userRef.data().userImage,
+      username: userRef.data().username,
+      violation: reason
+    }
+
+    console.log(myMap)
     await updateDoc(momentRef, {
       isReported: true,
-      reports: arrayUnion(user.uid),
+      reports: arrayUnion(myMap),
       reportsCount: increment(1)
-      })
+    })
     dropDownContentContainerDiv.style.display = "none";
     }
   })
