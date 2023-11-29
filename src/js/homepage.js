@@ -68,9 +68,8 @@ window.addEventListener("scroll", async function () {
   const lastChild = main_content.lastElementChild;
   if (lastChild) {
     const rect = lastChild.getBoundingClientRect();
-
     // rect.bottom shows float, so keep that -1
-    if (rect.bottom - 1 <= window.innerHeight) {
+    if (rect.bottom - 2 <= window.innerHeight) {
       if (!canLoadMoreData) {
         // still getting data
         return;
