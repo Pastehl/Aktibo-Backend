@@ -861,23 +861,7 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
 //   });
 // }
 
-// async function createNewExerciseDocument(category, est_time, instructions, intensity, name, reps_duration, sets, tags, video) {
-//   // Add a new document with a generated id.
-//   const docRef = await addDoc(collection(db, "exercises"), {
-//     category: category,
-//     est_time: est_time,
-//     instructions: instructions,
-//     intensity: intensity,
-//     name: name,
-//     reps_duration: reps_duration,
-//     sets: sets,
-//     tags: tags,
-//     video: video
 
-//   });
-//   console.log("Document written with ID: ", docRef.id);
-
-// }
 
 
 

@@ -378,25 +378,7 @@ function validateExercise() {
     showToast('Please select a file.');
     return false;
   }
-  // Add an event listener to check the file size
-  fileInput.addEventListener('change', function() {
-
-// Check if the file type is .mp4 and the size is within the limit (7 MB)
-if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-  return true
-} else {
-  // Optionally clear the file input to prevent an invalid file from being selected
-  showToast('Invalid file. Please select a valid video file (MP4) with a size less than or equal to 7 MB.');
-  fileInput.value = '';
-  return false
-}
-  });
-
-  // Clear any previous toast message
-  showToast('');
-
-  // You can do further processing here (e.g., submit the form or perform other actions)
-  // For this example, we're just logging a success message
+  
   console.log('Exercise is valid:', exerciseNameValue, repsValue, setsValue, minsValue, secsValue);
   return true
 }
@@ -406,19 +388,22 @@ function addFileUploadStateEventListener(){
 
   // Set the accept attribute to allow only .mp4 files
   fileInput.accept = '.mp4';
-  var file = fileInput.files[0]; // Get the selected file
 
   // Add an event listener to check the file size
   removeAllListenersFromClass(fileInput)
   fileInput.addEventListener('change', function() {
+    var file = fileInput.files[0];
+    // Check if the file type is .mp4 and the size is within the limit (7 MB)
+    if (file != undefined && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
 
-// Check if the file type is .mp4 and the size is within the limit (7 MB)
-if (file && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-} else {
-  // Optionally clear the file input to prevent an invalid file from being selected
-  fileInput.value = '';
-}
-  });
+    } 
+  
+    else {
+      // Optionally clear the file input to prevent an invalid file from being selected
+      showToast("Wrong File Type or File Size.")
+      fileInput.value = '';
+  }
+    });
 }
   
 function showToast(message) {
@@ -691,4 +676,31 @@ async function sortBySearchId(tag){
   }
 
 
+}
+
+async function createNewExerciseDocument(id, category, est_time, instructions, intensity, name, reps_duration, sets, tags, video) {
+  try {
+    // Add a new document with a generated id.
+    const docRef = await setDoc(collection(db, "exercises", id), {
+      category: category,
+      est_time: est_time,
+      instructions: instructions,
+      intensity: intensity,
+      name: name,
+      reps_duration: reps_duration,
+      sets: sets,
+      tags: tags,
+      video: video
+    });
+
+    console.log("Document written with ID: ", docRef.id);
+  } catch (error) {
+    if (error.code === 'already-exists') {
+      // Handle the case where the document with the specified ID already exists
+      console.log("Document with ID already exists. Handle accordingly.");
+    } else {
+      // Handle other errors
+      console.error("Error creating document:", error);
+    }
+  }
 }
