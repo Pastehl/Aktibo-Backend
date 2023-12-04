@@ -37,30 +37,30 @@ const db = getFirestore(app);
 
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/auth.user
-    const uid = user.uid;
-    const userRef = collection(db, "users");
-    const docRef = await getDocs(userRef)
-    docRef.forEach((doc) => {
-    onAuthStateChanged(auth, (user) => {
+  // if (user) {
+  //   // User is signed in, see docs for a list of available properties
+  //   // https://firebase.google.com/docs/reference/js/auth.user
+  //   const uid = user.uid;
+  //   const userRef = collection(db, "users");
+  //   const docRef = await getDocs(userRef)
+  //   docRef.forEach((doc) => {
+  //   onAuthStateChanged(auth, (user) => {
 
-    if(doc.data().isAdmin){
-      window.location.href = "homepage.html";
-      }
-    });
-    window.location.href = "dashboard.html";
+  //   if(doc.data().isAdmin){
+  //     window.location.href = "homepage.html";
+  //     }
+  //   });
+  //   window.location.href = "dashboard.html";
 
-  });
-  } 
-  else {
-    window.location.href = "index.html";
+  // });
+  // } 
+  // else {
+  //   window.location.href = "index.html";
 
-    // User is signed out
-    // ...
+  //   // User is signed out
+  //   // ...
     
-  }
+  // }
 });
 
 // logout
@@ -318,4 +318,21 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     })
 
     updateCalendar();
+    // var ctx = document.getElementById('myChart').getContext('2d');
 
+    // // Define your data
+    // var data = {
+    //     labels: ['January', 'February', 'March', 'April', 'May'],
+    //     datasets: [{
+    //         label: 'My First Dataset',
+    //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    //         borderColor: 'rgba(75, 192, 192, 1)',
+    //         data: [65, 59, 80, 81, 56]
+    //     }]
+    // };
+
+    // // Create the chart
+    // var myChart = new Chart(ctx, {
+    //     type: 'bar', // Specify the chart type (bar, line, pie, etc.)
+    //     data: data
+    // });
