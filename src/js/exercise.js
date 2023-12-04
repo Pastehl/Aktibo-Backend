@@ -89,6 +89,7 @@ cancelButton.onclick = function () {
 
 submitBtn.addEventListener('click',function (){
   if(validateExercise()){
+    createNewExerciseDocument()
     modal.hide()
   }
 
@@ -319,15 +320,13 @@ function validateExercise() {
   var exerciseName = document.getElementById('name')
   var reps = document.getElementById('reps_duration')
   var sets = document.getElementById('sets')
-  var mins = document.getElementById('est_time_min')
-  var secs = document.getElementById('est_time_sec')
+  var est_time = document.getElementById('est_time')
 
   // Get the values from the inputs
   var exerciseNameValue = exerciseName.value.trim();
   var repsValue = reps.value.trim(); // Treat reps as a string
   var setsValue = parseInt(sets.value); // Treat sets as a string
-  var minsValue = parseInt(mins.value, 10);
-  var secsValue = parseInt(secs.value, 10);
+  var est_timeValue = parseInt(est_time.value, 10);
 
   // Check if exerciseName is empty
   if (exerciseNameValue === '') {
@@ -341,14 +340,14 @@ function validateExercise() {
       showToast('Repetitions/Duration cannot be empty.');
       return false;
   }
-  if (isNaN(setsValue) || setsValue < 0) {
-      showToast('Sets cannot be non-negative numbers.');
+  if (isNaN(setsValue) || setsValue <= 0) {
+      showToast('Sets cannot be 0 or non-negative numbers.');
       return false;
   }
 
   // Check if mins and secs are non-negative numbers
-  if (isNaN(minsValue) || isNaN(secsValue) || minsValue < 0 || secsValue < 0) {
-      showToast('Mins and Secs must be non-negative numbers.');
+  if (est_time === '') {
+      showToast('Estimated Time cannot be empty.');
       return false;
   }
 
@@ -379,10 +378,8 @@ function validateExercise() {
     return false;
   }
   
-  console.log('Exercise is valid:', exerciseNameValue, repsValue, setsValue, minsValue, secsValue);
   return true
 }
-
 function addFileUploadStateEventListener(){
   var fileInput = document.getElementById('video');
 
@@ -677,30 +674,41 @@ async function sortBySearchId(tag){
 
 
 }
+// id, category, est_time, instructions, intensity, exerciseName, reps_duration, sets, tags, video
+async function createNewExerciseDocument() {
+  var exerciseName = document.getElementById('name').value
+  var reps = document.getElementById('reps_duration').value
+  var sets = document.getElementById('sets').value
+  var est_time = document.getElementById('est_time').value
+  var category = document.getElementById('category').value
+  var intensity = document.getElementById('intensity').value
+  var fileInput = document.getElementById('video')
+  var file = fileInput.files[0]
 
-async function createNewExerciseDocument(id, category, est_time, instructions, intensity, name, reps_duration, sets, tags, video) {
-  try {
-    // Add a new document with a generated id.
-    const docRef = await setDoc(collection(db, "exercises", id), {
-      category: category,
-      est_time: est_time,
-      instructions: instructions,
-      intensity: intensity,
-      name: name,
-      reps_duration: reps_duration,
-      sets: sets,
-      tags: tags,
-      video: video
-    });
 
-    console.log("Document written with ID: ", docRef.id);
-  } catch (error) {
-    if (error.code === 'already-exists') {
-      // Handle the case where the document with the specified ID already exists
-      console.log("Document with ID already exists. Handle accordingly.");
-    } else {
-      // Handle other errors
-      console.error("Error creating document:", error);
-    }
-  }
+  console.log("Created Document",exerciseName,reps,sets,est_time,category,intensity,file)
+  // try {
+  //   // Add a new document with a generated id.
+  //   const docRef = await setDoc(collection(db, "exercises", id), {
+  //     category: category,
+  //     est_time: est_time,
+  //     instructions: instructions,
+  //     intensity: intensity,
+  //     name: name,
+  //     reps_duration: reps_duration,
+  //     sets: sets,
+  //     tags: tags,
+  //     video: video
+  //   });
+
+  //   console.log("Document written with ID: ", docRef.id);
+  // } catch (error) {
+  //   if (error.code === 'already-exists') {
+  //     // Handle the case where the document with the specified ID already exists
+  //     console.log("Document with ID already exists. Handle accordingly.");
+  //   } else {
+  //     // Handle other errors
+  //     console.error("Error creating document:", error);
+  //   }
+  // }
 }
