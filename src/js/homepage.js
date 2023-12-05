@@ -38,11 +38,28 @@ const auth = getAuth();
 const db = getFirestore(app);
 
 // redirect user if user is NOT signed in
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     // User is signed in
+    const uid = user.uid;
+    const userRef = collection(db, "users");
+    const docRef = await getDoc(doc(userRef, uid));
+
+    if (docRef.exists()) {
+      const isAdmin = docRef.data().isAdmin;
+
+      if (!isAdmin) {
+        window.location.href = "dashboard.html";
+      }
+    } else {
+      // Handle the case where the user document doesn't exist
+      console.error("User document does not exist");
+      // You may want to redirect or handle this case appropriately
+    }
   } else {
+    // User is signed out
     window.location.href = "index.html";
+    // Handle signed-out state if needed
   }
 });
 
@@ -398,9 +415,7 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
       violation: reason
     }
 
-    console.log(myMap)
     await updateDoc(momentRef, {
-      isReported: true,
       reports: arrayUnion(myMap),
       reportsCount: increment(1)
     })

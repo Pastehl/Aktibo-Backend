@@ -226,10 +226,10 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     new Chart(ctx3, {
     type: 'bar',
     data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday'],
     datasets: [{
     label: '# of Votes',
-    data: [12, 19, 3, 5, 2, 3],
+    data: [12, 19, 3, 5, 2, 3, 5],
     borderWidth: 1
     }]
     },
@@ -247,10 +247,10 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     new Chart(ctx4, {
     type: 'line',
     data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday'],
     datasets: [{
     label: '# of Votes',
-    data: [12, 19, 3, 5, 2, 3],
+    data: [12, 19, 3, 5, 2, 3, 1],
     borderWidth: 1
     }]
     },
@@ -319,7 +319,7 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 
     updateCalendar();
 
-    
+
     // var ctx = document.getElementById('myChart').getContext('2d');
 
     // // Define your data

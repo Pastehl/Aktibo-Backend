@@ -19,18 +19,30 @@ const db = getFirestore(app);
 
 import '../scss/styles.scss';
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
-      // ...
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // User is signed in
+    const uid = user.uid;
+    const userRef = collection(db, "users");
+    const docRef = await getDoc(doc(userRef, uid));
+
+    if (docRef.exists()) {
+      const isAdmin = docRef.data().isAdmin;
+
+      if (!isAdmin) {
+        window.location.href = "dashboard.html";
+      }
     } else {
-      // User is signed out
-      // ...
-      window.location.href = "index.html";
+      // Handle the case where the user document doesn't exist
+      console.error("User document does not exist");
+      // You may want to redirect or handle this case appropriately
     }
-  });
+  } else {
+    // User is signed out
+    window.location.href = "index.html";
+    // Handle signed-out state if needed
+  }
+});
 
 document.getElementById("logout_btn").addEventListener("click",function(){
     signOut(auth).then(() => {
@@ -186,7 +198,6 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,status){
       })
     }
     await updateDoc(momentRef, {
-    isReported: status,
     reports: deleteField(),
     reportsCount: deleteField()
 
