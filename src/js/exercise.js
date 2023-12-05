@@ -15,7 +15,8 @@ import {
   limit,
   startAfter,
   arrayUnion,
-  arrayRemove
+  arrayRemove,
+  documentId
 } from "firebase/firestore";
 import * as bootstrap from 'bootstrap'
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
@@ -611,12 +612,21 @@ async function addExerciseVideoSrc(docId){
 }
 
 async function sortByCategory(){
- const q = query(collection(db, "exercises"), orderBy("category","asc"))
+ const q = query(collection(db, "exercises"))
   let exerciseListContainer = document.getElementById('exerciseListContainer')
   exerciseListContainer.innerHTML = ""
+  
+  if(exerciseTextField.value == ""){
+     const q = query(collection(db, "exercises"), orderBy("category","asc"))
+  }
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) =>{
-    showExercise(doc,exerciseListContainer)
+    const cat = doc.data().category.toLowerCase()
+    const catValue = document.getElementById('category').value.toLowerCase()
+    if(cat.contains(catValue)){
+      showExercise(doc,exerciseListContainer)
+    }
+    
   })
 
 }
