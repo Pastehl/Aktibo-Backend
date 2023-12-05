@@ -611,46 +611,85 @@ async function addExerciseVideoSrc(docId){
   videoModalSrc.src = src
 }
 
-async function sortByCategory(){
- const q = query(collection(db, "exercises"))
-  let exerciseListContainer = document.getElementById('exerciseListContainer')
-  exerciseListContainer.innerHTML = ""
-  
-  if(exerciseTextField.value == ""){
-     const q = query(collection(db, "exercises"), orderBy("category","asc"))
+async function sortByCategory() {
+  const exerciseListContainer = document.getElementById('exerciseListContainer');
+  exerciseListContainer.innerHTML = "";
+
+  const inputValue = exerciseTextField.value.trim().toLowerCase();
+
+  // If the input is empty, fetch all exercises sorted by category
+  if (!inputValue) {
+    const q = query(collection(db, "exercises"), orderBy("category", "asc"));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      showExercise(doc, exerciseListContainer);
+    });
+  } else {
+    // If the input is not empty, filter exercises by category
+    const q = query(collection(db, "exercises"));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      const cat = doc.data().category.toLowerCase();
+
+      // Check if the category includes the input value
+      if (cat.includes(inputValue)) {
+        showExercise(doc, exerciseListContainer);
+      }
+    });
   }
+}
+
+
+async function sortByIntensity() {
+  const exerciseListContainer = document.getElementById('exerciseListContainer');
+  exerciseListContainer.innerHTML = "";
+
+  const inputValue = exerciseTextField.value.trim().toLowerCase();
+
+  // If the input is empty, fetch all exercises sorted by intensity
+  if (!inputValue) {
+    const q = query(collection(db, "exercises"), orderBy("intensity", "asc"));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      showExercise(doc, exerciseListContainer);
+    });
+  } else {
+    // If the input is not empty, filter exercises by intensity
+    const q = query(collection(db, "exercises"));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      const intensity = doc.data().intensity.toLowerCase();
+
+      // Check if the intensity includes the input value
+      if (intensity.includes(inputValue)) {
+        showExercise(doc, exerciseListContainer);
+      }
+    });
+  }
+}
+
+
+async function sortByTags(tag) {
+  const exerciseListContainer = document.getElementById('exerciseListContainer');
+  exerciseListContainer.innerHTML = "";
+
+  const inputValue = tag.trim().toLowerCase();
+
+  const q = query(collection(db, "exercises"));
   const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) =>{
-    const cat = doc.data().category.toLowerCase()
-    const catValue = document.getElementById('category').value.toLowerCase()
-    if(cat.contains(catValue)){
-      showExercise(doc,exerciseListContainer)
+
+  querySnapshot.forEach((doc) => {
+    const tags = doc.data().tags.map((t) => t.toLowerCase());
+
+    // Check if any tag includes the partial input value
+    if (tags.some((t) => t.includes(inputValue))) {
+      showExercise(doc, exerciseListContainer);
     }
-    
-  })
-
-}
-
-async function sortByIntensity(){
- const q = query(collection(db, "exercises"), orderBy("intensity","asc"))
-  let exerciseListContainer = document.getElementById('exerciseListContainer')
-  exerciseListContainer.innerHTML = ""
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) =>{
-    showExercise(doc,exerciseListContainer)
-  })
-
-}
-
-async function sortByTags(tag){
- const q = query(collection(db, "exercises"), where("tags", "array-contains-any", [tag]))
-  let exerciseListContainer = document.getElementById('exerciseListContainer')
-  exerciseListContainer.innerHTML = ""
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) =>{
-    showExercise(doc,exerciseListContainer)
-  })
-
+  });
 }
 
 async function sortBySearchName(tag){
