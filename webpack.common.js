@@ -4,9 +4,8 @@ const path = require("path");
 const autoprefixer = require('autoprefixer')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let pages = ["index", "homepage", "report", "exercise","test","exerciseForms",'dashboard'];
+let pages = ["index", "homepage", "report", "exercise","test","exerciseForms",'dashboard','userMoments'];
 
-// let pages = ["test"];
 
 module.exports = {
     entry: pages.reduce((config, page) => {

@@ -47,6 +47,7 @@ var main_content = document.getElementById("main_content")
 main_content.innerHTML = ""
 let idCounters = 1
 let momentsRef = collection(db, "moments");
+const q = query(momentsRef, orderBy("datePosted", "desc"));
 
 async function showAllMoments(doc,currentPostNumber){
   var usrName = doc.data().username
@@ -114,7 +115,7 @@ if(isReported == false || isReported ==undefined || isReported == null){
 
   
 
-  const docSnap = await getDocs(momentsRef);
+const docSnap = await getDocs(q);
 
 async function showFlaggedPosts(){
     docSnap.forEach((doc) => {
