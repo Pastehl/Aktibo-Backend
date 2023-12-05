@@ -15,7 +15,9 @@ import {
   limit,
   startAfter,
   arrayUnion,
-  arrayRemove
+  arrayRemove,
+  serverTimestamp,
+  Timestamp  
 } from "firebase/firestore";
 import '../scss/styles.scss';
 
@@ -71,7 +73,8 @@ googleLoginButton.addEventListener("click", function(){
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
-        window.location.href = "homepage.html";
+        redirectPage(user)
+
     }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -83,3 +86,27 @@ googleLoginButton.addEventListener("click", function(){
         // ...
     });
 });
+
+async function redirectPage(user){
+const uid = user.uid;
+      const userRef = collection(db, "users");
+      const docRef = await getDoc(doc(userRef, uid));
+
+      if (docRef.exists()) {
+        const isAdmin = docRef.data().isAdmin;
+
+        if (isAdmin === true) {
+          window.location.href = "homepage.html";
+        } else if (isAdmin === false) {
+          window.location.href = "dashboard.html";
+        } else {
+          // isAdmin is null or undefined, handle appropriately (redirect to a default page, etc.)
+          console.error("isAdmin is not defined or null, redirecting to default page");
+          window.location.href = "dashboard.html";
+        }
+      } else {
+        // Handle the case where the user document doesn't exist
+        console.error("User document does not exist");
+        // You may want to redirect or handle this case appropriately
+      }
+}
