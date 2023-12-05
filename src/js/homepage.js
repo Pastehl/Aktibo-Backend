@@ -86,7 +86,7 @@ window.addEventListener("scroll", async function () {
 // get data from firestore
 let momentsRef = collection(db, "moments");
 let lastVisible; // last loaded post
-getMomentsData(3); // first shown posts
+getMomentsData(5); // first shown posts
 let hasNotShownLastPostToast = true; // for last post Toast message
 
 async function getMomentsData(amount) {

@@ -415,7 +415,6 @@ function showToast(message) {
   toast.show();
 }
 function showExercise(doc,exerciseListContainer){
-  var exerciseID = doc.id
   var exerciseName = doc.data().name
   var category = doc.data().category
   var intensity = doc.data().intensity
@@ -442,7 +441,6 @@ function showExercise(doc,exerciseListContainer){
   exerciseListContainer.innerHTML+=
   `
   <tr style="background-color: #ffffff;">
-    <th scope="col" style="width:8rem;">`+exerciseID+`</th>
     <th scope="col" style="width:12rem;">`+exerciseName+`</th>
     <th scope="col" style="width:10rem;">`+category+`</th>
     <th scope="col" style="width:10rem;">`+intensity+`</th>
@@ -646,34 +644,39 @@ async function sortByTags(tag){
 }
 
 async function sortBySearchName(tag){
-  const q = query(collection(db, "exercises"), where("name", "==", tag))
+  const q = query(collection(db, "exercises"))
   let exerciseListContainer = document.getElementById('exerciseListContainer')
   exerciseListContainer.innerHTML = ""
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) =>{
-    showExercise(doc,exerciseListContainer)
+    const lowercaseDocName = doc.data().name.toLowerCase();
+    const lowercaseTag = tag.toLowerCase();
+    if(lowercaseDocName.includes(lowercaseTag)){
+      showExercise(doc,exerciseListContainer)
+    }
+    
   })
 
 }
 
-async function sortBySearchId(tag){
-  let exerciseListContainer = document.getElementById('exerciseListContainer')
-  exerciseListContainer.innerHTML = ""
-  if(tag){
-    const docRef = doc(db, "exercises", tag);
-    const docSnap = await getDoc(docRef);
-    showExercise(docSnap,exerciseListContainer)
-  }
-  else{
-    const q = query(collection(db, "exercises", tag))
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) =>{
-    showExercise(doc,exerciseListContainer)
-  })
-  }
+// async function sortBySearchId(tag){
+//   let exerciseListContainer = document.getElementById('exerciseListContainer')
+//   exerciseListContainer.innerHTML = ""
+//   if(tag){
+//     const docRef = doc(db, "exercises", tag);
+//     const docSnap = await getDoc(docRef);
+//     showExercise(docSnap,exerciseListContainer)
+//   }
+//   else{
+//     const q = query(collection(db, "exercises", tag))
+//     const querySnapshot = await getDocs(q);
+//     querySnapshot.forEach((doc) =>{
+//     showExercise(doc,exerciseListContainer)
+//   })
+//   }
 
 
-}
+// }
 // id, category, est_time, instructions, intensity, exerciseName, reps_duration, sets, tags, video
 async function createNewExerciseDocument() {
   var exerciseName = document.getElementById('name').value
