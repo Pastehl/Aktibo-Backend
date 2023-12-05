@@ -318,6 +318,8 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     })
 
     updateCalendar();
+
+    
     // var ctx = document.getElementById('myChart').getContext('2d');
 
     // // Define your data
