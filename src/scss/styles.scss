@@ -915,6 +915,19 @@ modal exercise
     margin-bottom: 20px;
 }
 
+.videoBtn{
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    font-size: 1.5rem; 
+    color: black; 
+    border:none;
+    background-color: white;
+}
+// .closeVideoBtn span{
+//     border:none;
+//     background-color: black;
+// }
 .row {
     display: flex;
 }

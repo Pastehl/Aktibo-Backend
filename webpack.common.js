@@ -3,6 +3,7 @@
 const path = require("path");
 const autoprefixer = require('autoprefixer')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 let pages = ["index", "homepage", "report", "exercise","test","exerciseForms",'dashboard','userMoments'];
 
@@ -27,7 +28,7 @@ module.exports = {
               chunks: [page],
             })
         ),
-        // <- here goes array(s) of other plugins
+        [new NodePolyfillPlugin()],// <- here goes array(s) of other plugins
 
     ),
     module: {

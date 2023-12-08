@@ -850,34 +850,6 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
 // Function to update likes count
 
 
-// Function to decrement likes
-// async function decrementLikes(docId) {
-//   const momentRef = doc(db, "moments", docId);
-//   const momentDoc = await getDoc(momentRef);
-//   const usersLiked = momentDoc.data().usersLiked || [];
-//   const updatedUsersLiked = usersLiked.filter((user) => user !== uid);
-
-//   await updateDoc(momentRef, {
-//     likes: increment(-1),
-//     usersLiked: updatedUsersLiked
-//   })
-// }
-
-// function addNewExercise(){
-//   let category = document.getElementById("category").value
-//   let name = document.getElementById("name").value
-//   let instructions = ["asdf","sadf"]
-
-//   createNewExerciseDocument(category)
-//   .then(() => {
-//     // show user message of success
-//   }).catch((error) => {
-//     // show user message of failure
-//   });
-// }
-
-
-
 
 
 // async function addCommentPost(docId,text){

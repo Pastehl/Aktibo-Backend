@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   getFirestore,
+  addDoc,
   collection,
   query,
   where,
@@ -18,6 +19,7 @@ import {
   arrayRemove,
   documentId
 } from "firebase/firestore";
+import {  getStorage, ref, uploadBytesResumable, getDownloadURL ,uploadBytes } from "firebase/storage";
 import * as bootstrap from 'bootstrap'
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
 
@@ -37,6 +39,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
+const storage = getStorage();
 
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
@@ -108,6 +111,7 @@ cancelButton.onclick = function () {
 submitBtn.addEventListener('click',function (){
   if(validateExercise()){
     createNewExerciseDocument()
+    clearModal()
     modal.hide()
   }
 
@@ -210,7 +214,7 @@ function removeInst(element, inst){
 
 
 //Check for enter in Instructions    
-inputInst.addEventListener('keyup', function (e){
+inputInst.addEventListener('keydown', function (e){
   console.log(e.key+ "*INST*")
   if(e.key === 'Enter'){
     console.log(e.target.value)
@@ -233,29 +237,25 @@ input.addEventListener("keydown", function (e) {
 //Check for enter in Instructions
 function addInst(e){
   console.log("Instruction ADD")
-    if(e.key == "Enter"){
-      console.log("*******")
-      console.log(e.target)
-      console.log(e.target.value)
-        let inst = e.target.value.replace(/\s+/g, ' ');
-        console.log(typeof(inst))
-        console.log(inst)
-
-        if(!instArr.includes(inst)){
-                inst.split(',').forEach(inst => {
-                  if(inst != ""){
-                    instArr.push(inst);
-                    console.log(instArr)
-                    createInst();
-                    // Create toast? tag sucessfully added?
-                  }
-
-                });
+  console.log("*******")
+  console.log(e.target.value)
+  let inst = e.target.value.replace(/\s+/g, ' ');
+  console.log(typeof(inst))
+  console.log(inst)
+  if(!instArr.includes(inst)){
+          inst.split(',').forEach(inst => {
+            if(inst != ""){
+              instArr.push(inst);
+              console.log(instArr)
+              createInst();
+              // Create toast? tag sucessfully added?
             }
 
-          e.target.value = "";  
-        }
-        addRemoveTagBtnEventlistener()
+          });
+      }
+
+      e.target.value = "";  
+    addRemoveTagBtnEventlistener()
 }
 //Add element in Tags []
 function addTag(e){
@@ -452,7 +452,8 @@ function showExercise(doc,exerciseListContainer){
   } 
   if(instructions!= null || instructions != undefined)
     for (let index = 0; index < instructions.length; index++) {
-      const element = instructions[index];
+      let ctr = index + 1
+      const element = ctr + ". " +instructions[index];
       instructionsStr += element
     }
 
@@ -590,7 +591,7 @@ function clearModal(){
   exerciseName.disabled = false
 
   reps.value = '';
-  sets.value = 0;
+  sets.value = 1;
   est_t.value = ''
   category.selectedIndex = 0;
   intensity.selectedIndex = 0;
@@ -756,28 +757,40 @@ async function createNewExerciseDocument() {
 
 
   console.log("Created Document",exerciseName,reps,sets,est_time,category,intensity,file)
-  // try {
-  //   // Add a new document with a generated id.
-  //   const docRef = await setDoc(collection(db, "exercises", id), {
-  //     category: category,
-  //     est_time: est_time,
-  //     instructions: instructions,
-  //     intensity: intensity,
-  //     name: name,
-  //     reps_duration: reps_duration,
-  //     sets: sets,
-  //     tags: tags,
-  //     video: video
-  //   });
+  try {
+    // Add a new document with a generated id.
+    const docRef = await addDoc(collection(db, "exercises"), {
+      category: category,
+      est_time: est_time,
+      instructions: instArr,
+      intensity: intensity,
+      name: exerciseName,
+      reps_duration: reps,
+      sets: sets,
+      tags: tags,
+      video: await uploadVideo(file)
+    })
 
-  //   console.log("Document written with ID: ", docRef.id);
-  // } catch (error) {
-  //   if (error.code === 'already-exists') {
-  //     // Handle the case where the document with the specified ID already exists
-  //     console.log("Document with ID already exists. Handle accordingly.");
-  //   } else {
-  //     // Handle other errors
-  //     console.error("Error creating document:", error);
-  //   }
-  // }
+    console.log("Document written with ID: ", docRef.id);
+  } catch (error) {
+    if (error.code === 'already-exists') {
+      // Handle the case where the document with the specified ID already exists
+      console.log("Document with ID already exists. Handle accordingly.");
+    } else {
+      // Handle other errors
+      console.error("Error creating document:", error);
+    }
+  }
+}
+
+async function uploadVideo(file) {
+    // Upload file and metadata to the object 'exercise_videos/' + file.name
+  const storageRef = ref(storage, 'exercise_videos/' + file.name);
+  const snapshot = await uploadBytes(storageRef, file);
+
+  const downloadURL = await getDownloadURL(snapshot.ref);
+  console.log('File available at', downloadURL);
+
+  return downloadURL.toString();
+
 }
