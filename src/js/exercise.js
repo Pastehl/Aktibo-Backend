@@ -524,7 +524,7 @@ function addUpdateBtnEventListener(){
   for (let index = 0; index < submitBtn.length; index++) {
     const element = updateBtn[index];
     element.addEventListener('click',function(){
-      console.log(element.dataset.docId)
+      updateExerciseDocument(element.dataset.docId)
     })
   }
 
@@ -752,25 +752,6 @@ async function sortBySearchName(tag){
 
 }
 
-// async function sortBySearchId(tag){
-//   let exerciseListContainer = document.getElementById('exerciseListContainer')
-//   exerciseListContainer.innerHTML = ""
-//   if(tag){
-//     const docRef = doc(db, "exercises", tag);
-//     const docSnap = await getDoc(docRef);
-//     showExercise(docSnap,exerciseListContainer)
-//   }
-//   else{
-//     const q = query(collection(db, "exercises", tag))
-//     const querySnapshot = await getDocs(q);
-//     querySnapshot.forEach((doc) =>{
-//     showExercise(doc,exerciseListContainer)
-//   })
-//   }
-
-
-// }
-// id, category, est_time, instructions, intensity, exerciseName, reps_duration, sets, tags, video
 async function createNewExerciseDocument() {
   var exerciseName = document.getElementById('name').value
   var reps = document.getElementById('reps_duration').value
@@ -827,7 +808,7 @@ async function updateExerciseDocument(docId){
   var est_time = document.getElementById('est_time').value
   var category = document.getElementById('category').value
   var intensity = document.getElementById('intensity').value
-  var fileLink = document.getElementById('videoText')
+  var fileLink = document.getElementById('videoText').value
   const updateRef = doc(db,"exercises", docId)
   await setDoc(updateRef, {
     category: category,
@@ -843,4 +824,7 @@ async function updateExerciseDocument(docId){
 
   // Success
   showToast("Exercise updated successfully.")
+  clearModal()
+  modal.hide()
+  getExercises()
 }
