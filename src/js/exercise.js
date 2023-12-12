@@ -81,12 +81,10 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 
 //modal
 var modal =new bootstrap.Modal('#myModal',{keyboard:false});
-console.log(modal)
 var videomodal = new bootstrap.Modal('#videoModal');
-console.log(videomodal)
 var openModalBtn = document.getElementById("addbtn");
 var cancelButton = document.getElementById("cancelBtn");
-var submitBtn = document.getElementById('submitBtn')
+var submitBtn = document.getElementsByClassName('submitUpdateBtn')
 var videoModalSrc = document.getElementById('videoModalBody')
 var closeVideoBtn = document.getElementById('closeVideoBtn')
 var searchOptionDropdown = document.getElementById('exerciseSearchOption')
@@ -94,10 +92,11 @@ var exerciseSearchBtn = document.getElementById('exerciseSearchButton')
 var exerciseTextField = document.getElementById('exerciseTextField')
 
 
-
 openModalBtn.addEventListener('click',function(){
     clearModal()
     addFileUploadStateEventListener()
+    removeAllListenersFromClass(submitBtn)
+    addSubmitBtnEventListener(submitBtn)
     modal.show()
 }) 
 
@@ -108,15 +107,22 @@ cancelButton.onclick = function () {
 
 }
 
-submitBtn.addEventListener('click',function (){
-  if(validateExercise()){
-    createNewExerciseDocument()
-    clearModal()
-    modal.hide()
+
+function addSubmitBtnEventListener(submitBtn){  
+  for (let index = 0; index < submitBtn.length; index++) {
+    const element = submitBtn[index];
+    element.addEventListener('click',function(){
+      if(validateExercise()){
+      createNewExerciseDocument()
+      clearModal()
+      modal.hide()
+      removeAllListenersFromClass(submitBtn)
+    }
+  })
   }
+  
+}
 
-
-})
 closeVideoBtn.addEventListener('click', function (){
   videomodal.hide()
 })
@@ -141,9 +147,7 @@ exerciseSearchBtn.addEventListener('click', function (){
   exerciseTextField.value = ""
  
 })
-// editExerciseBtn.addEventListener('click', function() {
 
-// })
 //Instructions Variables
 const ulInst = document.querySelector('.inst-ul')
 var inputInst = document.getElementById('instructions')
@@ -410,7 +414,7 @@ function addFileUploadStateEventListener(){
     var file = fileInput.files[0];
     // Check if the file type is .mp4 and the size is within the limit (7 MB)
     if (file != undefined && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-
+        showToast("File has uploaded successfully.")
     } 
   
     else {
@@ -460,15 +464,16 @@ function showExercise(doc,exerciseListContainer){
   exerciseListContainer.innerHTML+=
   `
   <tr style="background-color: #ffffff;">
-    <th scope="col" style="width:12rem;">`+exerciseName+`</th>
-    <th scope="col" style="width:10rem;">`+category+`</th>
-    <th scope="col" style="width:10rem;">`+intensity+`</th>
-    <th scope="col" style="width:10rem;">`+tags+`</th>
-    <th scope="col" style="width:12rem;">`+reps_duration+`</th>
-    <th scope="col">`+est_time+`</th>
-    <th scope="col" style="width:10rem;">`+instructionsStr+`</th>
-    <th scope="col" style="width:3rem;"><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id ="`+doc.id+`"><i class='bx bx-video bx-sm'></i></button></th>
-    <th scope="col" style="width:8rem;"><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id ="`+doc.id+`"><i class='bx bx-edit bx-sm'></i></button></th>
+    <th scope="col" style="width: auto;">` + exerciseName + `</th>
+    <th scope="col" style="width: auto;">` + category + `</th>
+    <th scope="col" style="width: auto;">` + intensity + `</th>
+    <th scope="col" style="white-space: nowrap; max-width: 100px;">` + tags + `</th>
+    <th scope="col" style="width: auto;">` + reps_duration + `</th>
+    <th scope="col" style="width: auto;">` + est_time + `</th>
+    <th scope="col" style="width: auto;">` + instructionsStr + `</th>
+    <th scope="col" style="width: auto;"><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id="` + doc.id + `"><i class='bx bx-video bx-sm'></i></button></th>
+    <th scope="col" style="width: auto;"><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id="` + doc.id + `"><i class='bx bx-edit bx-sm'></i></button></th>
+
   </tr>
   `
 
@@ -513,8 +518,20 @@ function addEditExercisesEventListener(){
     });
   }
 }
-function updateExercises(docId){
-  console.log("executed")
+function addUpdateBtnEventListener(){
+  var updateBtn = document.getElementsByClassName('submitUpdateBtn')
+  removeAllListenersFromClass(updateBtn)
+  for (let index = 0; index < submitBtn.length; index++) {
+    const element = updateBtn[index];
+    element.addEventListener('click',function(){
+      console.log(element.dataset.docId)
+    })
+  }
+
+  
+}
+async function updateExercises(docId){
+
   clearModal()
   fillModal(docId)
 }
@@ -529,31 +546,31 @@ async function fillModal(docId){
   var intensity = document.getElementById('intensity')
   var heading = document.getElementById('heading')
   var video = document.getElementById('video')
-  
+  var submitBtn = document.getElementById('submitBtn');
 
   const docRef = doc(db, "exercises", docId);
   const docSnap = await getDoc(docRef);  
 
   //input values
   exerciseName.value = docSnap.data().name;
-  exerciseName.disabled = true
   reps.value = docSnap.data().reps_duration;
   sets.value = docSnap.data().sets;
   est_t.value = docSnap.data().est_time;
   category.selectedIndex = 0;
   for (var i = 0; i < category.options.length; i++) {
-    if (category.options[i].value === docSnap.data().category) {
-        // Set the selectedIndex
-        categorySelect.selectedIndex = i;
-        break;
+    if (docSnap.data().category.toLowerCase().includes(category.options[i].value.toLowerCase())) {
+      // Set the selectedIndex
+      category.selectedIndex = i;
+      break;
     }
   }
+
   intensity.selectedIndex = 0;
-    for (var i = 0; i < intensity.options.length; i++) {
-    if (intensity.options[i].value === docSnap.data().intensity) {
-        // Set the selectedIndex
-        categorySelect.selectedIndex = i;
-        break;
+  for (var i = 0; i < intensity.options.length; i++) {
+    if (docSnap.data().intensity.toLowerCase().includes(intensity.options[i].value.toLowerCase())) {
+      // Set the selectedIndex
+      intensity.selectedIndex = i;
+      break;
     }
   }
   heading.innerHTML = 'Edit Exercise';
@@ -566,11 +583,15 @@ async function fillModal(docId){
   video.id = 'videoText';
   video.name = 'videoText';
   video.value = docSnap.data().video;
-
+  submitBtn.setAttribute('data-doc-id', docId);
+  submitBtn.innerHTML = "Update"
+  submitBtn.id = 'updateBtn';
   countTags();
   createTag();
   createInst()
   addRemoveTagBtnEventlistener();
+  addUpdateBtnEventListener()
+
 }
 
 function clearModal(){
@@ -582,14 +603,18 @@ function clearModal(){
   var intensity = document.getElementById('intensity')
   var heading = document.getElementById('heading')
   var videoText = document.getElementById('video')
+  var submitBtn = document.getElementById('submitBtn');
+
   if(videoText == null){
     videoText = document.getElementById('videoText')
   }
+  if(submitBtn == null){
+    submitBtn = document.getElementById('updateBtn');
+  }
+  removeAllListenersFromClass(submitBtn)
 
   // Clearing input values
   exerciseName.value = '';
-  exerciseName.disabled = false
-
   reps.value = '';
   sets.value = 1;
   est_t.value = ''
@@ -606,7 +631,8 @@ function clearModal(){
   videoText.type = 'file';
   videoText.id = 'video';
   videoText.name = 'video';
-  
+  submitBtn.id = 'submitBtn'
+  submitBtn.innerHTML = 'Add'
   // video.replaceChild(newFileInput, video);
   
   countTags();
@@ -790,7 +816,31 @@ async function uploadVideo(file) {
 
   const downloadURL = await getDownloadURL(snapshot.ref);
   console.log('File available at', downloadURL);
-
   return downloadURL.toString();
 
+}
+
+async function updateExerciseDocument(docId){
+  var exerciseName = document.getElementById('name').value
+  var reps = document.getElementById('reps_duration').value
+  var sets = document.getElementById('sets').value
+  var est_time = document.getElementById('est_time').value
+  var category = document.getElementById('category').value
+  var intensity = document.getElementById('intensity').value
+  var fileLink = document.getElementById('videoText')
+  const updateRef = doc(db,"exercises", docId)
+  await setDoc(updateRef, {
+    category: category,
+    est_time: est_time,
+    instructions: instArr,
+    intensity: intensity,
+    name: exerciseName,
+    reps_duration: reps,
+    sets: sets,
+    tags: tags,
+    video: fileLink
+  })
+
+  // Success
+  showToast("Exercise updated successfully.")
 }
