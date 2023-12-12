@@ -1,3 +1,26 @@
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import 'chart.js';
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
+
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendarContainer');
+
+    var calendar = new Calendar(calendarEl, {
+        plugins: [dayGridPlugin],
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        }
+        // Add other options or events as needed
+    });
+
+    calendar.render();
+});
+
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
@@ -85,48 +108,175 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     const ctx7 = document.getElementById('myChart7');
     const ctx8 = document.getElementById('myChart8');
 
-    const doughnutLabel = {
-    id: 'doughnutLabel',
+    //Green Test Graph
+    //Template for Graph
+    const doughnut_Steps = {
+    id: 'doughnut_Steps',
     beforeDatasetsDraw(chart, args, pluginOptions) {
     const {ctx, data} = chart;
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = 'bold 30px sans-serif';
+    ctx.font = 'bold 30px sans-serif';  //text formatting
     ctx.fillStyle = 'rgb(99,169,31)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`test`, xCoor, yCoor);
-    }
-    }
+    ctx.fillText(`Steps`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    const doughnutLabel2 = {
-    id: 'doughnutLabel2',
+    var bottomText = 'Steps';
+    var bottomTextX = ctx.canvas.width / 2 
+    var bottomTextY = ctx.canvas.height - 80;
+    ctx.fillStyle = '#000';
+    ctx.font = '20px sans-serif'; //text formatting
+    ctx.textAlign = 'center';   
+    ctx.textBaseline = 'middle';
+    ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    }
+    }
+    
+    //Orange Time Graph
+    //Template for Graph
+    const doughnut_Calories = {
+    id: 'doughnut_Calories',
     beforeDatasetsDraw(chart, args, pluginOptions) {
     const {ctx, data} = chart;
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = 'bold 30px sans-serif';
-    ctx.fillStyle = 'rgb(255,127,17)';
+    ctx.font = 'bold 30px sans-serif';  //text formatting
+    ctx.fillStyle = 'rgb(255,127,17)';  
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`time`, xCoor, yCoor);
+    ctx.fillText(`Calories`, xCoor, yCoor); //Change first argument to change text inside the circle
+
+    var bottomText = 'Calories Burned';
+    var bottomTextX = ctx.canvas.width / 2
+    var bottomTextY = ctx.canvas.height - 80;
+    ctx.fillStyle = '#000';
+    ctx.font = '20px sans-serif';  //text formatting
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(bottomText, bottomTextX, bottomTextY);
     }
     }
+
+    //Red Graph
+    //Template for Graph
+    const redGraph = {
+      id: 'redGraph',
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+      const {ctx, data} = chart;
+      ctx.save();
+      const xCoor = chart.getDatasetMeta(0).data[0].x;
+      const yCoor = chart.getDatasetMeta(0).data[0].y;
+      ctx.font = 'bold 30px sans-serif';  //text formatting
+      ctx.fillStyle = 'rgb(255,0,0)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`Red`, xCoor, yCoor); //Change first argument to change text inside the circle
+
+      // var bottomText = 'Red';
+      // var bottomTextX = ctx.canvas.width / 2
+      // var bottomTextY = ctx.canvas.height - 1;
+      // ctx.fillStyle = '#000';
+      // ctx.font = '20px sans-serif';
+      // ctx.textAlign = 'center';
+      // ctx.textBaseline = 'middle';
+      // ctx.fillText(bottomText, bottomTextX, bottomTextY);
+      }
+      }
+
+
+    //Blue Graph
+    //Template for Graph
+    const blueGraph = {
+      id: 'blueGraph',
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+      const {ctx, data} = chart;
+      ctx.save();
+      const xCoor = chart.getDatasetMeta(0).data[0].x;
+      const yCoor = chart.getDatasetMeta(0).data[0].y;
+      ctx.font = 'bold 30px sans-serif';  //text formatting
+      ctx.fillStyle = 'rgb(0, 0, 255)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`Blue`, xCoor, yCoor); //Change first argument to change text inside the circle
+
+      var bottomText = 'Blue';
+      var bottomTextX = ctx.canvas.width / 2;
+      var bottomTextY = ctx.canvas.height - 10;
+      ctx.fillStyle = '#000';
+      ctx.font = '20px sans-serif'; //text formatting
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(bottomText, bottomTextX, bottomTextY);
+      }
+      }
+
+    //Yellow Graph
+    //Template for Graph
+    const yellowGraph = {
+      id: 'yellowGraph',
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+      const {ctx, data} = chart;
+      ctx.save();
+      const xCoor = chart.getDatasetMeta(0).data[0].x;
+      const yCoor = chart.getDatasetMeta(0).data[0].y;
+      ctx.font = 'bold 30px sans-serif';  //text formatting
+      ctx.fillStyle = 'rgb(218, 165, 32)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`Yellow`, xCoor, yCoor); //Change first argument to change text inside the circle
+      
+      var bottomText = 'Yellow';
+      var bottomTextX = ctx.canvas.width / 2
+      var bottomTextY = ctx.canvas.height - 10;
+      ctx.fillStyle = '#000';
+      ctx.font = '20px sans-serif'; //text formatting
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(bottomText, bottomTextX, bottomTextY);
+      }
+      } 
+
+    //Gray Graph
+    //Template for Graph
+    const grayGraph = {
+      id: 'grayGraph',
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+      const {ctx, data} = chart;
+      ctx.save();
+      const xCoor = chart.getDatasetMeta(0).data[0].x;
+      const yCoor = chart.getDatasetMeta(0).data[0].y;
+      ctx.font = 'bold 30px sans-serif';  //text formatting
+      ctx.fillStyle = 'rgb(54, 69, 79)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`Gray`, xCoor, yCoor); //Change first argument to change text inside the circle
+
+      var bottomText = 'Gray';
+      var bottomTextX = ctx.canvas.width / 2
+      var bottomTextY = ctx.canvas.height - 10;
+      ctx.fillStyle = '#000';
+      ctx.font = '20px sans-serif'; //text formatting
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(bottomText, bottomTextX, bottomTextY);
+      }
+      }
 
     new Chart(ctx, {
     type: 'doughnut',
     data: {
     datasets: [{
-    data: [300, 50],
+    data: [300, 50],  //data
     backgroundColor: [
-    'rgb(99,169,31)',
-    'rgb(40,54,26)',
+    'rgb(99,169,31)', //dark color
+    'rgb(40,54,26)',  //light color
     ],
     }]
     },
-    plugins: [doughnutLabel],
+    plugins: [doughnut_Steps],
     options: {
     maintainAspectRatio:false,
     responsive: true
@@ -137,14 +287,14 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     type: 'doughnut',
     data: {
     datasets: [{
-    data: [300, 50],
+    data: [300, 50],    //data
     backgroundColor: [
-    'rgb(255,127,17)',
-    'rgb(243,223,194)',
+    'rgb(255,127,17)',  //dark color
+    'rgb(243,223,194)', //light color
     ],
     }]
     },
-    plugins: [doughnutLabel2],
+    plugins: [doughnut_Calories], 
     options: {
     maintainAspectRatio: false,
     responsive: true,
@@ -155,14 +305,14 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     type: 'doughnut',
     data: {
     datasets: [{
-    data: [300, 50],
+    data: [300, 50],    //data
     backgroundColor: [
-    'rgb(255,127,17)',
-    'rgb(243,223,194)',
+    'rgb(255,0,0)',     //dark color
+    'rgb(255,114,118)', //light color
     ],
     }]
     },
-    plugins: [doughnutLabel2],
+    plugins: [redGraph],
     options: {
     maintainAspectRatio: false,
     responsive: true,
@@ -173,14 +323,14 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     type: 'doughnut',
     data: {
     datasets: [{
-    data: [300, 50],
+    data: [300, 50],      //data
     backgroundColor: [
-    'rgb(255,127,17)',
-    'rgb(243,223,194)',
+    'rgb(0, 0, 255)',     //dark color
+    'rgb(37, 207, 240)',  //light color
     ],
     }]
     },
-    plugins: [doughnutLabel2],
+    plugins: [blueGraph],
     options: {
     maintainAspectRatio: false,
     responsive: true,
@@ -191,10 +341,10 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     type: 'doughnut',
     data: {
     datasets: [{
-    data: [300, 50],
+    data: [300, 50],      //data
     backgroundColor: [
-    'rgb(255,127,17)',
-    'rgb(243,223,194)',
+    'rgb(218, 165, 32)',  //dark color
+    'rgb(255, 192, 0)',   //light color
     ],
     }]
     },
@@ -202,17 +352,17 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     maintainAspectRatio: false,
     responsive: true,
     },
-    plugins: [doughnutLabel2],
+    plugins: [yellowGraph],
     });
 
     new Chart(ctx8, {
     type: 'doughnut',
     data: {
     datasets: [{
-    data: [300, 50],
+    data: [300, 50],       //data
     backgroundColor: [
-    'rgb(255,127,17)',
-    'rgb(243,223,194)',
+    'rgb(54, 69, 79)',     //dark color
+    'rgb(115, 147, 179)',  //light color
     ],
     }]
     },
@@ -220,7 +370,7 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     maintainAspectRatio: false,
     responsive: true,
     },
-    plugins: [doughnutLabel2],
+    plugins: [grayGraph],
     });
     //bar chart test config
     new Chart(ctx3, {
@@ -265,76 +415,18 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     }
     });
 
-    const monthYearElement = document.getElementById('monthYear');
-    const datesElement = document.getElementById('dates');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendarContainer');
 
-    let currentDate = new Date();
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: ['dayGrid'],
+          header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }
+          // Add other options or events as needed
+      });
 
-    const updateCalendar = () => {
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-
-    const firstDay = new Date(currentYear, currentMonth, 0);
-    const lastDay = new Date(currentYear, currentMonth + 1, 0);
-    const totalDays = lastDay.getDate();
-    const firstDayIndex = firstDay.getDay();
-    const lastDayIndex = lastDay.getDay();
-
-    const monthYearString = currentDate.toLocaleString
-    ('default', {month: 'long', year: 'numeric'});
-    monthYearElement.textContent = monthYearString;
-
-    let datesHTML = '';
-
-    for(let i = firstDayIndex; i > 0; i--) {
-    const prevDate = new Date(currentYear, currentMonth, 0 - i + 1);
-    datesHTML += `<div class="date inactive">${prevDate.getDate()}</div>`;
-    }
-
-    for(let i = 1; i <= totalDays; i++) {
-    const date = new Date(currentYear, currentMonth, i);
-    const activeClass = date.toDateString() === new Date().toDateString() ? 'active' : '';
-    datesHTML += `<div class="date ${activeClass}">${i}</div>`;           
-    }
-
-    for(let i = 1; i <= 7 - lastDayIndex; i++) {
-    const nextDate = new Date(currentYear, currentMonth + 1, i);
-    datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;        
-    }
-
-    datesElement.innerHTML = datesHTML;
-    }
-
-    prevBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1)
-    updateCalendar();
-    })
-
-    nextBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1)
-    updateCalendar();
-    })
-
-    updateCalendar();
-
-
-    // var ctx = document.getElementById('myChart').getContext('2d');
-
-    // // Define your data
-    // var data = {
-    //     labels: ['January', 'February', 'March', 'April', 'May'],
-    //     datasets: [{
-    //         label: 'My First Dataset',
-    //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-    //         borderColor: 'rgba(75, 192, 192, 1)',
-    //         data: [65, 59, 80, 81, 56]
-    //     }]
-    // };
-
-    // // Create the chart
-    // var myChart = new Chart(ctx, {
-    //     type: 'bar', // Specify the chart type (bar, line, pie, etc.)
-    //     data: data
-    // });
+      calendar.render();
+  });
