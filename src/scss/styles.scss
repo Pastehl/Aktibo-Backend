@@ -952,6 +952,21 @@ modal exercise
 // }
 .row {
     display: flex;
+    padding-left: 10px;
+}
+
+.row bg-white{
+    display: flex;
+    justify-content: space-between;
+}
+
+.col {
+    white-space: nowrap;
+    overflow: hidden;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
 }
 .form-column {
     flex: 50%;
@@ -1124,6 +1139,7 @@ modal exercise
     padding: 1rem;
     height: 100%;
     overflow: auto;
+    width: 100vw;
   }
 .dropdown-content p{
     padding: 8px;
