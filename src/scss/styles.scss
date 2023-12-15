@@ -1139,3 +1139,24 @@ modal exercise
 //Calendar
 
 
+
+#spinner {
+    display: block;
+	width: 200px;
+    position: absolute;
+    left: 20%; 
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#spinner2 {
+    display: block;
+	width: 200px;
+    position: absolute;
+    left: 70%; 
+    top: 50%;
+    transform: translate(-50%, -50%);
+}   
+#exerciseListContainer .col {
+    font-size: 11px;
+}

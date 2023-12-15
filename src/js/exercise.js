@@ -82,6 +82,7 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 //modal
 var modal =new bootstrap.Modal('#myModal',{keyboard:false});
 var videomodal = new bootstrap.Modal('#videoModal');
+var instructionsModal = new bootstrap.Modal('#instructionsModal')
 var openModalBtn = document.getElementById("addbtn");
 var cancelButton = document.getElementById("cancelBtn");
 var submitBtn = document.getElementsByClassName('submitUpdateBtn')
@@ -94,6 +95,7 @@ var exerciseTextField = document.getElementById('exerciseTextField')
 
 openModalBtn.addEventListener('click',function(){
     clearModal()
+    removeAllListeners(document.getElementById('video'))
     addFileUploadStateEventListener()
     removeAllListenersFromClass(submitBtn)
     addSubmitBtnEventListener(submitBtn)
@@ -404,17 +406,14 @@ function validateExercise() {
 }
 function addFileUploadStateEventListener(){
   var fileInput = document.getElementById('video');
-
   // Set the accept attribute to allow only .mp4 files
   fileInput.accept = '.mp4';
 
   // Add an event listener to check the file size
-  removeAllListenersFromClass(fileInput)
   fileInput.addEventListener('change', function() {
     var file = fileInput.files[0];
     // Check if the file type is .mp4 and the size is within the limit (7 MB)
     if (file != undefined && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-        showToast("File has uploaded successfully.")
     } 
   
     else {
@@ -444,8 +443,7 @@ function showExercise(doc,exerciseListContainer){
   var reps_duration = doc.data().reps_duration
   var est_time_min = doc.data().est_time_min
   var est_time_sec = doc.data().est_time_sec
-  var instructions = doc.data().instructions
-  let instructionsStr = ""
+
   let est_time = doc.data().est_time
   //var video = doc.data().video
   if(est_time == undefined && est_time_min.length > 0){
@@ -454,31 +452,26 @@ function showExercise(doc,exerciseListContainer){
   if(est_time == undefined && est_time_sec.length > 0){
     est_time = est_time_sec + " secs"
   } 
-  if(instructions!= null || instructions != undefined)
-    for (let index = 0; index < instructions.length; index++) {
-      let ctr = index + 1
-      const element = ctr + ". " +instructions[index];
-      instructionsStr += element
-    }
 
   exerciseListContainer.innerHTML+=
   `
-  <tr style="background-color: #ffffff;">
-    <th scope="col" style="width: auto;">` + exerciseName + `</th>
-    <th scope="col" style="width: auto;">` + category + `</th>
-    <th scope="col" style="width: auto;">` + intensity + `</th>
-    <th scope="col" style="white-space: nowrap; max-width: 100px;">` + tags + `</th>
-    <th scope="col" style="width: auto;">` + reps_duration + `</th>
-    <th scope="col" style="width: auto;">` + est_time + `</th>
-    <th scope="col" style="width: auto;">` + instructionsStr + `</th>
-    <th scope="col" style="width: auto;"><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id="` + doc.id + `"><i class='bx bx-video bx-sm'></i></button></th>
-    <th scope="col" style="width: auto;"><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id="` + doc.id + `"><i class='bx bx-edit bx-sm'></i></button></th>
-
+  <tr class="row bg-white">
+    <th class="col" >` + exerciseName + `</th>
+    <th class="col" >` + category + `</th>
+    <th class="col" >` + intensity + `</th>
+    <th class="col" >` + tags + `</th>
+    <th class="col" >` + reps_duration + `</th>
+    <th class="col" >` + est_time + `</th>
+    <th class="col"><button type="button" class="btn btn-secondary btn-sm instructionBtn" data-doc-id="` + doc.id + `"><i class='bx bx-book-open bx-sm'></i></button></th> 
+    <th class="col" ><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id="` + doc.id + `"><i class='bx bx-video bx-sm'></i></button></th>
+    <th class="col" ><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id="` + doc.id + `"><i class='bx bx-edit bx-sm'></i></button></th>
   </tr>
+
   `
 
 addOpenVideoPlayerEventListener()
 addEditExercisesEventListener()
+addOpenInstructionEventListener()
 }
 getExercises()
 async function getExercises(){
@@ -507,13 +500,27 @@ function addOpenVideoPlayerEventListener(){
 function addEditExercisesEventListener(){
   var vidPlayerBtn = document.getElementsByClassName('editExerciseBtn')
   removeAllListenersFromClass(vidPlayerBtn)
-
+  removeAllListeners(document.getElementById('video'))
+  addFileUploadStateEventListener()
   for (let index = 0; index < vidPlayerBtn.length; index++) {
     const element = vidPlayerBtn[index];
     element.addEventListener('click', function (e) {
       //fill in the values
       updateExercises(element.dataset.docId)
+      
       modal.show()
+
+    });
+  }
+}
+function addOpenInstructionEventListener(){
+  var instructionBtn = document.getElementsByClassName('instructionBtn')
+  removeAllListenersFromClass(instructionBtn)
+
+  for (let index = 0; index < instructionBtn.length; index++) {
+    const element = instructionBtn[index];
+    element.addEventListener('click', function (e) {
+      showInstructionsModal(element.dataset.docId)
 
     });
   }
@@ -578,11 +585,7 @@ async function fillModal(docId){
   instArr = docSnap.data().instructions
   tags = docSnap.data().tags
 
-  //video source should be a text box
-  video.type = 'text';
-  video.id = 'videoText';
-  video.name = 'videoText';
-  video.value = docSnap.data().video;
+
   submitBtn.setAttribute('data-doc-id', docId);
   submitBtn.innerHTML = "Update"
   submitBtn.id = 'updateBtn';
@@ -639,7 +642,7 @@ function clearModal(){
   createTag();
   createInst()
   addRemoveTagBtnEventlistener();
-
+  
 }
 
 async function addExerciseVideoSrc(docId){
@@ -808,7 +811,8 @@ async function updateExerciseDocument(docId){
   var est_time = document.getElementById('est_time').value
   var category = document.getElementById('category').value
   var intensity = document.getElementById('intensity').value
-  var fileLink = document.getElementById('videoText').value
+  var fileLink = document.getElementById('video')
+  var file = fileLink.files[0]
   const updateRef = doc(db,"exercises", docId)
   await setDoc(updateRef, {
     category: category,
@@ -819,7 +823,7 @@ async function updateExerciseDocument(docId){
     reps_duration: reps,
     sets: sets,
     tags: tags,
-    video: fileLink
+    video: uploadVideo(file)
   })
 
   // Success
@@ -827,4 +831,48 @@ async function updateExerciseDocument(docId){
   clearModal()
   modal.hide()
   getExercises()
+}
+
+function removeAllListeners(element) {
+  
+  if (element) {
+    const clone = element.cloneNode(true);
+    element.replaceWith(clone);
+  } else {
+    console.error(`Element with id "${elementId}" not found.`);
+  }
+}
+
+async function showInstructionsModal(docId) {
+  // Get the modal and its body element
+  const modal = document.getElementById('instructionsModal');
+  const modalBody = modal.querySelector('.modal-body');
+
+  // Get the document data
+  const docRef = doc(db, "exercises", docId);
+  const docSnap = await getDoc(docRef);
+  let instructions = docSnap.data().instructions,
+    instructionsStr = "";
+
+  // Clear previous content
+  modalBody.innerHTML = "";
+
+  // Check if instructions array is not null or undefined
+  if (instructions != null && instructions != undefined) {
+    for (let index = 0; index < instructions.length; index++) {
+      let ctr = index + 1
+      const element = ctr + ". " + instructions[index];
+      instructionsStr += element;
+
+      // Create a new paragraph element for each instruction
+      const paragraph = document.createElement('p');
+      paragraph.textContent = element;
+      
+      // Append the paragraph to the modal body
+      modalBody.appendChild(paragraph);
+    }
+  }
+
+  // Show the modal
+  instructionsModal.show()
 }

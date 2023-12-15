@@ -83,45 +83,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const idToken = user.getIdToken(true)
-    console.log(idToken)
 
-    // const { google } = require('googleapis');
-    // const oauth2Client = new google.auth.OAuth2();
-    // oauth2Client.setCredentials({
-    // access_token: idToken,
-  // });
 
-//     // Create Fitness API client
-//     const fitness = google.fitness('v1');
+window.onload = function(){
 
-//     // Set the desired data source and time range
-// const request = {
-//   userId: 'me',
-//   resource: {
-//     aggregateBy: [{
-//       dataTypeName: 'com.google.step_count.delta',
-//     }],
-//     bucketByTime: {
-//       durationMillis: 86400000, // 1 day in milliseconds
-//     },
-//     startTimeMillis: Date.now() - 7 * 86400000, // 7 days ago
-//     endTimeMillis: Date.now(),
-//   },
-//   auth: oauth2Client,
-// };
+  let spinner = document.getElementById("spinner");
+  let ctx = spinner.getContext("2d");
+  let width = spinner.width;
+  let height = spinner.height;
+  let degrees = 0;
+  let new_degrees = 0;
+  let difference = 0;
+  let color = "turquoise";
+  let bgcolor = "#222";
+  let text;
+  let text_width;
+  let animation_loop, redraw_loop;
 
-// // Make the API request
-// fitness.users.dataset.aggregate(request, (err, result) => {
-//   if (err) {
-//     console.error('Error:', err);
-//     return;
-//   }
+  // Set your totalSteps and currentSteps variables
+  let totalSteps = 100;
+  let currentSteps = 75;
 
-//   // Process the result
-//   console.log('Steps:', result.data.bucket[0].dataset[0].point[0].value[0].intVal);
-// });
-   }
-});
+  function init() {
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.beginPath();
+    ctx.strokeStyle = bgcolor;
+    ctx.lineWidth = 30;
+    ctx.arc(width/2, width/2, 100, 0, Math.PI*2, false);
+    ctx.stroke();
+
+    let radians = (degrees / 360) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 30;
+    ctx.arc(width/2, height/2, 100, 0 - 90*Math.PI/180, radians - 90*Math.PI/180, false);
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.font = "50px arial";
+    text = Math.floor(degrees/360*100);
+    text_width = ctx.measureText(text).width;
+    ctx.fillText(text, width/2 - text_width/2, height/2 + 15);
+  }
+
+  function draw() {
+    if (typeof animation_loop != undefined) clearInterval(animation_loop);
+    new_degrees = (currentSteps / totalSteps) * 360;
+    difference = new_degrees - degrees;
+    animation_loop = setInterval(animate_to, 100/difference);
+  }
+
+  function animate_to() {
+    if (degrees >= new_degrees) {
+      clearInterval(animation_loop);
+    } else {
+      degrees++;
+      init();
+    }
+  }
+
+  draw();
+}

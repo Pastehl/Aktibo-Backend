@@ -90,16 +90,16 @@
               <div class="table-responsive">
                 <table class="table project-list-table table-nowrap align-middle table-hover ">
                   <thead class="table-dark">
-                    <tr>
-                      <th scope="col" style="width:auto;">Exercise Name</th>
-                      <th scope="col" style="width:auto;">Category</th>
-                      <th scope="col" style="width:auto;">Intensity</th>
-                      <th scope="col" style="white-space: nowrap; max-width: 100px;">Tags</th>
-                      <th scope="col" style="width:auto;">Repetitions/Duration</th>
-                      <th scope="col" style="width:auto;">Estimated Time(min)</th>
-                      <th scope="col" style="width:auto;">Instructions</th>
-                      <th scope="col" style="width:auto;">Video</th>
-                      <th scope="col" style="width:auto;">Action</th>
+                    <tr class="row">
+                      <th class="col" >Exercise Name</th>
+                      <th class="col" >Category</th>
+                      <th class="col" >Intensity</th>
+                      <th class="col" >Tags</th>
+                      <th class="col" >Repetitions/Duration</th>
+                      <th class="col" >Estimated Time(min)</th>
+                      <th class="col" >Instructions</th>
+                      <th class="col" >Video</th>
+                      <th class="col" >Action</th>
                     </tr>
                   </thead>
                   <tbody id="exerciseListContainer">
@@ -238,14 +238,22 @@
                 <!-- Embedded video player -->
                 <iframe id="videoModalBody" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
             </div>
-            <!-- <div class="modal-footer">
-                <button type="button" id="closeVideoBtn" class="btn btn-secondary btn-sm">Close</button>
-            </div> -->
         </div>
     </div>
 </div>
+<!-- modal Instructions -->
+  <div class="modal fade show" id="instructionsModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog" role="document" style="width: 600px; height: 600px; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="modal-content" style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+            <button type="button" id="instructionsModalBtn" class="instructionsModal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body">
 
-
+            </div>
+        </div>
+    </div>
+</div>
     </div>
     <!-- Modal -->
     <!-- toast -->
