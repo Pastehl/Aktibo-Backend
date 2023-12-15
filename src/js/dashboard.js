@@ -5,22 +5,6 @@ import 'jquery';
 import 'popper.js';
 import 'bootstrap';
 
-document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendarContainer');
-
-    var calendar = new Calendar(calendarEl, {
-        plugins: [dayGridPlugin],
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        }
-        // Add other options or events as needed
-    });
-
-    calendar.render();
-});
-
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
@@ -60,30 +44,28 @@ const db = getFirestore(app);
 
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
-  // if (user) {
-  //   // User is signed in, see docs for a list of available properties
-  //   // https://firebase.google.com/docs/reference/js/auth.user
-  //   const uid = user.uid;
-  //   const userRef = collection(db, "users");
-  //   const docRef = await getDocs(userRef)
-  //   docRef.forEach((doc) => {
-  //   onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    const uid = user.uid;
+    const userRef = collection(db, "users");
+    const docRef = await getDoc(doc(userRef, uid));
 
-  //   if(doc.data().isAdmin){
-  //     window.location.href = "homepage.html";
-  //     }
-  //   });
-  //   window.location.href = "dashboard.html";
+    if (docRef.exists()) {
+      const isAdmin = docRef.data().isAdmin;
 
-  // });
-  // } 
-  // else {
-  //   window.location.href = "index.html";
-
-  //   // User is signed out
-  //   // ...
-    
-  // }
+      if (!isAdmin) {
+        window.location.href = "dashboard.html";
+      }
+    } else {
+      // Handle the case where the user document doesn't exist
+      console.error("User document does not exist");
+      // You may want to redirect or handle this case appropriately
+    }
+  } else {
+    // User is signed out
+    window.location.href = "index.html";
+    // Handle signed-out state if needed
+  }
 });
 
 // logout
@@ -415,18 +397,17 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     }
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-      var calendarEl = document.getElementById('calendarContainer');
+ document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendarContainer');
 
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: ['dayGrid'],
-          header: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          }
-          // Add other options or events as needed
-      });
+    var calendar = new Calendar(calendarEl, {
+        plugins: [dayGridPlugin],
+    });
 
-      calendar.render();
-  });
+    calendar.render();
+    var toolbarElement = calendarEl.querySelector('.fc-header-toolbar');
+    if (toolbarElement && toolbarElement.children.length >= 3) {
+      toolbarElement.removeChild(toolbarElement.lastChild);
+      toolbarElement.removeChild(toolbarElement.lastChild);
+    }
+});
