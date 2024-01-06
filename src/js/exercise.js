@@ -748,6 +748,8 @@ async function sortBySearchName(tag){
     const lowercaseDocName = doc.data().name.toLowerCase();
     const lowercaseTag = tag.toLowerCase();
     if(lowercaseDocName.includes(lowercaseTag)){
+      console.log(lowercaseDocName)
+      console.log(doc.id)
       showExercise(doc,exerciseListContainer)
     }
     

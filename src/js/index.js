@@ -57,11 +57,7 @@ onAuthStateChanged(auth, async (user) => {
                     // Redirect to the dashboard for regular users
                     window.location.href = "dashboard.html";
                 }
-            } else {
-                console.log("User data not found. Please register.");
-                // Handle the case where user data is not found (not an existing user)
-                // You might want to show an error message or take appropriate action.
-            }
+            } 
         } catch (error) {
             console.error("Error checking user data:", error);
         }
@@ -73,80 +69,80 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
-let googleLoginButton = document.getElementById("googleLoginButton");
-googleLoginButton.addEventListener("click", function(){
-    signInWithPopup(auth, provider)
-    .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-         isExistingUser(user.uid)
-                .then((exists) => {
-                    if (exists) {
-                        console.log("reached")
 
-                        // Redirect to the appropriate page for existing users
+let googleLoginButton = document.getElementById("googleLoginButton");
+googleLoginButton.addEventListener("click", function () {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log(result)
+            // ... (your existing code)
+            isExistingUser(result.user.uid).then((exists) => {
+                    if (exists) {
                         redirectPage(user);
                     } else {
-                        // Handle case where the user is not an existing user
                         showToast("User not found. Please register on the mobile application.");
-                        // You might want to show an error message or take appropriate action.
                     }
                 })
                 .catch((error) => {
                     console.error("Error checking if user exists:", error);
                 });
 
-    }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
 
-      if(error.code == 'auth/multi-factor-auth-required'){
-        const resolver = getMultiFactorResolver(auth, error);
-        console.log(resolver)
-            // Ask user which second factor to use.
-            if (resolver.hints[0].factorId ===
-                PhoneMultiFactorGenerator.FACTOR_ID) {
-                const phoneInfoOptions = {
-                    multiFactorHint: resolver.hints[0],
-                    session: resolver.session
-                };
-                const phoneAuthProvider = new PhoneAuthProvider(auth);
-                // Send SMS verification code
-                return phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, RecaptchaVerifier)
-                    .then(function (verificationId) {
-                      clearInputContents()
-                      modal2fa.show()
+            if (error.code == 'auth/multi-factor-auth-required') {
+              console.log("MFA Reached")
+              document.getElementById('recaptcha-container').innerHTML="";
+              const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+                  'size': 'invisible',
+                  'callback': (response) => {
+                    // console.log(response)
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                    // ...
+                  },
+                  'expired-callback': () => {
+                    // Response expired. Ask user to solve reCAPTCHA again.
+                    // ...
+                  }
+              }, auth);
+                const resolver = getMultiFactorResolver(auth, error);
 
-                        // Ask user for the SMS verification code. Then:
-                        const cred = PhoneAuthProvider.credential(
-                            verificationId, getInputs());
-                        const multiFactorAssertion =
-                            PhoneMultiFactorGenerator.assertion(cred);
-                        // Complete sign-in.
-                        return resolver.resolveSignIn(multiFactorAssertion)
-                    })
-                    .then(function (userCredential) {
-                        // User successfully signed in with the second factor phone number.
-                    });
-                    
+                if (resolver.hints[0].factorId === PhoneMultiFactorGenerator.FACTOR_ID) {
+                    const phoneInfoOptions = {
+                        multiFactorHint: resolver.hints[0],
+                        session: resolver.session
+                    };
+                    const phoneAuthProvider = new PhoneAuthProvider(auth);
+                    // Create RecaptchaVerifier before using it
+                    return phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier)
+                        .then(function (verificationId) {
+                            clearInputContents()
+                            modal2fa.show()
+                            showToast("OTP has been sent to your number.")
+
+                            document.getElementById("optConfirmBtn").addEventListener("click", function(){
+
+                              const cred = PhoneAuthProvider.credential(verificationId, getInputs());
+                              const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
+
+                              return resolver.resolveSignIn(multiFactorAssertion);
+                            })
+                            
+
+                        })
+                        .then(function (userCredential) {
+                            // User successfully signed in with the second factor phone number.
+                        });
+                }
+            } else if (error.code == 'auth/wrong-password') {
+              console.log("eror not found acc")
+                // Handle other errors such as wrong password.
             }
-        }
-      else if (error.code == 'auth/wrong-password') {
-               // Handle other errors such as wrong password.
-      }
-  });
+        });
 });
+
 
 async function redirectPage(docRef){
       if (docRef.exists()) {
@@ -190,6 +186,7 @@ cancelBtn.addEventListener('click', function(){
 
 
 const inputs = document.getElementById("inputs");
+
 inputs.addEventListener("input", function(){
   const inputElements = document.querySelectorAll('#inputs .input');
   const submitButton = document.getElementById('optConfirmBtn');
@@ -211,6 +208,7 @@ inputs.addEventListener("input", function (e) {
     const next = target.nextElementSibling;
     if (next) {
       next.focus();
+
     }
   }
 });
@@ -226,6 +224,15 @@ inputs.addEventListener("keyup", function (e) {
       prev.focus();
     }
     return;
+  }
+  if (key === "arrowleft" || key === "arrowright") {
+    const direction = key === "arrowleft" ? -1 : 1;
+    const sibling = key === "arrowleft" ? "previousElementSibling" : "nextElementSibling";
+
+    const nextInput = target[sibling];
+    if (nextInput) {
+      nextInput.focus();
+    }
   }
 });
 
@@ -264,7 +271,8 @@ async function isExistingUser(userId) {
 const userRef = collection(db, "users");
       const docRef = await getDoc(doc(userRef, userId));
 
-      if (docRef.exists()) {
-        redirectPage(docRef)
+      if (docRef.exists()&& docRef.data() != null) {
+        return true
       }
+      return false
 }

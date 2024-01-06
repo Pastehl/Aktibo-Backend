@@ -37,7 +37,7 @@
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^4.0.0",
     "crypto-browserify": "^3.12.0",
-    "firebase": "^10.6.0",
+    "firebase": "^9.14.0",
     "firebase-admin": "^11.11.1",
     "firebase-tools": "^12.5.4",
     "fs": "^0.0.1-security",
