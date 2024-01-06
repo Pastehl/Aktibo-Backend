@@ -1186,8 +1186,7 @@ modal exercise
     margin: 0 10px;
     text-align: center;
     font-size: 36px;
-    cursor: not-allowed;
-    pointer-events: none;
+    pointer-events: pointer;
 }
 
 .input:focus {

@@ -94,6 +94,7 @@ googleLoginButton.addEventListener("click", function () {
 
             if (error.code == 'auth/multi-factor-auth-required') {
               console.log("MFA Reached")
+              recreateElement('recaptcha-container')
               document.getElementById('recaptcha-container').innerHTML="";
               const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
                   'size': 'invisible',
@@ -103,6 +104,8 @@ googleLoginButton.addEventListener("click", function () {
                     // ...
                   },
                   'expired-callback': () => {
+                    showToast("OTP expired. Please try again.");
+
                     // Response expired. Ask user to solve reCAPTCHA again.
                     // ...
                   }
@@ -127,18 +130,32 @@ googleLoginButton.addEventListener("click", function () {
                               const cred = PhoneAuthProvider.credential(verificationId, getInputs());
                               const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
 
-                              return resolver.resolveSignIn(multiFactorAssertion);
+                              return resolver.resolveSignIn(multiFactorAssertion).then(function(){
+                                modal2fa.hide()
+                                
+                              })
+                              .catch((error) => {
+                                if(error.code == 'auth/invalid-verification-code'){
+                                  showToast("Wrong OTP. Please try again.");
+                                }
+                                else if(error.code == 'auth/code-expired'){
+                                  showToast("Expired OTP.")
+                                }
+                             })
                             })
                             
 
                         })
                         .then(function (userCredential) {
                             // User successfully signed in with the second factor phone number.
-                        });
+                        })           
                 }
             } else if (error.code == 'auth/wrong-password') {
-              console.log("eror not found acc")
+              showToast("Account not found. Please create an account on our mobile app.")
                 // Handle other errors such as wrong password.
+            }
+            else {
+              showToast("Error occurred. Please refresh the website.")
             }
         });
 });
@@ -164,18 +181,15 @@ async function redirectPage(docRef){
       }
 }
 
-// function recreateElement(elementID){
-//   var old_element = document.getElementById(elementID);
-//   var new_element = old_element.cloneNode(true);
-//   old_element.parentNode.replaceChild(new_element, old_element);
-// }
+function recreateElement(elementID){
+  var old_element = document.getElementById(elementID);
+  var new_element = old_element.cloneNode(true);
+  old_element.parentNode.replaceChild(new_element, old_element);
+}
 
-var openModalBtn = document.getElementById("2faOpen");
 var modal2fa = new bootstrap.Modal('#otpModal');
 
-openModalBtn.addEventListener('click',function(){
-  modal2fa.show()
-})
+
 var cancelBtn = document.getElementById('CancelBtn')
 
 cancelBtn.addEventListener('click', function(){
@@ -236,6 +250,7 @@ inputs.addEventListener("keyup", function (e) {
   }
 });
 
+
 function getInputs(){
   const inputElements = document.querySelectorAll('#inputs .input');
   let resultString = '';
@@ -276,3 +291,4 @@ const userRef = collection(db, "users");
       }
       return false
 }
+
