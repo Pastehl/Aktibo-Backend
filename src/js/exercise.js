@@ -652,8 +652,9 @@ async function addExerciseVideoSrc(docId){
   let src = docSnap.data().video
   console.log(src)
   console.log(videoModalSrc.src)
-  if(src.length > 0){
-    
+  if(src == null){
+    src = ""
+    showToast("Video does not exist.")
   }
   videoModalSrc.src = src
 }
@@ -829,6 +830,7 @@ async function updateExerciseDocument(docId){
   })
   }
   else{
+     const videoUrl = await uploadVideo(file);
       await setDoc(updateRef, {
     category: category,
     est_time: est_time,
@@ -838,7 +840,7 @@ async function updateExerciseDocument(docId){
     reps_duration: reps,
     sets: sets,
     tags: tags,
-    video: uploadVideo(file)
+    video: videoUrl
   })
   }
 
