@@ -548,7 +548,6 @@ async function fillModal(docId){
   var reps = document.getElementById('reps_duration')
   var sets = document.getElementById('sets')
   var est_t = document.getElementById('est_time')
-  //var secs = document.getElementById('est_time_sec')
   var category = document.getElementById('category')
   var intensity = document.getElementById('intensity')
   var heading = document.getElementById('heading')
