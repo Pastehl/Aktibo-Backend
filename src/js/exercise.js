@@ -817,30 +817,30 @@ async function updateExerciseDocument(docId){
   var fileLink = document.getElementById('video')
   var file = fileLink.files[0]
   const updateRef = doc(db,"exercises", docId)
-  if(file == null){
+  if(file != null){
+     const videoUrl = await uploadVideo(file);
     await setDoc(updateRef, {
-    category: category,
-    est_time: est_time,
-    instructions: instArr,
-    intensity: intensity,
-    name: exerciseName,
-    reps_duration: reps,
-    sets: Number(sets),
-    tags: tags,
+      category: category,
+      est_time: est_time,
+      instructions: instArr,
+      intensity: intensity,
+      name: exerciseName,
+      reps_duration: reps,
+      sets: sets,
+      tags: tags,
+      video: videoUrl
   })
   }
   else{
-     const videoUrl = await uploadVideo(file);
-      await setDoc(updateRef, {
-    category: category,
-    est_time: est_time,
-    instructions: instArr,
-    intensity: intensity,
-    name: exerciseName,
-    reps_duration: reps,
-    sets: sets,
-    tags: tags,
-    video: videoUrl
+    await updateDoc(updateRef, {
+      category: category,
+      est_time: est_time,
+      instructions: instArr,
+      intensity: intensity,
+      name: exerciseName,
+      reps_duration: reps,
+      sets: Number(sets),
+      tags: tags,
   })
   }
 
