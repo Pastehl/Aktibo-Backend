@@ -779,7 +779,7 @@ async function createNewExerciseDocument() {
       intensity: intensity,
       name: exerciseName,
       reps_duration: reps,
-      sets: sets,
+      sets: Number(sets),
       tags: tags,
       video: await uploadVideo(file)
     })
@@ -825,7 +825,7 @@ async function updateExerciseDocument(docId){
     intensity: intensity,
     name: exerciseName,
     reps_duration: reps,
-    sets: sets,
+    sets: Number(sets),
     tags: tags,
   })
   }
