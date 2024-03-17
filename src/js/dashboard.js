@@ -198,11 +198,11 @@ const redGraph = {
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
+    ctx.font = "bold 1.5rem sans-serif"; //text formatting
     ctx.fillStyle = "rgb(255,0,0)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Red`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(`595`, xCoor, yCoor); //Change first argument to change text inside the circle
 
     // var bottomText = 'Red';
     // var bottomTextX = ctx.canvas.width / 2
@@ -224,20 +224,20 @@ const blueGraph = {
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
+    ctx.font = "bold 1rem sans-serif"; //text formatting
     ctx.fillStyle = "rgb(0, 0, 255)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Blue`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(`48g`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    var bottomText = "Blue";
-    var bottomTextX = ctx.canvas.width / 2;
-    var bottomTextY = ctx.canvas.height - 10;
-    ctx.fillStyle = "#000";
-    ctx.font = "20px sans-serif"; //text formatting
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    // var bottomText = "Blue";
+    // var bottomTextX = ctx.canvas.width / 2;
+    // var bottomTextY = ctx.canvas.height - 10;
+    // ctx.fillStyle = "#000";
+    // ctx.font = "20px sans-serif"; //text formatting
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 
@@ -250,20 +250,20 @@ const yellowGraph = {
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
+    ctx.font = "bold 1rem sans-serif"; //text formatting
     ctx.fillStyle = "rgb(218, 165, 32)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Yellow`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(`22g`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    var bottomText = "Yellow";
-    var bottomTextX = ctx.canvas.width / 2;
-    var bottomTextY = ctx.canvas.height - 10;
-    ctx.fillStyle = "#000";
-    ctx.font = "20px sans-serif"; //text formatting
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    // var bottomText = "Yellow";
+    // var bottomTextX = ctx.canvas.width / 2;
+    // var bottomTextY = ctx.canvas.height - 10;
+    // ctx.fillStyle = "#000";
+    // ctx.font = "20px sans-serif"; //text formatting
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 
@@ -276,20 +276,20 @@ const grayGraph = {
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
+    ctx.font = "bold 1rem sans-serif"; //text formatting
     ctx.fillStyle = "rgb(54, 69, 79)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Gray`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(`22g`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    var bottomText = "Gray";
-    var bottomTextX = ctx.canvas.width / 2;
-    var bottomTextY = ctx.canvas.height - 10;
-    ctx.fillStyle = "#000";
-    ctx.font = "20px sans-serif"; //text formatting
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    // var bottomText = "Gray";
+    // var bottomTextX = ctx.canvas.width / 2;
+    // var bottomTextY = ctx.canvas.height - 10;
+    // ctx.fillStyle = "#000";
+    // ctx.font = "20px sans-serif"; //text formatting
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 
@@ -312,7 +312,7 @@ new Chart(ctx, {
     responsive: true,
 
     //adjust to resize thickness of doughnut
-    cutout: 60,
+    cutout: "80%",
   },
 });
 
@@ -333,7 +333,7 @@ new Chart(ctx2, {
   options: {
     maintainAspectRatio: true,
     responsive: true,
-    cutout: 60,
+    cutout: "80%",
   },
 });
 
@@ -354,7 +354,7 @@ new Chart(ctx5, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
-    // cutout: 55,
+    cutout: "80%",
   },
 });
 
@@ -373,9 +373,9 @@ new Chart(ctx6, {
   },
   plugins: [blueGraph],
   options: {
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     responsive: true,
-    // cutout: 45,
+    cutout: "80%",
   },
 });
 
@@ -393,9 +393,9 @@ new Chart(ctx7, {
     ],
   },
   options: {
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     responsive: true,
-    // cutout: 45,
+    cutout: "80%",
   },
   plugins: [yellowGraph],
 });
@@ -414,9 +414,9 @@ new Chart(ctx8, {
     ],
   },
   options: {
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     responsive: true,
-    // cutout: 45,
+    cutout: "80%",
   },
   plugins: [grayGraph],
 });
