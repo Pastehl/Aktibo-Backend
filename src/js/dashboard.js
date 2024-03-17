@@ -444,6 +444,10 @@ new Chart(ctx3, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
+
+    //change bar color, same with line chart
+    backgroundColor: "#63A91F",
+
     scales: {
       y: {
         beginAtZero: true,
@@ -475,6 +479,7 @@ new Chart(ctx4, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
+    backgroundColor: "#63A91F",
     scales: {
       y: {
         beginAtZero: true,
@@ -488,6 +493,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var calendar = new Calendar(calendarEl, {
     plugins: [dayGridPlugin],
+    backgroundColor: "#63A91F",
   });
 
   calendar.render();
