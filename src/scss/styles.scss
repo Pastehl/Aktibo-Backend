@@ -752,6 +752,31 @@ article:has(:hover, :focus) {
     // border: 2px solid #63A91F;
 }
 
+.chartt-container-buttons {
+    // display: flex;
+    // max-width: 100%;
+    // position: relative;
+
+    // //top-bottom left-right
+    // margin: .5em .5em;
+    // padding: .5em .5em;
+
+    // align-items: center;
+    // justify-content: center;
+    // overflow: visible;
+    // // border-radius: 25px;
+    // // border: 2px solid #63A91F;
+    display: flex;
+    flex-direction: column; /* Ensure items stack vertically */
+    max-width: 100%;
+    position: relative;
+    margin: .5em .5em; /* Adjust margins as needed */
+    padding: .5em .5em; /* Adjust padding as needed */
+    // align-items: center;
+     justify-content: center;
+    overflow: visible;
+}
+
 .chart-green-border {
     border-radius: 25px;
     border: 1px solid #63A91F;
