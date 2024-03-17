@@ -52,9 +52,15 @@
         <div class="chartt-container .padding-one chart-green-border"> <!-- chart-container-->
           <canvas id="myChart4"></canvas>
         </div>
-        <div class="chartt-container"> <!-- chart-container -->
-          <button type="button">Temp1</button>
-          <button type="button">Temp2</button>
+        <div class="chartt-container flex-column"> <!-- chart-container -->
+          <div class="dashboard-btn" onclick="enterFoodRecordFunctionHere()">
+            <i class='bx bxs-food-menu'></i>
+            <p>Food Record</p>
+          </div>
+          <div class="dashboard-btn" onclick="enterGenerateReportFunctionHere()">
+            <i class='bx bxs-report'></i>
+            <p>Generate Reports</p>
+          </div>
         </div>
         <div class="chartt-container flex-column"> <!-- chart-container2 -->
           <div class="charts-large">

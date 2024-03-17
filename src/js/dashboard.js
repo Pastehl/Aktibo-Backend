@@ -298,7 +298,7 @@ new Chart(ctx, {
   data: {
     datasets: [
       {
-        data: [300, 50], //data
+        data: [250, 50], //data
         backgroundColor: [
           "rgb(99,169,31)", //dark color
           "rgb(40,54,26)", //light color
@@ -321,7 +321,7 @@ new Chart(ctx2, {
   data: {
     datasets: [
       {
-        data: [300, 50], //data
+        data: [240, 170], //data
         backgroundColor: [
           "rgb(255,127,17)", //dark color
           "rgb(243,223,194)", //light color
@@ -342,7 +342,7 @@ new Chart(ctx5, {
   data: {
     datasets: [
       {
-        data: [300, 50], //data
+        data: [100, 250], //data
         backgroundColor: [
           "rgb(255,0,0)", //dark color
           "rgb(255,114,118)", //light color
@@ -363,7 +363,7 @@ new Chart(ctx6, {
   data: {
     datasets: [
       {
-        data: [300, 50], //data
+        data: [240, 110], //data
         backgroundColor: [
           "rgb(0, 0, 255)", //dark color
           "rgb(37, 207, 240)", //light color

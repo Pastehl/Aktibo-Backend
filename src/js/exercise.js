@@ -19,7 +19,7 @@ import {
   arrayRemove,
   documentId
 } from "firebase/firestore";
-import {  getStorage, ref, uploadBytesResumable, getDownloadURL ,uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
 import * as bootstrap from 'bootstrap'
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
 
@@ -80,7 +80,7 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 });
 
 //modal
-var modal =new bootstrap.Modal('#myModal',{keyboard:false});
+var modal = new bootstrap.Modal('#myModal', { keyboard: false });
 var videomodal = new bootstrap.Modal('#videoModal');
 var instructionsModal = new bootstrap.Modal('#instructionsModal')
 var openModalBtn = document.getElementById("addbtn");
@@ -93,14 +93,14 @@ var exerciseSearchBtn = document.getElementById('exerciseSearchButton')
 var exerciseTextField = document.getElementById('exerciseTextField')
 
 
-openModalBtn.addEventListener('click',function(){
-    clearModal()
-    removeAllListeners(document.getElementById('video'))
-    addFileUploadStateEventListener()
-    removeAllListenersFromClass(submitBtn)
-    addSubmitBtnEventListener(submitBtn)
-    modal.show()
-}) 
+openModalBtn.addEventListener('click', function () {
+  clearModal()
+  removeAllListeners(document.getElementById('video'))
+  addFileUploadStateEventListener()
+  removeAllListenersFromClass(submitBtn)
+  addSubmitBtnEventListener(submitBtn)
+  modal.show()
+})
 
 cancelButton.onclick = function () {
   console.log('close cancel')
@@ -109,45 +109,44 @@ cancelButton.onclick = function () {
 
 }
 
-
-function addSubmitBtnEventListener(submitBtn){  
+function addSubmitBtnEventListener(submitBtn) {
   for (let index = 0; index < submitBtn.length; index++) {
     const element = submitBtn[index];
-    element.addEventListener('click',function(){
-      if(validateExercise()){
-      createNewExerciseDocument()
-      clearModal()
-      modal.hide()
-      removeAllListenersFromClass(submitBtn)
-    }
-  })
+    element.addEventListener('click', function () {
+      if (validateExercise()) {
+        createNewExerciseDocument()
+        clearModal()
+        modal.hide()
+        removeAllListenersFromClass(submitBtn)
+      }
+    })
   }
-  
+
 }
 
-closeVideoBtn.addEventListener('click', function (){
+closeVideoBtn.addEventListener('click', function () {
   videomodal.hide()
 })
-exerciseSearchBtn.addEventListener('click', function (){
+exerciseSearchBtn.addEventListener('click', function () {
   var selectedValue = searchOptionDropdown.value;
 
-  if(selectedValue == "id"){
+  if (selectedValue == "id") {
     sortBySearchId(exerciseTextField.value)
   }
-  if(selectedValue == "name"){
+  if (selectedValue == "name") {
     sortBySearchName(exerciseTextField.value)
   }
-  if(selectedValue == "category"){
+  if (selectedValue == "category") {
     sortByCategory()
   }
-  if(selectedValue == "intensity"){
+  if (selectedValue == "intensity") {
     sortByIntensity()
   }
-  if(selectedValue == "tags"){
+  if (selectedValue == "tags") {
     sortByTags(exerciseTextField.value)
-  } 
+  }
   exerciseTextField.value = ""
- 
+
 })
 
 //Instructions Variables
@@ -169,60 +168,60 @@ var tagNumb = document.querySelector(".details-tags span");
 // console.log(tagNumb)
 
 let maxTags = 10,
-tags = ["test1", "test2"];
+  tags = ["test1", "test2"];
 
 countTags();
 createTag();
 createInst()
 addRemoveTagBtnEventlistener();
 
-function countTags(){
-    input.focus();
-    tagNumb.innerText = maxTags - tags.length;
+function countTags() {
+  input.focus();
+  tagNumb.innerText = maxTags - tags.length;
 }
 
-function createTag(){
-    ul.querySelectorAll("li").forEach(li => li.remove());
-    tags.slice().reverse().forEach(tag =>{
-      //console.log(tag)
-        let liTag = `<li>${tag} <i class="bx bxs-x-circle tagClose" ></i></li>`;
-        ul.insertAdjacentHTML("afterbegin", liTag);
-    });
-    countTags();
+function createTag() {
+  ul.querySelectorAll("li").forEach(li => li.remove());
+  tags.slice().reverse().forEach(tag => {
+    //console.log(tag)
+    let liTag = `<li>${tag} <i class="bx bxs-x-circle tagClose" ></i></li>`;
+    ul.insertAdjacentHTML("afterbegin", liTag);
+  });
+  countTags();
 }
-function createInst(){
-    ulInst.querySelectorAll("li").forEach(li => li.remove());
-    instArr.slice().reverse().forEach(inst =>{
-      //console.log(inst)
-        let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
-        ulInst.insertAdjacentHTML("afterbegin", liInst);
-    });
-    inputInst.focus()
+function createInst() {
+  ulInst.querySelectorAll("li").forEach(li => li.remove());
+  instArr.slice().reverse().forEach(inst => {
+    //console.log(inst)
+    let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
+    ulInst.insertAdjacentHTML("afterbegin", liInst);
+  });
+  inputInst.focus()
 }
 
 
-function remove(element, tag){
+function remove(element, tag) {
 
-    console.log(tags)
-    tags.splice(tags.indexOf(tag), 1);
-    console.log('after')
-    element.parentElement.remove();
-    console.log(tags)
-    countTags();
+  console.log(tags)
+  tags.splice(tags.indexOf(tag), 1);
+  console.log('after')
+  element.parentElement.remove();
+  console.log(tags)
+  countTags();
 }
-function removeInst(element, inst){
-    console.log(instArr)
-    instArr.splice(instArr.indexOf(inst), 1);
-    console.log('after')
-    element.parentElement.remove();
-    console.log(instArr)
+function removeInst(element, inst) {
+  console.log(instArr)
+  instArr.splice(instArr.indexOf(inst), 1);
+  console.log('after')
+  element.parentElement.remove();
+  console.log(instArr)
 }
 
 
 //Check for enter in Instructions    
-inputInst.addEventListener('keydown', function (e){
-  console.log(e.key+ "*INST*")
-  if(e.key === 'Enter'){
+inputInst.addEventListener('keydown', function (e) {
+  console.log(e.key + "*INST*")
+  if (e.key === 'Enter') {
     console.log(e.target.value)
     e.preventDefault()
     inputInst.focus()
@@ -232,79 +231,79 @@ inputInst.addEventListener('keydown', function (e){
 })
 //Check for enter in tags
 input.addEventListener("keydown", function (e) {
-    console.log(e.key)
-    if(e.key === 'Enter'){
-      console.log(e.target.value)
-      e.preventDefault()  
-      input.focus()
-      addTag(e)
+  console.log(e.key)
+  if (e.key === 'Enter') {
+    console.log(e.target.value)
+    e.preventDefault()
+    input.focus()
+    addTag(e)
   }
 });
 //Check for enter in Instructions
-function addInst(e){
+function addInst(e) {
   console.log("Instruction ADD")
   console.log("*******")
   console.log(e.target.value)
   let inst = e.target.value.replace(/\s+/g, ' ');
-  console.log(typeof(inst))
+  console.log(typeof (inst))
   console.log(inst)
-  if(!instArr.includes(inst)){
-          inst.split(',').forEach(inst => {
-            if(inst != ""){
-              instArr.push(inst);
-              console.log(instArr)
-              createInst();
-              // Create toast? tag sucessfully added?
-            }
-
-          });
+  if (!instArr.includes(inst)) {
+    inst.split(',').forEach(inst => {
+      if (inst != "") {
+        instArr.push(inst);
+        console.log(instArr)
+        createInst();
+        // Create toast? tag sucessfully added?
       }
 
-      e.target.value = "";  
-    addRemoveTagBtnEventlistener()
+    });
+  }
+
+  e.target.value = "";
+  addRemoveTagBtnEventlistener()
 }
 //Add element in Tags []
-function addTag(e){
+function addTag(e) {
   console.log("TAG ADD")
-    if(e.key == "Enter"){
-      console.log(e.target)
-        let tag = e.target.value.replace(/\s+/g, ' ');
-        console.log(tag)
-        if(tag.length > 1 && !tags.includes(tag)){
-            if(tags.length < 10){
-                tag.split(',').forEach(tag => {
-                  if(tag != ""){
-                    tags.push(tag);
-                    createTag();
-                    // Create toast? tag sucessfully added?
-                  }
+  if (e.key == "Enter") {
+    console.log(e.target)
+    let tag = e.target.value.replace(/\s+/g, ' ');
+    console.log(tag)
+    if (tag.length > 1 && !tags.includes(tag)) {
+      if (tags.length < 10) {
+        tag.split(',').forEach(tag => {
+          if (tag != "") {
+            tags.push(tag);
+            createTag();
+            // Create toast? tag sucessfully added?
+          }
 
-                });
-            }
-            else{
-              // Create toast maximum number of tags hit
-            }
-        }
-        e.target.value = "";
+        });
+      }
+      else {
+        // Create toast maximum number of tags hit
+      }
     }
-    addRemoveTagBtnEventlistener()
+    e.target.value = "";
+  }
+  addRemoveTagBtnEventlistener()
 }
 //Remove Btn for Tags
 const removeBtn = document.querySelector(".details button");
-removeBtn.addEventListener("click", () =>{
-    tags.length = 0;
-    ul.querySelectorAll("li").forEach(li => li.remove());
-    input.value = ""
-    countTags();
+removeBtn.addEventListener("click", () => {
+  tags.length = 0;
+  ul.querySelectorAll("li").forEach(li => li.remove());
+  input.value = ""
+  countTags();
 });
 //Remove Btn for Instructions
 const removeInstructionsBtn = document.querySelector('.ins-details button')
-removeInstructionsBtn.addEventListener("click", () =>{
-    ulInst.querySelectorAll("li").forEach(li => li.remove());
-    inputInst.value = ""
+removeInstructionsBtn.addEventListener("click", () => {
+  ulInst.querySelectorAll("li").forEach(li => li.remove());
+  inputInst.value = ""
 });
 
-function addRemoveTagBtnEventlistener(){
+function addRemoveTagBtnEventlistener() {
   let removeTag = document.getElementsByClassName("bxs-x-circle");
   removeAllListenersFromClass(removeTag)
   let elemClassList = ""
@@ -313,26 +312,26 @@ function addRemoveTagBtnEventlistener(){
     const text = element.textContent
     elemClassList = element.classList
 
-    if(elemClassList.contains("instClose")){
+    if (elemClassList.contains("instClose")) {
       element.addEventListener("click", function (e) {
-      console.log("clicked")
-      console.log()
-      removeInst(e.target,text)
-    });
+        console.log("clicked")
+        console.log()
+        removeInst(e.target, text)
+      });
     }
-    else{
+    else {
       element.addEventListener("click", function (e) {
-      console.log("clicked")
-      console.log()
-      remove(e.target,text)
-    });
+        console.log("clicked")
+        console.log()
+        remove(e.target, text)
+      });
     }
 
   }
 }
 //Ensure only 1 event listener is binded
 function removeAllListenersFromClass(elements) {
-  Array.from(elements).forEach(function(element) {
+  Array.from(elements).forEach(function (element) {
     var clonedElement = element.cloneNode(true);
     element.parentNode.replaceChild(clonedElement, element);
   });
@@ -340,7 +339,7 @@ function removeAllListenersFromClass(elements) {
 
 //Text Field Validation
 function validateExercise() {
-//TextFields
+  //TextFields
   var exerciseName = document.getElementById('name')
   var reps = document.getElementById('reps_duration')
   var sets = document.getElementById('sets')
@@ -354,35 +353,35 @@ function validateExercise() {
 
   // Check if exerciseName is empty
   if (exerciseNameValue === '') {
-      showToast('Exercise Name cannot be empty.');
-      exerciseName.focus();
-      return false;
+    showToast('Exercise Name cannot be empty.');
+    exerciseName.focus();
+    return false;
   }
 
   // Check if reps and sets are empty strings
-  if (repsValue === '' ) {
-      showToast('Repetitions/Duration cannot be empty.');
-      return false;
+  if (repsValue === '') {
+    showToast('Repetitions/Duration cannot be empty.');
+    return false;
   }
   if (isNaN(setsValue) || setsValue <= 0) {
-      showToast('Sets cannot be 0 or non-negative numbers.');
-      return false;
+    showToast('Sets cannot be 0 or non-negative numbers.');
+    return false;
   }
 
   // Check if mins and secs are non-negative numbers
   if (est_time === '') {
-      showToast('Estimated Time cannot be empty.');
-      return false;
+    showToast('Estimated Time cannot be empty.');
+    return false;
   }
 
   //check if instructions and exercise tags are empty
-  if(instArr.length === 0) {
+  if (instArr.length === 0) {
     showToast('No instructions placed');
-     return false;
+    return false;
 
 
   }
-  if(tags.length === 0) {
+  if (tags.length === 0) {
     showToast('Exercise tag is empty');
     return false;
   }
@@ -401,29 +400,29 @@ function validateExercise() {
     showToast('Please select a file.');
     return false;
   }
-  
+
   return true
 }
-function addFileUploadStateEventListener(){
+function addFileUploadStateEventListener() {
   var fileInput = document.getElementById('video');
   // Set the accept attribute to allow only .mp4 files
   fileInput.accept = '.mp4';
 
   // Add an event listener to check the file size
-  fileInput.addEventListener('change', function() {
+  fileInput.addEventListener('change', function () {
     var file = fileInput.files[0];
     // Check if the file type is .mp4 and the size is within the limit (7 MB)
     if (file != undefined && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-    } 
-  
+    }
+
     else {
       // Optionally clear the file input to prevent an invalid file from being selected
       showToast("Wrong File Type or File Size.")
       fileInput.value = '';
-  }
-    });
+    }
+  });
 }
-  
+
 function showToast(message) {
   var toastContainer = document.querySelector('.toast-container');
   var toastBody = document.querySelector('.toast-body');
@@ -435,7 +434,7 @@ function showToast(message) {
   var toast = new bootstrap.Toast(document.getElementById('liveToast'));
   toast.show();
 }
-function showExercise(doc,exerciseListContainer){
+function showExercise(doc, exerciseListContainer) {
   var exerciseName = doc.data().name
   var category = doc.data().category
   var intensity = doc.data().intensity
@@ -446,15 +445,15 @@ function showExercise(doc,exerciseListContainer){
 
   let est_time = doc.data().est_time
   //var video = doc.data().video
-  if(est_time == undefined && est_time_min.length > 0){
+  if (est_time == undefined && est_time_min.length > 0) {
     est_time = est_time_min + " mins"
   }
-  if(est_time == undefined && est_time_sec.length > 0){
+  if (est_time == undefined && est_time_sec.length > 0) {
     est_time = est_time_sec + " secs"
-  } 
+  }
 
-  exerciseListContainer.innerHTML+=
-  `
+  exerciseListContainer.innerHTML +=
+    `
   <tr class="row bg-white">
     <th class="col" >` + exerciseName + `</th>
     <th class="col" >` + category + `</th>
@@ -469,22 +468,22 @@ function showExercise(doc,exerciseListContainer){
 
   `
 
-addOpenVideoPlayerEventListener()
-addEditExercisesEventListener()
-addOpenInstructionEventListener()
+  addOpenVideoPlayerEventListener()
+  addEditExercisesEventListener()
+  addOpenInstructionEventListener()
 }
 getExercises()
-async function getExercises(){
-const q = query(collection(db, "exercises"))//, orderBy("", "asc"));
+async function getExercises() {
+  const q = query(collection(db, "exercises"))//, orderBy("", "asc"));
   const querySnapshot = await getDocs(q);
   let exerciseListContainer = document.getElementById('exerciseListContainer')
   exerciseListContainer.innerHTML = ""
-  querySnapshot.forEach((doc) =>{
-    showExercise(doc,exerciseListContainer)
+  querySnapshot.forEach((doc) => {
+    showExercise(doc, exerciseListContainer)
   })
 }
 
-function addOpenVideoPlayerEventListener(){
+function addOpenVideoPlayerEventListener() {
   var vidPlayerBtn = document.getElementsByClassName('videoPlayerBtn')
   removeAllListenersFromClass(vidPlayerBtn)
 
@@ -497,7 +496,7 @@ function addOpenVideoPlayerEventListener(){
     });
   }
 }
-function addEditExercisesEventListener(){
+function addEditExercisesEventListener() {
   var vidPlayerBtn = document.getElementsByClassName('editExerciseBtn')
   removeAllListenersFromClass(vidPlayerBtn)
   removeAllListeners(document.getElementById('video'))
@@ -507,13 +506,13 @@ function addEditExercisesEventListener(){
     element.addEventListener('click', function (e) {
       //fill in the values
       updateExercises(element.dataset.docId)
-      
+
       modal.show()
 
     });
   }
 }
-function addOpenInstructionEventListener(){
+function addOpenInstructionEventListener() {
   var instructionBtn = document.getElementsByClassName('instructionBtn')
   removeAllListenersFromClass(instructionBtn)
 
@@ -525,25 +524,25 @@ function addOpenInstructionEventListener(){
     });
   }
 }
-function addUpdateBtnEventListener(){
+function addUpdateBtnEventListener() {
   var updateBtn = document.getElementsByClassName('submitUpdateBtn')
   removeAllListenersFromClass(updateBtn)
   for (let index = 0; index < submitBtn.length; index++) {
     const element = updateBtn[index];
-    element.addEventListener('click',function(){
+    element.addEventListener('click', function () {
       updateExerciseDocument(element.dataset.docId)
     })
   }
 
-  
+
 }
-async function updateExercises(docId){
+async function updateExercises(docId) {
 
   clearModal()
   fillModal(docId)
 }
 
-async function fillModal(docId){
+async function fillModal(docId) {
   var exerciseName = document.getElementById('name')
   var reps = document.getElementById('reps_duration')
   var sets = document.getElementById('sets')
@@ -555,7 +554,7 @@ async function fillModal(docId){
   var submitBtn = document.getElementById('submitBtn');
 
   const docRef = doc(db, "exercises", docId);
-  const docSnap = await getDoc(docRef);  
+  const docSnap = await getDoc(docRef);
 
   //input values
   exerciseName.value = docSnap.data().name;
@@ -596,7 +595,7 @@ async function fillModal(docId){
 
 }
 
-function clearModal(){
+function clearModal() {
   var exerciseName = document.getElementById('name')
   var reps = document.getElementById('reps_duration')
   var sets = document.getElementById('sets')
@@ -607,10 +606,10 @@ function clearModal(){
   var videoText = document.getElementById('video')
   var submitBtn = document.getElementById('submitBtn');
 
-  if(videoText == null){
+  if (videoText == null) {
     videoText = document.getElementById('videoText')
   }
-  if(submitBtn == null){
+  if (submitBtn == null) {
     submitBtn = document.getElementById('updateBtn');
   }
   removeAllListenersFromClass(submitBtn)
@@ -622,7 +621,7 @@ function clearModal(){
   est_t.value = ''
   category.selectedIndex = 0;
   intensity.selectedIndex = 0;
-  heading.innerHTML  = 'New Exercise';
+  heading.innerHTML = 'New Exercise';
 
   // Clearing Tags and Instructions
   instArr = ['do 1', 'do 2']
@@ -636,22 +635,22 @@ function clearModal(){
   submitBtn.id = 'submitBtn'
   submitBtn.innerHTML = 'Add'
   // video.replaceChild(newFileInput, video);
-  
+
   countTags();
   createTag();
   createInst()
   addRemoveTagBtnEventlistener();
-  
+
 }
 
-async function addExerciseVideoSrc(docId){
+async function addExerciseVideoSrc(docId) {
   //get the doc id -> get doc src -> update the modal -> close it src = ""
   const docRef = doc(db, "exercises", docId);
   const docSnap = await getDoc(docRef);
   let src = docSnap.data().video
   console.log(src)
   console.log(videoModalSrc.src)
-  if(src == null){
+  if (src == null) {
     src = ""
     showToast("Video does not exist.")
   }
@@ -739,20 +738,20 @@ async function sortByTags(tag) {
   });
 }
 
-async function sortBySearchName(tag){
+async function sortBySearchName(tag) {
   const q = query(collection(db, "exercises"))
   let exerciseListContainer = document.getElementById('exerciseListContainer')
   exerciseListContainer.innerHTML = ""
   const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) =>{
+  querySnapshot.forEach((doc) => {
     const lowercaseDocName = doc.data().name.toLowerCase();
     const lowercaseTag = tag.toLowerCase();
-    if(lowercaseDocName.includes(lowercaseTag)){
+    if (lowercaseDocName.includes(lowercaseTag)) {
       console.log(lowercaseDocName)
       console.log(doc.id)
-      showExercise(doc,exerciseListContainer)
+      showExercise(doc, exerciseListContainer)
     }
-    
+
   })
 
 }
@@ -768,7 +767,7 @@ async function createNewExerciseDocument() {
   var file = fileInput.files[0]
 
 
-  console.log("Created Document",exerciseName,reps,sets,est_time,category,intensity,file)
+  console.log("Created Document", exerciseName, reps, sets, est_time, category, intensity, file)
   try {
     // Add a new document with a generated id.
     const docRef = await addDoc(collection(db, "exercises"), {
@@ -796,7 +795,7 @@ async function createNewExerciseDocument() {
 }
 
 async function uploadVideo(file) {
-    // Upload file and metadata to the object 'exercise_videos/' + file.name
+  // Upload file and metadata to the object 'exercise_videos/' + file.name
   const storageRef = ref(storage, 'exercise_videos/' + file.name);
   const snapshot = await uploadBytes(storageRef, file);
 
@@ -806,7 +805,7 @@ async function uploadVideo(file) {
 
 }
 
-async function updateExerciseDocument(docId){
+async function updateExerciseDocument(docId) {
   var exerciseName = document.getElementById('name').value
   var reps = document.getElementById('reps_duration').value
   var sets = document.getElementById('sets').value
@@ -815,9 +814,9 @@ async function updateExerciseDocument(docId){
   var intensity = document.getElementById('intensity').value
   var fileLink = document.getElementById('video')
   var file = fileLink.files[0]
-  const updateRef = doc(db,"exercises", docId)
-  if(file != null){
-     const videoUrl = await uploadVideo(file);
+  const updateRef = doc(db, "exercises", docId)
+  if (file != null) {
+    const videoUrl = await uploadVideo(file);
     await setDoc(updateRef, {
       category: category,
       est_time: est_time,
@@ -828,9 +827,9 @@ async function updateExerciseDocument(docId){
       sets: sets,
       tags: tags,
       video: videoUrl
-  })
+    })
   }
-  else{
+  else {
     await updateDoc(updateRef, {
       category: category,
       est_time: est_time,
@@ -840,7 +839,7 @@ async function updateExerciseDocument(docId){
       reps_duration: reps,
       sets: Number(sets),
       tags: tags,
-  })
+    })
   }
 
 
@@ -852,7 +851,7 @@ async function updateExerciseDocument(docId){
 }
 
 function removeAllListeners(element) {
-  
+
   if (element) {
     const clone = element.cloneNode(true);
     element.replaceWith(clone);
@@ -885,7 +884,7 @@ async function showInstructionsModal(docId) {
       // Create a new paragraph element for each instruction
       const paragraph = document.createElement('p');
       paragraph.textContent = element;
-      
+
       // Append the paragraph to the modal body
       modalBody.appendChild(paragraph);
     }
