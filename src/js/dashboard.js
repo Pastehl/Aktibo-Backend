@@ -125,7 +125,7 @@ const doughnutt_Steps = {
     ctx.fillStyle = "rgb(99,169,31)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Steps`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(`10000`, xCoor, yCoor); //Change first argument to change text inside the circle
 
     // var bottomText = "Steps";
     // var bottomTextX = ctx.canvas.width / 2.5;
@@ -176,7 +176,7 @@ const doughnutt_Calories = {
     ctx.fillStyle = "rgb(255,127,17)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Calories`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(`325`, xCoor, yCoor); //Change first argument to change text inside the circle
 
     // var bottomText = "Calories Burned";
     // var bottomTextX = ctx.canvas.width / 2;
