@@ -503,3 +503,4 @@ document.addEventListener("DOMContentLoaded", function () {
     toolbarElement.removeChild(toolbarElement.lastChild);
   }
 });
+

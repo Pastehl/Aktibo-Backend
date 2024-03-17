@@ -72,11 +72,15 @@ ul.nav li.active a {
     //   padding: 10px;
     margin-left: 280px;
     /* Adjust this margin to make room for the sidebar */
-    padding: 20px;
+    padding: 1rem 20px 20px;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     height: 100%;
+    // padding-top: 1rem;
+    text-align: center;
+    min-width: 25rem;
+    font-size: 0.7rem;
 }
 
 .footer {
@@ -285,12 +289,13 @@ header {
     padding: 20px;
 }
 
-.main_content {
-    padding-top: 1rem;
-    text-align: center;
-    min-width: 25rem;
-    font-size: 0.7rem;
-}
+// .main_content {
+//     padding-top: 1rem;
+//     text-align: center;
+//     min-width: 25rem;
+//     font-size: 0.7rem;
+    
+// }
 
 .container-b {
     height: auto;
@@ -708,6 +713,7 @@ article:has(:hover, :focus) {
     width: 100vw;
     height: 100vh;
     flex: 1;
+    
     // margin: 1px, 1px, 1px, 1px;
 }
 
@@ -716,7 +722,7 @@ article:has(:hover, :focus) {
     display: grid;
     grid-template-columns: 33% 34% 33%;
     grid-template-rows: 50% 50%;
-    max-width: 70vw;
+    max-width: 80vw;
     height: 90vh;
     flex: 1;
     gap: 1em;
@@ -775,6 +781,10 @@ article:has(:hover, :focus) {
     // align-items: center;
      justify-content: center;
     overflow: visible;
+}
+
+.food_record {
+    border-radius: 20px;
 }
 
 .chart-green-border {
@@ -1035,6 +1045,7 @@ article:has(:hover, :focus) {
     margin-right: 10px;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 #dropdown-content ul {
@@ -1381,4 +1392,8 @@ modal exercise .modal {
     width: 100%;
     max-width: 1200px;
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-container{
+    cursor: pointer;
 }
