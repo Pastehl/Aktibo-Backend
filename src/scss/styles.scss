@@ -756,6 +756,19 @@ article {
     // margin: 10px 5px 5px 5px;
 }
 
+//style for div inside charts-1
+
+.charts-1 div {
+    padding: .3em;
+    height: 100%;
+}
+
+.charts-1 h6 {
+    font-size: 1rem;
+    font-family: sans-serif;
+    margin: auto;
+}
+
 .charts-large {
     height: 50%;
     width: 100%;

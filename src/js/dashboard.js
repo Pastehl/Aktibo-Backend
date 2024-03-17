@@ -121,20 +121,20 @@ const doughnutt_Steps = {
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
+    ctx.font = "bold 1.3rem sans-serif"; //text formatting
     ctx.fillStyle = "rgb(99,169,31)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(`Steps`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    var bottomText = "Steps";
-    var bottomTextX = ctx.canvas.width / 2;
-    var bottomTextY = ctx.canvas.height /1.3;
-    ctx.fillStyle = "#000";
-    ctx.font = "20px sans-serif"; //text formatting
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    // var bottomText = "Steps";
+    // var bottomTextX = ctx.canvas.width / 2.5;
+    // var bottomTextY = ctx.canvas.height / 1.5;
+    // ctx.fillStyle = "#000";
+    // ctx.font = "20px sans-serif"; //text formatting
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 
@@ -152,6 +152,7 @@ const doughnut_Calories = {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(`Calories`, xCoor, yCoor); //Change first argument to change text inside the circle
+
     var bottomText = "Calories Burned";
     var bottomTextX = ctx.canvas.width / 2;
     var bottomTextY = ctx.canvas.height - 80;
@@ -160,6 +161,31 @@ const doughnut_Calories = {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(bottomText, bottomTextX, bottomTextY);
+  },
+};
+
+//modified dougnut_Calories
+const doughnutt_Calories = {
+  id: "doughnut_Calories",
+  beforeDatasetsDraw(chart, args, pluginOptions) {
+    const { ctx, data } = chart;
+    ctx.save();
+    const xCoor = chart.getDatasetMeta(0).data[0].x;
+    const yCoor = chart.getDatasetMeta(0).data[0].y;
+    ctx.font = "bold 1.3rem sans-serif"; //text formatting
+    ctx.fillStyle = "rgb(255,127,17)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`Calories`, xCoor, yCoor); //Change first argument to change text inside the circle
+
+    // var bottomText = "Calories Burned";
+    // var bottomTextX = ctx.canvas.width / 2;
+    // var bottomTextY = ctx.canvas.height - 80;
+    // ctx.fillStyle = "#000";
+    // ctx.font = "20px sans-serif"; //text formatting
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 
@@ -282,11 +308,11 @@ new Chart(ctx, {
   },
   plugins: [doughnutt_Steps], //doughnut_Steps
   options: {
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     responsive: true,
 
     //adjust to resize thickness of doughnut
-    cutout: 70,
+    cutout: 60,
   },
 });
 
@@ -303,11 +329,11 @@ new Chart(ctx2, {
       },
     ],
   },
-  plugins: [doughnut_Calories],
+  plugins: [doughnutt_Calories],
   options: {
-    maintainAspectRatio: false,
-    // responsive: true,
-    cutout: 70,
+    maintainAspectRatio: true,
+    responsive: true,
+    cutout: 60,
   },
 });
 
@@ -328,7 +354,7 @@ new Chart(ctx5, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
-    cutout: 55,
+    // cutout: 55,
   },
 });
 
@@ -349,7 +375,7 @@ new Chart(ctx6, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
-    cutout: 45,
+    // cutout: 45,
   },
 });
 
@@ -369,7 +395,7 @@ new Chart(ctx7, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
-    cutout: 45,
+    // cutout: 45,
   },
   plugins: [yellowGraph],
 });
@@ -390,7 +416,7 @@ new Chart(ctx8, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
-    cutout: 45,
+    // cutout: 45,
   },
   plugins: [grayGraph],
 });
