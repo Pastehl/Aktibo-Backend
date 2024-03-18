@@ -5,7 +5,7 @@ const autoprefixer = require('autoprefixer')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
-let pages = ["index", "homepage", "report", "exercise","test","exerciseForms",'dashboard','userMoments'];
+let pages = ["index", "homepage", "report", "exercise", "test", "exerciseForms", 'dashboard', 'userMoments'];
 
 
 module.exports = {
@@ -15,24 +15,24 @@ module.exports = {
     }, {}),
     optimization: {
         splitChunks: {
-          chunks: "all",
+            chunks: "all",
         },
     },
     plugins: [].concat(
         pages.map(
-          (page) =>
-            new HtmlWebpackPlugin({
-              inject: true,
-              template: `./src/${page}.html`,
-              filename: `${page}.html`,
-              chunks: [page],
-            })
+            (page) =>
+                new HtmlWebpackPlugin({
+                    inject: true,
+                    template: `./src/${page}.html`,
+                    filename: `${page}.html`,
+                    chunks: [page],
+                })
         ),
         [new NodePolyfillPlugin()],// <- here goes array(s) of other plugins
 
     ),
     module: {
-        rules: [ 
+        rules: [
             {
                 test: /.html$/,
                 use: ["html-loader"]
@@ -44,30 +44,40 @@ module.exports = {
             {
                 test: /\.(scss)$/,
                 use: [
-                {
-                    // Adds CSS to the DOM by injecting a `<style>` tag
-                    loader: 'style-loader'
-                },
-                {
-                    // Interprets `@import` and `url()` like `import/require()` and will resolve them
-                    loader: 'css-loader'
-                },
-                {
-                    // Loader for webpack to process CSS with PostCSS
-                    loader: 'postcss-loader',
-                    options: {
-                    postcssOptions: {
-                        plugins: [
-                        autoprefixer
-                        ]
+                    {
+                        // Adds CSS to the DOM by injecting a `<style>` tag
+                        loader: 'style-loader'
+                    },
+                    {
+                        // Interprets `@import` and `url()` like `import/require()` and will resolve them
+                        loader: 'css-loader'
+                    },
+                    {
+                        // Loader for webpack to process CSS with PostCSS
+                        loader: 'postcss-loader',
+                        options: {
+                            postcssOptions: {
+                                plugins: [
+                                    autoprefixer
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        // Loads a SASS/SCSS file and compiles it to CSS
+                        loader: 'sass-loader'
                     }
-                    }
-                },
-                {
-                    // Loads a SASS/SCSS file and compiles it to CSS
-                    loader: 'sass-loader'
-                }
                 ]
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                    },
+                }
             }
         ]
     },
