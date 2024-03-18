@@ -91,12 +91,14 @@ var videomodal = new bootstrap.Modal("#videoModal");
 var instructionsModal = new bootstrap.Modal("#instructionsModal");
 var openModalBtn = document.getElementById("addbtn");
 var cancelButton = document.getElementById("cancelBtn");
-var submitBtn = document.getElementsByClassName("submitUpdateBtn");
-var videoModalSrc = document.getElementById("videoModalBody");
-var closeVideoBtn = document.getElementById("closeVideoBtn");
-var searchOptionDropdown = document.getElementById("exerciseSearchOption");
-var exerciseSearchBtn = document.getElementById("exerciseSearchButton");
-var exerciseTextField = document.getElementById("exerciseTextField");
+var submitBtn = document.getElementsByClassName('submitUpdateBtn')
+var videoModalSrc = document.getElementById('videoModalBody')
+var closeVideoBtn = document.getElementById('closeVideoBtn')
+var searchOptionDropdown = document.getElementById('exerciseSearchOption')
+var exerciseSearchBtn = document.getElementById('exerciseSearchButton')
+var exerciseTextField = document.getElementById('exerciseTextField');
+var confirmDeleteModal = new bootstrap.Modal('#confirmDeleteModal');
+
 
 openModalBtn.addEventListener("click", function () {
   clearModal();
@@ -455,40 +457,24 @@ function showExercise(doc, exerciseListContainer) {
   exerciseListContainer.innerHTML +=
     `
   <tr class="row bg-white">
-    <th class="col" >` +
-    exerciseName +
-    `</th>
-    <th class="col" >` +
-    category +
-    `</th>
-    <th class="col" >` +
-    intensity +
-    `</th>
-    <th class="col" >` +
-    tags +
-    `</th>
-    <th class="col" >` +
-    reps_duration +
-    `</th>
-    <th class="col" >` +
-    est_time +
-    `</th>
-    <th class="col"><button type="button" class="btn btn-secondary btn-sm instructionBtn" data-doc-id="` +
-    doc.id +
-    `"><i class='bx bx-book-open bx-sm'></i></button></th> 
-    <th class="col" ><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id="` +
-    doc.id +
-    `"><i class='bx bx-video bx-sm'></i></button></th>
-    <th class="col" ><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id="` +
-    doc.id +
-    `"><i class='bx bx-edit bx-sm'></i></button></th>
-  </tr>
+    <th class="col" >` + exerciseName + `</th>
+    <th class="col" >` + category + `</th>
+    <th class="col" >` + intensity + `</th>
+    <th class="col" >` + tags + `</th>
+    <th class="col" >` + reps_duration + `</th>
+    <th class="col" >` + est_time + `</th>
+    <th class="col"><button type="button" class="btn btn-secondary btn-sm instructionBtn" data-doc-id="` + doc.id + `"><i class='bx bx-book-open bx-sm'></i></button></th> 
+    <th class="col" ><button type="button" class="btn btn-secondary btn-sm videoPlayerBtn" data-doc-id="` + doc.id + `"><i class='bx bx-video bx-sm'></i></button></th>
+    <th class="col" ><button type="button" class="btn btn-secondary btn-sm editExerciseBtn" data-doc-id="` + doc.id + `"><i class='bx bx-edit bx-sm'></i></button></th>
+    <th class="col" ><button type="button" class="btn btn-danger btn-sm deleteBtn" data-doc-id="` + doc.id + `"><i class='bx bx-trash bx-sm'></i></button></th>
+    </tr>
 
   `;
 
-  addOpenVideoPlayerEventListener();
-  addEditExercisesEventListener();
-  addOpenInstructionEventListener();
+  addOpenVideoPlayerEventListener()
+  addEditExercisesEventListener()
+  addOpenInstructionEventListener()
+  addConfirmDeleteEventListener()
 }
 getExercises();
 async function getExercises() {
@@ -546,6 +532,17 @@ function addUpdateBtnEventListener() {
     const element = updateBtn[index];
     element.addEventListener("click", function () {
       updateExerciseDocument(element.dataset.docId);
+    });
+  }
+}
+function addConfirmDeleteEventListener() {
+  var deleteBtn = document.getElementsByClassName('deleteBtn')
+  removeAllListenersFromClass(deleteBtn)
+  for (let index = 0; index < deleteBtn.length; index++) {
+    const element = deleteBtn[index];
+    element.addEventListener('click', function (e) {
+      showConfirmDeleteModal(element.dataset.docId)
+
     });
   }
 }
@@ -906,8 +903,8 @@ async function showInstructionsModal(docId) {
       const element = ctr + ". " + instructions[index];
       instructionsStr += element;
 
-      // Create a new paragraph element for each instruction
-      const paragraph = document.createElement("p");
+      // Create a new list item element for each instruction
+      const paragraph = document.createElement('li');
       paragraph.textContent = element;
 
       // Append the paragraph to the modal body
@@ -916,5 +913,28 @@ async function showInstructionsModal(docId) {
   }
 
   // Show the modal
-  instructionsModal.show();
+  instructionsModal.show()
+}
+
+async function showConfirmDeleteModal(docId) {
+  // Get the modal and its body element
+  const modal = document.getElementById('confirmDeleteModal');
+  const modalBody = modal.querySelector('.modal-body');
+
+  // Get the document data
+  const docRef = doc(db, "exercises", docId);
+  const docSnap = await getDoc(docRef);
+
+  // Clear previous content
+  modalBody.innerHTML = "";
+
+  // Create the modal body text
+  const paragraph = document.createElement('p');
+  paragraph.textContent = "Are you sure you want to delete '" + docSnap.data().name + "'?";
+
+  // Append the paragraph to the modal body
+  modalBody.appendChild(paragraph);
+
+  // Show the modal
+  confirmDeleteModal.show()
 }
