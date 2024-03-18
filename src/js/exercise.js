@@ -88,6 +88,8 @@ var cancelButton = document.getElementById("cancelBtn");
 var submitBtn = document.getElementsByClassName('submitUpdateBtn')
 var videoModalSrc = document.getElementById('videoModalBody')
 var closeVideoBtn = document.getElementById('closeVideoBtn')
+var closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn')
+var closeInstructionBtn = document.getElementById('closeInstructionBtn')
 var searchOptionDropdown = document.getElementById('exerciseSearchOption')
 var exerciseSearchBtn = document.getElementById('exerciseSearchButton')
 var exerciseTextField = document.getElementById('exerciseTextField');
@@ -125,9 +127,13 @@ function addSubmitBtnEventListener(submitBtn) {
 
 }
 
-closeVideoBtn.addEventListener('click', function () {
-  videomodal.hide()
-})
+
+//Buttons to close modals
+closeVideoBtn.addEventListener('click', function () {videomodal.hide()})
+closeConfirmDeleteBtn.addEventListener('click', function(){confirmDeleteModal.hide()})
+closeInstructionBtn.addEventListener('click', function(){instructionsModal.hide()}) 
+confirmDeleteCancelBtn.addEventListener('click', function(){confirmDeleteModal.hide()})
+
 exerciseSearchBtn.addEventListener('click', function () {
   var selectedValue = searchOptionDropdown.value;
 
@@ -594,7 +600,6 @@ async function fillModal(docId) {
 
   instArr = docSnap.data().instructions
   tags = docSnap.data().tags
-
 
   submitBtn.setAttribute('data-doc-id', docId);
   submitBtn.innerHTML = "Update"
