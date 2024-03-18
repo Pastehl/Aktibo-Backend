@@ -18,6 +18,7 @@ import {
   arrayUnion,
   arrayRemove,
   documentId,
+  deleteDoc
 } from "firebase/firestore";
 import {
   getStorage,
@@ -481,6 +482,7 @@ function showExercise(doc, exerciseListContainer) {
   addEditExercisesEventListener()
   addOpenInstructionEventListener()
   addConfirmDeleteEventListener()
+  addConfirmDeleteButtonEventListener()
 }
 getExercises();
 async function getExercises() {
@@ -549,6 +551,17 @@ function addConfirmDeleteEventListener() {
     element.addEventListener('click', function (e) {
       showConfirmDeleteModal(element.dataset.docId)
 
+    });
+  }
+}
+function addConfirmDeleteButtonEventListener(){
+  var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
+  removeAllListenersFromClass(deleteBtn)
+  for (let index = 0; index < deleteBtn.length; index++) {
+    const element = deleteBtn[index];
+    element.addEventListener('click', function (e) {
+      //do this when clicked
+      deleteExerciseRecord(element.dataset.docId)
     });
   }
 }
@@ -926,6 +939,7 @@ async function showConfirmDeleteModal(docId) {
   // Get the modal and its body element
   const modal = document.getElementById('confirmDeleteModal');
   const modalBody = modal.querySelector('.modal-body');
+  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
   // Get the document data
   const docRef = doc(db, "exercises", docId);
@@ -941,6 +955,14 @@ async function showConfirmDeleteModal(docId) {
   // Append the paragraph to the modal body
   modalBody.appendChild(paragraph);
 
+  //Set Function call when deleted
+  confirmDeleteBtn.setAttribute('data-doc-id', docId);
+
   // Show the modal
   confirmDeleteModal.show()
+}
+async function deleteExerciseRecord(docId){
+  deleteDoc(doc(db, "exercises", docId));
+  showToast("Exercise has been removed.");
+  confirmDeleteModal.hide();
 }
