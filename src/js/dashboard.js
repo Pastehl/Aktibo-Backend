@@ -9,6 +9,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   getFirestore,
+  addDoc,
   collection,
   query,
   where,
@@ -23,6 +24,7 @@ import {
   startAfter,
   arrayUnion,
   arrayRemove,
+  documentId,
 } from "firebase/firestore";
 import * as bootstrap from "bootstrap";
 import "../scss/styles.scss";
@@ -503,3 +505,8 @@ document.addEventListener("DOMContentLoaded", function () {
     toolbarElement.removeChild(toolbarElement.lastChild);
   }
 });
+
+
+function enterFoodRecordFunctionHere(){
+  
+}

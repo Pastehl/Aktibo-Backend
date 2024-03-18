@@ -17,10 +17,16 @@ import {
   startAfter,
   arrayUnion,
   arrayRemove,
-  documentId
+  documentId,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
-import * as bootstrap from 'bootstrap'
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
+import * as bootstrap from "bootstrap";
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
 
 import "../scss/styles.scss";
@@ -80,9 +86,9 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 });
 
 //modal
-var modal = new bootstrap.Modal('#myModal', { keyboard: false });
-var videomodal = new bootstrap.Modal('#videoModal');
-var instructionsModal = new bootstrap.Modal('#instructionsModal')
+var modal = new bootstrap.Modal("#myModal", { keyboard: false });
+var videomodal = new bootstrap.Modal("#videoModal");
+var instructionsModal = new bootstrap.Modal("#instructionsModal");
 var openModalBtn = document.getElementById("addbtn");
 var cancelButton = document.getElementById("cancelBtn");
 var submitBtn = document.getElementsByClassName('submitUpdateBtn')
@@ -96,35 +102,33 @@ var exerciseTextField = document.getElementById('exerciseTextField');
 var confirmDeleteModal = new bootstrap.Modal('#confirmDeleteModal');
 
 
-openModalBtn.addEventListener('click', function () {
-  clearModal()
-  removeAllListeners(document.getElementById('video'))
-  addFileUploadStateEventListener()
-  removeAllListenersFromClass(submitBtn)
-  addSubmitBtnEventListener(submitBtn)
-  modal.show()
-})
+openModalBtn.addEventListener("click", function () {
+  clearModal();
+  removeAllListeners(document.getElementById("video"));
+  addFileUploadStateEventListener();
+  removeAllListenersFromClass(submitBtn);
+  addSubmitBtnEventListener(submitBtn);
+  modal.show();
+});
 
 cancelButton.onclick = function () {
-  console.log('close cancel')
-  modal.hide()
-  clearModal()
-
-}
+  console.log("close cancel");
+  modal.hide();
+  clearModal();
+};
 
 function addSubmitBtnEventListener(submitBtn) {
   for (let index = 0; index < submitBtn.length; index++) {
     const element = submitBtn[index];
-    element.addEventListener('click', function () {
+    element.addEventListener("click", function () {
       if (validateExercise()) {
-        createNewExerciseDocument()
-        clearModal()
-        modal.hide()
-        removeAllListenersFromClass(submitBtn)
+        createNewExerciseDocument();
+        clearModal();
+        modal.hide();
+        removeAllListenersFromClass(submitBtn);
       }
-    })
+    });
   }
-
 }
 
 
@@ -138,36 +142,35 @@ exerciseSearchBtn.addEventListener('click', function () {
   var selectedValue = searchOptionDropdown.value;
 
   if (selectedValue == "id") {
-    sortBySearchId(exerciseTextField.value)
+    sortBySearchId(exerciseTextField.value);
   }
   if (selectedValue == "name") {
-    sortBySearchName(exerciseTextField.value)
+    sortBySearchName(exerciseTextField.value);
   }
   if (selectedValue == "category") {
-    sortByCategory()
+    sortByCategory();
   }
   if (selectedValue == "intensity") {
-    sortByIntensity()
+    sortByIntensity();
   }
   if (selectedValue == "tags") {
-    sortByTags(exerciseTextField.value)
+    sortByTags(exerciseTextField.value);
   }
-  exerciseTextField.value = ""
-
-})
+  exerciseTextField.value = "";
+});
 
 //Instructions Variables
-const ulInst = document.querySelector('.inst-ul')
-var inputInst = document.getElementById('instructions')
+const ulInst = document.querySelector(".inst-ul");
+var inputInst = document.getElementById("instructions");
 
 // console.log(ulInst)
 // console.log(inputInst)
 // console.log('-----------------')
-let instArr = ['do 1', 'do 2']
+let instArr = ["do 1", "do 2"];
 
 //Tags Variables
-const ul = document.querySelector(".tags-ul")
-var input = document.getElementById("tags")
+const ul = document.querySelector(".tags-ul");
+var input = document.getElementById("tags");
 var tagNumb = document.querySelector(".details-tags span");
 
 // console.log(ul)
@@ -179,7 +182,7 @@ let maxTags = 10,
 
 countTags();
 createTag();
-createInst()
+createInst();
 addRemoveTagBtnEventlistener();
 
 function countTags() {
@@ -188,152 +191,150 @@ function countTags() {
 }
 
 function createTag() {
-  ul.querySelectorAll("li").forEach(li => li.remove());
-  tags.slice().reverse().forEach(tag => {
-    //console.log(tag)
-    let liTag = `<li>${tag} <i class="bx bxs-x-circle tagClose" ></i></li>`;
-    ul.insertAdjacentHTML("afterbegin", liTag);
-  });
+  ul.querySelectorAll("li").forEach((li) => li.remove());
+  tags
+    .slice()
+    .reverse()
+    .forEach((tag) => {
+      //console.log(tag)
+      let liTag = `<li>${tag} <i class="bx bxs-x-circle tagClose" ></i></li>`;
+      ul.insertAdjacentHTML("afterbegin", liTag);
+    });
   countTags();
 }
 function createInst() {
-  ulInst.querySelectorAll("li").forEach(li => li.remove());
-  instArr.slice().reverse().forEach(inst => {
-    //console.log(inst)
-    let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
-    ulInst.insertAdjacentHTML("afterbegin", liInst);
-  });
-  inputInst.focus()
+  ulInst.querySelectorAll("li").forEach((li) => li.remove());
+  instArr
+    .slice()
+    .reverse()
+    .forEach((inst) => {
+      //console.log(inst)
+      let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
+      ulInst.insertAdjacentHTML("afterbegin", liInst);
+    });
+  inputInst.focus();
 }
 
-
 function remove(element, tag) {
-
-  console.log(tags)
+  console.log(tags);
   tags.splice(tags.indexOf(tag), 1);
-  console.log('after')
+  console.log("after");
   element.parentElement.remove();
-  console.log(tags)
+  console.log(tags);
   countTags();
 }
 function removeInst(element, inst) {
-  console.log(instArr)
+  console.log(instArr);
   instArr.splice(instArr.indexOf(inst), 1);
-  console.log('after')
+  console.log("after");
   element.parentElement.remove();
-  console.log(instArr)
+  console.log(instArr);
 }
 
-
-//Check for enter in Instructions    
-inputInst.addEventListener('keydown', function (e) {
-  console.log(e.key + "*INST*")
-  if (e.key === 'Enter') {
-    console.log(e.target.value)
-    e.preventDefault()
-    inputInst.focus()
-    console.log(inputInst.value)
-    addInst(e)
+//Check for enter in Instructions
+inputInst.addEventListener("keydown", function (e) {
+  console.log(e.key + "*INST*");
+  if (e.key === "Enter") {
+    console.log(e.target.value);
+    e.preventDefault();
+    inputInst.focus();
+    console.log(inputInst.value);
+    addInst(e);
   }
-})
+});
 //Check for enter in tags
 input.addEventListener("keydown", function (e) {
-  console.log(e.key)
-  if (e.key === 'Enter') {
-    console.log(e.target.value)
-    e.preventDefault()
-    input.focus()
-    addTag(e)
+  console.log(e.key);
+  if (e.key === "Enter") {
+    console.log(e.target.value);
+    e.preventDefault();
+    input.focus();
+    addTag(e);
   }
 });
 //Check for enter in Instructions
 function addInst(e) {
-  console.log("Instruction ADD")
-  console.log("*******")
-  console.log(e.target.value)
-  let inst = e.target.value.replace(/\s+/g, ' ');
-  console.log(typeof (inst))
-  console.log(inst)
+  console.log("Instruction ADD");
+  console.log("*******");
+  console.log(e.target.value);
+  let inst = e.target.value.replace(/\s+/g, " ");
+  console.log(typeof inst);
+  console.log(inst);
   if (!instArr.includes(inst)) {
-    inst.split(',').forEach(inst => {
+    inst.split(",").forEach((inst) => {
       if (inst != "") {
         instArr.push(inst);
-        console.log(instArr)
+        console.log(instArr);
         createInst();
         // Create toast? tag sucessfully added?
       }
-
     });
   }
 
   e.target.value = "";
-  addRemoveTagBtnEventlistener()
+  addRemoveTagBtnEventlistener();
 }
 //Add element in Tags []
 function addTag(e) {
-  console.log("TAG ADD")
+  console.log("TAG ADD");
   if (e.key == "Enter") {
-    console.log(e.target)
-    let tag = e.target.value.replace(/\s+/g, ' ');
-    console.log(tag)
+    console.log(e.target);
+    let tag = e.target.value.replace(/\s+/g, " ");
+    console.log(tag);
     if (tag.length > 1 && !tags.includes(tag)) {
       if (tags.length < 10) {
-        tag.split(',').forEach(tag => {
+        tag.split(",").forEach((tag) => {
           if (tag != "") {
             tags.push(tag);
             createTag();
             // Create toast? tag sucessfully added?
           }
-
         });
-      }
-      else {
+      } else {
         // Create toast maximum number of tags hit
       }
     }
     e.target.value = "";
   }
-  addRemoveTagBtnEventlistener()
+  addRemoveTagBtnEventlistener();
 }
 //Remove Btn for Tags
 const removeBtn = document.querySelector(".details button");
 removeBtn.addEventListener("click", () => {
   tags.length = 0;
-  ul.querySelectorAll("li").forEach(li => li.remove());
-  input.value = ""
+  ul.querySelectorAll("li").forEach((li) => li.remove());
+  input.value = "";
   countTags();
 });
 //Remove Btn for Instructions
-const removeInstructionsBtn = document.querySelector('.ins-details button')
+const removeInstructionsBtn = document.querySelector(".ins-details button");
 removeInstructionsBtn.addEventListener("click", () => {
-  ulInst.querySelectorAll("li").forEach(li => li.remove());
-  inputInst.value = ""
+  ulInst.querySelectorAll("li").forEach((li) => li.remove());
+  inputInst.value = "";
 });
 
 function addRemoveTagBtnEventlistener() {
   let removeTag = document.getElementsByClassName("bxs-x-circle");
-  removeAllListenersFromClass(removeTag)
-  let elemClassList = ""
+  removeAllListenersFromClass(removeTag);
+  let elemClassList = "";
   for (let index = 0; index < removeTag.length; index++) {
     const element = removeTag[index];
-    const text = element.textContent
-    elemClassList = element.classList
+    const text = element.textContent;
+    elemClassList = element.classList;
 
     if (elemClassList.contains("instClose")) {
       element.addEventListener("click", function (e) {
-        console.log("clicked")
-        console.log()
-        removeInst(e.target, text)
+        console.log("clicked");
+        console.log();
+        removeInst(e.target, text);
       });
-    }
-    else {
+    } else {
       element.addEventListener("click", function (e) {
-        console.log("clicked")
-        console.log()
-        remove(e.target, text)
+        console.log("clicked");
+        console.log();
+        remove(e.target, text);
       });
     }
-
   }
 }
 //Ensure only 1 event listener is binded
@@ -347,10 +348,10 @@ function removeAllListenersFromClass(elements) {
 //Text Field Validation
 function validateExercise() {
   //TextFields
-  var exerciseName = document.getElementById('name')
-  var reps = document.getElementById('reps_duration')
-  var sets = document.getElementById('sets')
-  var est_time = document.getElementById('est_time')
+  var exerciseName = document.getElementById("name");
+  var reps = document.getElementById("reps_duration");
+  var sets = document.getElementById("sets");
+  var est_time = document.getElementById("est_time");
 
   // Get the values from the inputs
   var exerciseNameValue = exerciseName.value.trim();
@@ -359,104 +360,104 @@ function validateExercise() {
   var est_timeValue = parseInt(est_time.value, 10);
 
   // Check if exerciseName is empty
-  if (exerciseNameValue === '') {
-    showToast('Exercise Name cannot be empty.');
+  if (exerciseNameValue === "") {
+    showToast("Exercise Name cannot be empty.");
     exerciseName.focus();
     return false;
   }
 
   // Check if reps and sets are empty strings
-  if (repsValue === '') {
-    showToast('Repetitions/Duration cannot be empty.');
+  if (repsValue === "") {
+    showToast("Repetitions/Duration cannot be empty.");
     return false;
   }
   if (isNaN(setsValue) || setsValue <= 0) {
-    showToast('Sets cannot be 0 or non-negative numbers.');
+    showToast("Sets cannot be 0 or non-negative numbers.");
     return false;
   }
 
   // Check if mins and secs are non-negative numbers
-  if (est_time === '') {
-    showToast('Estimated Time cannot be empty.');
+  if (est_time === "") {
+    showToast("Estimated Time cannot be empty.");
     return false;
   }
 
   //check if instructions and exercise tags are empty
   if (instArr.length === 0) {
-    showToast('No instructions placed');
+    showToast("No instructions placed");
     return false;
-
-
   }
   if (tags.length === 0) {
-    showToast('Exercise tag is empty');
+    showToast("Exercise tag is empty");
     return false;
   }
 
-
-
   //Video Validation
-  var fileInput = document.getElementById('video');
+  var fileInput = document.getElementById("video");
 
   // Set the accept attribute to allow only .mp4 files
-  fileInput.accept = '.mp4';
+  fileInput.accept = ".mp4";
   var file = fileInput.files[0]; // Get the selected file
 
   if (!file) {
     // No file selected
-    showToast('Please select a file.');
+    showToast("Please select a file.");
     return false;
   }
 
-  return true
+  return true;
 }
 function addFileUploadStateEventListener() {
-  var fileInput = document.getElementById('video');
+  var fileInput = document.getElementById("video");
   // Set the accept attribute to allow only .mp4 files
-  fileInput.accept = '.mp4';
+  fileInput.accept = ".mp4";
 
   // Add an event listener to check the file size
-  fileInput.addEventListener('change', function () {
+  fileInput.addEventListener("change", function () {
     var file = fileInput.files[0];
     // Check if the file type is .mp4 and the size is within the limit (7 MB)
-    if (file != undefined && file.type === 'video/mp4' && file.size <= 7 * 1024 * 1024) {
-    }
-
-    else {
+    if (
+      file != undefined &&
+      file.type === "video/mp4" &&
+      file.size <= 7 * 1024 * 1024
+    ) {
+    } else {
       // Optionally clear the file input to prevent an invalid file from being selected
-      showToast("Wrong File Type or File Size.\nMake sure file is an MP4 Format and not larger than 7MB.")
-      fileInput.value = '';
+      showToast(
+        "Wrong File Type or File Size.\nMake sure file is an MP4 Format and not larger than 7MB."
+      );
+      fileInput.value = "";
     }
   });
 }
 
 function showToast(message) {
-  var toastContainer = document.querySelector('.toast-container');
-  var toastBody = document.querySelector('.toast-body');
+  var toastContainer = document.querySelector(".toast-container");
+  var toastBody = document.querySelector(".toast-body");
 
   // Set the toast message
   toastBody.textContent = message;
 
   // Show the toast
-  var toast = new bootstrap.Toast(document.getElementById('liveToast'));
+  var toast = new bootstrap.Toast(document.getElementById("liveToast"));
   toast.show();
 }
 function showExercise(doc, exerciseListContainer) {
-  var exerciseName = doc.data().name
-  var category = doc.data().category
-  var intensity = doc.data().intensity
-  var tags = doc.data().tags
-  var reps_duration = doc.data().reps_duration
-  var est_time_min = doc.data().est_time_min
-  var est_time_sec = doc.data().est_time_sec
+  var exerciseName = doc.data().name;
+  var category = doc.data().category;
+  var intensity = doc.data().intensity;
+  var tags = doc.data().tags;
+  var reps_duration = doc.data().reps_duration;
+  var est_time_min = doc.data().est_time_min;
+  var est_time_sec = doc.data().est_time_sec;
 
-  let est_time = doc.data().est_time
+  let est_time = doc.data().est_time;
   //var video = doc.data().video
   if (est_time == undefined && est_time_min.length > 0) {
-    est_time = est_time_min + " mins"
+    est_time = est_time_min + " mins";
   }
   if (est_time == undefined && est_time_sec.length > 0) {
-    est_time = est_time_sec + " secs"
+    est_time = est_time_sec + " secs";
   }
 
   exerciseListContainer.innerHTML +=
@@ -474,73 +475,70 @@ function showExercise(doc, exerciseListContainer) {
     <th class="col" ><button type="button" class="btn btn-danger btn-sm deleteBtn" data-doc-id="` + doc.id + `"><i class='bx bx-trash bx-sm'></i></button></th>
     </tr>
 
-  `
+  `;
 
   addOpenVideoPlayerEventListener()
   addEditExercisesEventListener()
   addOpenInstructionEventListener()
   addConfirmDeleteEventListener()
 }
-getExercises()
+getExercises();
 async function getExercises() {
-  const q = query(collection(db, "exercises"))//, orderBy("", "asc"));
+  const q = query(collection(db, "exercises")); //, orderBy("", "asc"));
   const querySnapshot = await getDocs(q);
-  let exerciseListContainer = document.getElementById('exerciseListContainer')
-  exerciseListContainer.innerHTML = ""
+  let exerciseListContainer = document.getElementById("exerciseListContainer");
+  exerciseListContainer.innerHTML = "";
   querySnapshot.forEach((doc) => {
-    showExercise(doc, exerciseListContainer)
-  })
+    showExercise(doc, exerciseListContainer);
+  });
 }
 
 function addOpenVideoPlayerEventListener() {
-  var vidPlayerBtn = document.getElementsByClassName('videoPlayerBtn')
-  removeAllListenersFromClass(vidPlayerBtn)
+  var vidPlayerBtn = document.getElementsByClassName("videoPlayerBtn");
+  removeAllListenersFromClass(vidPlayerBtn);
 
   for (let index = 0; index < vidPlayerBtn.length; index++) {
     const element = vidPlayerBtn[index];
-    element.addEventListener('click', function (e) {
-      addExerciseVideoSrc(element.dataset.docId)
-      videomodal.show()
-
+    element.addEventListener("click", function (e) {
+      addExerciseVideoSrc(element.dataset.docId);
+      videomodal.show();
     });
   }
 }
 function addEditExercisesEventListener() {
-  var vidPlayerBtn = document.getElementsByClassName('editExerciseBtn')
-  removeAllListenersFromClass(vidPlayerBtn)
-  removeAllListeners(document.getElementById('video'))
-  addFileUploadStateEventListener()
+  var vidPlayerBtn = document.getElementsByClassName("editExerciseBtn");
+  removeAllListenersFromClass(vidPlayerBtn);
+  removeAllListeners(document.getElementById("video"));
+  addFileUploadStateEventListener();
   for (let index = 0; index < vidPlayerBtn.length; index++) {
     const element = vidPlayerBtn[index];
-    element.addEventListener('click', function (e) {
+    element.addEventListener("click", function (e) {
       //fill in the values
-      updateExercises(element.dataset.docId)
+      updateExercises(element.dataset.docId);
 
-      modal.show()
-
+      modal.show();
     });
   }
 }
 function addOpenInstructionEventListener() {
-  var instructionBtn = document.getElementsByClassName('instructionBtn')
-  removeAllListenersFromClass(instructionBtn)
+  var instructionBtn = document.getElementsByClassName("instructionBtn");
+  removeAllListenersFromClass(instructionBtn);
 
   for (let index = 0; index < instructionBtn.length; index++) {
     const element = instructionBtn[index];
-    element.addEventListener('click', function (e) {
-      showInstructionsModal(element.dataset.docId)
-
+    element.addEventListener("click", function (e) {
+      showInstructionsModal(element.dataset.docId);
     });
   }
 }
 function addUpdateBtnEventListener() {
-  var updateBtn = document.getElementsByClassName('submitUpdateBtn')
-  removeAllListenersFromClass(updateBtn)
+  var updateBtn = document.getElementsByClassName("submitUpdateBtn");
+  removeAllListenersFromClass(updateBtn);
   for (let index = 0; index < submitBtn.length; index++) {
     const element = updateBtn[index];
-    element.addEventListener('click', function () {
-      updateExerciseDocument(element.dataset.docId)
-    })
+    element.addEventListener("click", function () {
+      updateExerciseDocument(element.dataset.docId);
+    });
   }
 }
 function addConfirmDeleteEventListener() {
@@ -555,21 +553,20 @@ function addConfirmDeleteEventListener() {
   }
 }
 async function updateExercises(docId) {
-
-  clearModal()
-  fillModal(docId)
+  clearModal();
+  fillModal(docId);
 }
 
 async function fillModal(docId) {
-  var exerciseName = document.getElementById('name')
-  var reps = document.getElementById('reps_duration')
-  var sets = document.getElementById('sets')
-  var est_t = document.getElementById('est_time')
-  var category = document.getElementById('category')
-  var intensity = document.getElementById('intensity')
-  var heading = document.getElementById('heading')
-  var video = document.getElementById('video')
-  var submitBtn = document.getElementById('submitBtn');
+  var exerciseName = document.getElementById("name");
+  var reps = document.getElementById("reps_duration");
+  var sets = document.getElementById("sets");
+  var est_t = document.getElementById("est_time");
+  var category = document.getElementById("category");
+  var intensity = document.getElementById("intensity");
+  var heading = document.getElementById("heading");
+  var video = document.getElementById("video");
+  var submitBtn = document.getElementById("submitBtn");
 
   const docRef = doc(db, "exercises", docId);
   const docSnap = await getDoc(docRef);
@@ -581,7 +578,12 @@ async function fillModal(docId) {
   est_t.value = docSnap.data().est_time;
   category.selectedIndex = 0;
   for (var i = 0; i < category.options.length; i++) {
-    if (docSnap.data().category.toLowerCase().includes(category.options[i].value.toLowerCase())) {
+    if (
+      docSnap
+        .data()
+        .category.toLowerCase()
+        .includes(category.options[i].value.toLowerCase())
+    ) {
       // Set the selectedIndex
       category.selectedIndex = i;
       break;
@@ -590,92 +592,97 @@ async function fillModal(docId) {
 
   intensity.selectedIndex = 0;
   for (var i = 0; i < intensity.options.length; i++) {
-    if (docSnap.data().intensity.toLowerCase().includes(intensity.options[i].value.toLowerCase())) {
+    if (
+      docSnap
+        .data()
+        .intensity.toLowerCase()
+        .includes(intensity.options[i].value.toLowerCase())
+    ) {
       // Set the selectedIndex
       intensity.selectedIndex = i;
       break;
     }
   }
-  heading.innerHTML = 'Edit Exercise';
+  heading.innerHTML = "Edit Exercise";
 
-  instArr = docSnap.data().instructions
-  tags = docSnap.data().tags
+  instArr = docSnap.data().instructions;
+  tags = docSnap.data().tags;
 
-  submitBtn.setAttribute('data-doc-id', docId);
-  submitBtn.innerHTML = "Update"
-  submitBtn.id = 'updateBtn';
+  submitBtn.setAttribute("data-doc-id", docId);
+  submitBtn.innerHTML = "Update";
+  submitBtn.id = "updateBtn";
   countTags();
   createTag();
-  createInst()
+  createInst();
   addRemoveTagBtnEventlistener();
-  addUpdateBtnEventListener()
-
+  addUpdateBtnEventListener();
 }
 
 function clearModal() {
-  var exerciseName = document.getElementById('name')
-  var reps = document.getElementById('reps_duration')
-  var sets = document.getElementById('sets')
-  var est_t = document.getElementById('est_time')
-  var category = document.getElementById('category')
-  var intensity = document.getElementById('intensity')
-  var heading = document.getElementById('heading')
-  var videoText = document.getElementById('video')
-  var submitBtn = document.getElementById('submitBtn');
+  var exerciseName = document.getElementById("name");
+  var reps = document.getElementById("reps_duration");
+  var sets = document.getElementById("sets");
+  var est_t = document.getElementById("est_time");
+  var category = document.getElementById("category");
+  var intensity = document.getElementById("intensity");
+  var heading = document.getElementById("heading");
+  var videoText = document.getElementById("video");
+  var submitBtn = document.getElementById("submitBtn");
 
   if (videoText == null) {
-    videoText = document.getElementById('videoText')
+    videoText = document.getElementById("videoText");
   }
   if (submitBtn == null) {
-    submitBtn = document.getElementById('updateBtn');
+    submitBtn = document.getElementById("updateBtn");
   }
-  removeAllListenersFromClass(submitBtn)
+  removeAllListenersFromClass(submitBtn);
 
   // Clearing input values
-  exerciseName.value = '';
-  reps.value = '';
+  exerciseName.value = "";
+  reps.value = "";
   sets.value = 1;
-  est_t.value = ''
+  est_t.value = "";
   category.selectedIndex = 0;
   intensity.selectedIndex = 0;
-  heading.innerHTML = 'New Exercise';
+  heading.innerHTML = "New Exercise";
 
   // Clearing Tags and Instructions
-  instArr = ['do 1', 'do 2']
+  instArr = ["do 1", "do 2"];
   tags = ["test1", "test2"];
 
   // Clearing video source
 
-  videoText.type = 'file';
-  videoText.id = 'video';
-  videoText.name = 'video';
-  submitBtn.id = 'submitBtn'
-  submitBtn.innerHTML = 'Add'
+  videoText.type = "file";
+  videoText.id = "video";
+  videoText.name = "video";
+  submitBtn.id = "submitBtn";
+  submitBtn.innerHTML = "Add";
   // video.replaceChild(newFileInput, video);
 
   countTags();
   createTag();
-  createInst()
+  createInst();
   addRemoveTagBtnEventlistener();
-
 }
 
 async function addExerciseVideoSrc(docId) {
   //get the doc id -> get doc src -> update the modal -> close it src = ""
   const docRef = doc(db, "exercises", docId);
   const docSnap = await getDoc(docRef);
-  let src = docSnap.data().video
-  console.log(src)
-  console.log(videoModalSrc.src)
+  let src = docSnap.data().video;
+  console.log(src);
+  console.log(videoModalSrc.src);
   if (src == null) {
-    src = ""
-    showToast("Video does not exist.")
+    src = "";
+    showToast("Video does not exist.");
   }
-  videoModalSrc.src = src
+  videoModalSrc.src = src;
 }
 
 async function sortByCategory() {
-  const exerciseListContainer = document.getElementById('exerciseListContainer');
+  const exerciseListContainer = document.getElementById(
+    "exerciseListContainer"
+  );
   exerciseListContainer.innerHTML = "";
 
   const inputValue = exerciseTextField.value.trim().toLowerCase();
@@ -704,9 +711,10 @@ async function sortByCategory() {
   }
 }
 
-
 async function sortByIntensity() {
-  const exerciseListContainer = document.getElementById('exerciseListContainer');
+  const exerciseListContainer = document.getElementById(
+    "exerciseListContainer"
+  );
   exerciseListContainer.innerHTML = "";
 
   const inputValue = exerciseTextField.value.trim().toLowerCase();
@@ -735,9 +743,10 @@ async function sortByIntensity() {
   }
 }
 
-
 async function sortByTags(tag) {
-  const exerciseListContainer = document.getElementById('exerciseListContainer');
+  const exerciseListContainer = document.getElementById(
+    "exerciseListContainer"
+  );
   exerciseListContainer.innerHTML = "";
 
   const inputValue = tag.trim().toLowerCase();
@@ -756,35 +765,41 @@ async function sortByTags(tag) {
 }
 
 async function sortBySearchName(tag) {
-  const q = query(collection(db, "exercises"))
-  let exerciseListContainer = document.getElementById('exerciseListContainer')
-  exerciseListContainer.innerHTML = ""
+  const q = query(collection(db, "exercises"));
+  let exerciseListContainer = document.getElementById("exerciseListContainer");
+  exerciseListContainer.innerHTML = "";
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     const lowercaseDocName = doc.data().name.toLowerCase();
     const lowercaseTag = tag.toLowerCase();
     if (lowercaseDocName.includes(lowercaseTag)) {
-      console.log(lowercaseDocName)
-      console.log(doc.id)
-      showExercise(doc, exerciseListContainer)
+      console.log(lowercaseDocName);
+      console.log(doc.id);
+      showExercise(doc, exerciseListContainer);
     }
-
-  })
-
+  });
 }
 
 async function createNewExerciseDocument() {
-  var exerciseName = document.getElementById('name').value
-  var reps = document.getElementById('reps_duration').value
-  var sets = document.getElementById('sets').value
-  var est_time = document.getElementById('est_time').value
-  var category = document.getElementById('category').value
-  var intensity = document.getElementById('intensity').value
-  var fileInput = document.getElementById('video')
-  var file = fileInput.files[0]
+  var exerciseName = document.getElementById("name").value;
+  var reps = document.getElementById("reps_duration").value;
+  var sets = document.getElementById("sets").value;
+  var est_time = document.getElementById("est_time").value;
+  var category = document.getElementById("category").value;
+  var intensity = document.getElementById("intensity").value;
+  var fileInput = document.getElementById("video");
+  var file = fileInput.files[0];
 
-
-  console.log("Created Document", exerciseName, reps, sets, est_time, category, intensity, file)
+  console.log(
+    "Created Document",
+    exerciseName,
+    reps,
+    sets,
+    est_time,
+    category,
+    intensity,
+    file
+  );
   try {
     // Add a new document with a generated id.
     const docRef = await addDoc(collection(db, "exercises"), {
@@ -796,12 +811,12 @@ async function createNewExerciseDocument() {
       reps_duration: reps,
       sets: Number(sets),
       tags: tags,
-      video: await uploadVideo(file)
-    })
+      video: await uploadVideo(file),
+    });
     showToast("Exercise Successfully Created.");
     console.log("Document written with ID: ", docRef.id);
   } catch (error) {
-    if (error.code === 'already-exists') {
+    if (error.code === "already-exists") {
       // Handle the case where the document with the specified ID already exists
       console.log("Document with ID already exists. Handle accordingly.");
     } else {
@@ -813,25 +828,24 @@ async function createNewExerciseDocument() {
 
 async function uploadVideo(file) {
   // Upload file and metadata to the object 'exercise_videos/' + file.name
-  const storageRef = ref(storage, 'exercise_videos/' + file.name);
+  const storageRef = ref(storage, "exercise_videos/" + file.name);
   const snapshot = await uploadBytes(storageRef, file);
 
   const downloadURL = await getDownloadURL(snapshot.ref);
-  console.log('File available at', downloadURL);
+  console.log("File available at", downloadURL);
   return downloadURL.toString();
-
 }
 
 async function updateExerciseDocument(docId) {
-  var exerciseName = document.getElementById('name').value
-  var reps = document.getElementById('reps_duration').value
-  var sets = document.getElementById('sets').value
-  var est_time = document.getElementById('est_time').value
-  var category = document.getElementById('category').value
-  var intensity = document.getElementById('intensity').value
-  var fileLink = document.getElementById('video')
-  var file = fileLink.files[0]
-  const updateRef = doc(db, "exercises", docId)
+  var exerciseName = document.getElementById("name").value;
+  var reps = document.getElementById("reps_duration").value;
+  var sets = document.getElementById("sets").value;
+  var est_time = document.getElementById("est_time").value;
+  var category = document.getElementById("category").value;
+  var intensity = document.getElementById("intensity").value;
+  var fileLink = document.getElementById("video");
+  var file = fileLink.files[0];
+  const updateRef = doc(db, "exercises", docId);
   if (file != null) {
     const videoUrl = await uploadVideo(file);
     await setDoc(updateRef, {
@@ -843,10 +857,9 @@ async function updateExerciseDocument(docId) {
       reps_duration: reps,
       sets: sets,
       tags: tags,
-      video: videoUrl
-    })
-  }
-  else {
+      video: videoUrl,
+    });
+  } else {
     await updateDoc(updateRef, {
       category: category,
       est_time: est_time,
@@ -856,19 +869,17 @@ async function updateExerciseDocument(docId) {
       reps_duration: reps,
       sets: Number(sets),
       tags: tags,
-    })
+    });
   }
 
-
   // Success
-  showToast("Exercise updated successfully.")
-  clearModal()
-  modal.hide()
-  getExercises()
+  showToast("Exercise updated successfully.");
+  clearModal();
+  modal.hide();
+  getExercises();
 }
 
 function removeAllListeners(element) {
-
   if (element) {
     const clone = element.cloneNode(true);
     element.replaceWith(clone);
@@ -879,8 +890,8 @@ function removeAllListeners(element) {
 
 async function showInstructionsModal(docId) {
   // Get the modal and its body element
-  const modal = document.getElementById('instructionsModal');
-  const modalBody = modal.querySelector('.modal-body');
+  const modal = document.getElementById("instructionsModal");
+  const modalBody = modal.querySelector(".modal-body");
 
   // Get the document data
   const docRef = doc(db, "exercises", docId);
@@ -894,7 +905,7 @@ async function showInstructionsModal(docId) {
   // Check if instructions array is not null or undefined
   if (instructions != null && instructions != undefined) {
     for (let index = 0; index < instructions.length; index++) {
-      let ctr = index + 1
+      let ctr = index + 1;
       const element = ctr + ". " + instructions[index];
       instructionsStr += element;
 
