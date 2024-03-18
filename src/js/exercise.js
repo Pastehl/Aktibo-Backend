@@ -417,7 +417,7 @@ function addFileUploadStateEventListener() {
 
     else {
       // Optionally clear the file input to prevent an invalid file from being selected
-      showToast("Wrong File Type or File Size.")
+      showToast("Wrong File Type or File Size.\nMake sure file is an MP4 Format and not larger than 7MB.")
       fileInput.value = '';
     }
   });
@@ -781,7 +781,7 @@ async function createNewExerciseDocument() {
       tags: tags,
       video: await uploadVideo(file)
     })
-
+    showToast("Exercise Successfully Created.");
     console.log("Document written with ID: ", docRef.id);
   } catch (error) {
     if (error.code === 'already-exists') {
