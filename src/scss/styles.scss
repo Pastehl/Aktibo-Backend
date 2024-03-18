@@ -72,11 +72,15 @@ ul.nav li.active a {
     //   padding: 10px;
     margin-left: 280px;
     /* Adjust this margin to make room for the sidebar */
-    padding: 20px;
+    padding: 1rem 20px 20px;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     height: 100%;
+    // padding-top: 1rem;
+    text-align: center;
+    min-width: 25rem;
+    font-size: 0.7rem;
 }
 
 .footer {
@@ -285,12 +289,13 @@ header {
     padding: 20px;
 }
 
-.main_content {
-    padding-top: 1rem;
-    text-align: center;
-    min-width: 25rem;
-    font-size: 0.7rem;
-}
+// .main_content {
+//     padding-top: 1rem;
+//     text-align: center;
+//     min-width: 25rem;
+//     font-size: 0.7rem;
+    
+// }
 
 .container-b {
     height: auto;
@@ -708,6 +713,7 @@ article:has(:hover, :focus) {
     width: 100vw;
     height: 100vh;
     flex: 1;
+    
     // margin: 1px, 1px, 1px, 1px;
 }
 
@@ -716,7 +722,7 @@ article:has(:hover, :focus) {
     display: grid;
     grid-template-columns: 33% 34% 33%;
     grid-template-rows: 50% 50%;
-    max-width: 70vw;
+    max-width: 80vw;
     height: 90vh;
     flex: 1;
     gap: 1em;
@@ -750,6 +756,35 @@ article:has(:hover, :focus) {
     overflow: visible;
     // border-radius: 25px;
     // border: 2px solid #63A91F;
+}
+
+.chartt-container-buttons {
+    // display: flex;
+    // max-width: 100%;
+    // position: relative;
+
+    // //top-bottom left-right
+    // margin: .5em .5em;
+    // padding: .5em .5em;
+
+    // align-items: center;
+    // justify-content: center;
+    // overflow: visible;
+    // // border-radius: 25px;
+    // // border: 2px solid #63A91F;
+    display: flex;
+    flex-direction: column; /* Ensure items stack vertically */
+    max-width: 100%;
+    position: relative;
+    margin: .5em .5em; /* Adjust margins as needed */
+    padding: .5em .5em; /* Adjust padding as needed */
+    // align-items: center;
+     justify-content: center;
+    overflow: visible;
+}
+
+.food_record {
+    border-radius: 20px;
 }
 
 .chart-green-border {
@@ -1053,6 +1088,7 @@ article:has(:hover, :focus) {
     margin-right: 10px;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 #dropdown-content ul {
@@ -1449,3 +1485,70 @@ modal exercise .modal {
     max-width: 1200px;
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
 }
+
+.dropdown-container{
+    cursor: pointer;
+}
+
+
+.barcontainer {
+    margin: auto;
+    width: 20rem;
+    height: 2.5rem;
+    border-radius: 1rem;
+    background-color: lightgrey;
+    position: relative;
+  }
+  
+  .bar {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    display: flex;
+    position: relative;
+  }
+  
+  .segment {
+    height: 100%;
+    float: left;
+  }
+  
+  .blue {
+    background-color: #006E90;
+    flex: 1;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+  
+  .green {
+    background-color: #63A91F;
+    flex: 1;
+  }
+  
+  .orange {
+    background-color: #FF7F11;
+    flex: 1;
+    
+  }
+  
+  .red {
+    background-color: #FF1B1C;
+    flex: 1;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  
+  .pointer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.35rem;
+    height: 130%;
+    border-radius: 0.5rem;
+    margin-top: -0.38rem;
+    background-color: black;
+  }
+
+  .bmip {
+    margin-top: 0.4rem;
+  }

@@ -292,27 +292,77 @@ function addLikeButtonEventListeners() {
     });
   }
 }
+//ORIGNAL  FUNCTION BELOW
+// function addOpenReportButtonEventListeners(){
+//     let reportBtn = document.getElementsByClassName('bx-dots-vertical')
+//     removeAllListenersFromClass(reportBtn)
 
-function addOpenReportButtonEventListeners(){
-    let reportBtn = document.getElementsByClassName('bx-dots-vertical')
-    removeAllListenersFromClass(reportBtn)
+//     for (let index = 0; index < reportBtn.length; index++) {
+//     const element = reportBtn[index];
+//     element.addEventListener('click', function (e) {
+//       console.log(element)
+//       const dropDownContentContainerDiv = element.parentNode.nextElementSibling // get the
+//       console.log(dropDownContentContainerDiv)
+//       if (dropDownContentContainerDiv.style.display === "block") {
+//             console.log("Close")
+//             dropDownContentContainerDiv.style.display = "none";   
+//         } else {
+//             console.log("Open")
+//             dropDownContentContainerDiv.style.display = "block";
+//             //  || dropDownContentContainerDiv.style.display == ""; 
 
-    for (let index = 0; index < reportBtn.length; index++) {
-    const element = reportBtn[index];
-    element.addEventListener('click', function (e) {
-      console.log(element)
-      const dropDownContentContainerDiv = element.parentNode.nextElementSibling // get the
-      console.log(dropDownContentContainerDiv)
-      if (dropDownContentContainerDiv.style.display === "block") {
-            console.log("Close")
-            dropDownContentContainerDiv.style.display = "none";   
-        } else {
-            console.log("Open")
-            dropDownContentContainerDiv.style.display = "block" || dropDownContentContainerDiv.style.display == "";
+//         }
+//     });
+//  }
+// }
 
+//NEW DROPDOWN FUNCTION
+function addOpenReportButtonEventListeners() {
+    let reportBtn = document.getElementsByClassName('bx-dots-vertical');
+    removeAllListenersFromClass(reportBtn);
+
+    // Function to close dropdown content if clicked outside
+    function closeDropdownContent() {
+        let dropdowns = document.querySelectorAll('.dropdown-content');
+        dropdowns.forEach(function(dropdown) {
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+
+    // Add click event listener to document to close dropdowns
+    document.addEventListener('click', function(event) {
+        let isDropdownClick = false;
+        let target = event.target;
+        while (target) {
+            if (target.classList && target.classList.contains('dropdown-content')) {
+                isDropdownClick = true;
+                break;
+            }
+            target = target.parentNode;
+        }
+        if (!isDropdownClick) {
+            closeDropdownContent();
         }
     });
- }
+
+    for (let index = 0; index < reportBtn.length; index++) {
+        const element = reportBtn[index];
+        element.addEventListener('click', function (e) {
+            console.log(element);
+            const dropDownContentContainerDiv = element.parentNode.nextElementSibling; // get the dropdown content
+            console.log(dropDownContentContainerDiv);
+            if (dropDownContentContainerDiv.style.display === "block") {
+                console.log("Close");
+                dropDownContentContainerDiv.style.display = "none";   
+            } else {
+                console.log("Open");
+                dropDownContentContainerDiv.style.display = "block";
+            }
+            e.stopPropagation(); // Prevents the click event from propagating to the document click event listener
+        });
+    }
 }
 
 function addReportPostButtonEventListener(){

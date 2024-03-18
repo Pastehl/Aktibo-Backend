@@ -543,13 +543,30 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-//
-// let calendarEventSection = document.getElementsByClassName("fc-daygrid-day-events");
-
-// function addStarToDate(date){
-// }
-
-
-function enterFoodRecordFunctionHere(){
-  
+let pointerPosition = 0;
+let bmidata = 36; // Example value retrieved from backend
+const pointer = document.querySelector('.pointer');
+const barWidth = document.querySelector('.bar').offsetWidth;
+if (bmidata < 18.5) {
+  pointerPosition = ((bmidata / 18.5) * 100) / 4; 
+  console.log(pointerPosition);
 }
+
+else if (bmidata >= 18.5 && bmidata <=24.9){
+  pointerPosition = ((bmidata - 18.5) / (24.9 - 18.5) * 25) + 24;
+}
+
+else if (bmidata >= 25 && bmidata <=29.9){
+  pointerPosition = ((bmidata - 25) / (29.9 - 25) * 25) + 49;
+  console.log(pointerPosition);
+}
+
+else if (bmidata >= 30 && bmidata < 40){
+  pointerPosition = (bmidata / 40) * 98.1; 
+}
+
+else if (bmidata >= 40){
+  pointerPosition = 98.1;
+}
+
+pointer.style.left = pointerPosition + '%';
