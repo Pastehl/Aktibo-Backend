@@ -13265,6 +13265,16 @@ modal exercise .modal {
   margin: 0;
 }
 
+.fc-daygrid-day-events {
+  font-size: 1.3em;
+  padding: 0;
+  margin: 0;
+}
+
+#calendarContainer a {
+  color: #63A91F;
+}
+
 #spinner {
   display: block;
   width: 200px;

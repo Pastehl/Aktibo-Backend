@@ -490,12 +490,49 @@ new Chart(ctx4, {
   },
 });
 
+
+//need to pass an array with object to "events"
+// '\u2B50' = star emoji 
+
 document.addEventListener("DOMContentLoaded", function () {
   var calendarEl = document.getElementById("calendarContainer");
 
   var calendar = new Calendar(calendarEl, {
     plugins: [dayGridPlugin],
-    backgroundColor: "#63A91F",
+    events: [
+      { 
+        title: "\u2B50", 
+        start: '2024-03-01',
+      },
+      { 
+        title: "\u2B50", 
+        start: '2024-03-02',
+      },
+      { 
+        title: "\u2B50", 
+        start: '2024-03-04',
+      },
+      { 
+        title: "\u2B50", 
+        start: '2024-03-05',
+      },
+      { 
+        title: "\u2B50", 
+        start: '2024-03-08',
+      },
+      { 
+        title: "\u2B50", 
+        start: '2024-03-07',
+      },
+      { 
+        title: "\u2B50", 
+        start: '2024-03-12',
+      }
+    ],
+    eventBackgroundColor: 'transparent',
+    eventBorderColor: 'transparent',
+    event
+
   });
 
   calendar.render();
@@ -505,6 +542,12 @@ document.addEventListener("DOMContentLoaded", function () {
     toolbarElement.removeChild(toolbarElement.lastChild);
   }
 });
+
+//
+// let calendarEventSection = document.getElementsByClassName("fc-daygrid-day-events");
+
+// function addStarToDate(date){
+// }
 
 
 function enterFoodRecordFunctionHere(){

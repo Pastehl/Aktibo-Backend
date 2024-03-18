@@ -1378,12 +1378,23 @@ modal exercise .modal {
 
 .dropdown-content hr {
     margin: 0;
-
 }
 
-//Calendar
+//change color of calendar event
 
+// .fc-daygrid-day-events{
+//     background-color: #63A91F;
+// }
 
+.fc-daygrid-day-events{
+    font-size: 1.3em;
+    padding: 0;
+    margin: 0;
+}
+
+#calendarContainer a{
+    color: #63A91F;
+}
 
 #spinner {
     display: block;
