@@ -1397,3 +1397,66 @@ modal exercise .modal {
 .dropdown-container{
     cursor: pointer;
 }
+
+
+.barcontainer {
+    margin: auto;
+    width: 20rem;
+    height: 2.5rem;
+    border-radius: 1rem;
+    background-color: lightgrey;
+    position: relative;
+  }
+  
+  .bar {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    display: flex;
+    position: relative;
+  }
+  
+  .segment {
+    height: 100%;
+    float: left;
+  }
+  
+  .blue {
+    background-color: #006E90;
+    flex: 1;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+  
+  .green {
+    background-color: #63A91F;
+    flex: 1;
+  }
+  
+  .orange {
+    background-color: #FF7F11;
+    flex: 1;
+    
+  }
+  
+  .red {
+    background-color: #FF1B1C;
+    flex: 1;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  
+  .pointer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.35rem;
+    height: 130%;
+    border-radius: 0.5rem;
+    margin-top: -0.38rem;
+    background-color: black;
+  }
+
+  .bmip {
+    margin-top: 0.4rem;
+  }

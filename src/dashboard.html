@@ -53,9 +53,20 @@
           <canvas id="myChart4"></canvas>
         </div>
         <div class="chartt-container-buttons"> <!-- chart-container -->
-         
-          <!-- <canvas id="bmiChart"></canvas>draft -->
-          <p><a href="link_to_button1"><img src="../assets/button1_img.png" class ="food_record" alt="Button 1" width="100%"></a></p>
+
+          <div class="barcontainer">
+            <div class="bar">
+              <div class="segment blue"></div>
+              <div class="segment green"></div>
+              <div class="segment orange"></div>
+              <div class="segment red"></div>
+              <div class="pointer"></div>
+            </div>
+            <p class = "bmip">Your current BMI is {{bmidata}}. You are within the </p>
+          </div>
+
+          <p><a href="link_to_button1"><img src="../assets/button1_img.png" class="food_record" alt="Button 1"
+                width="100%"></a></p>
           <p><a href="link_to_button2"><img src="../assets/button2_img.png" alt="Button 2" width="100%"></a></p>
         </div>
         <div class="chartt-container flex-column"> <!-- chart-container2 -->
