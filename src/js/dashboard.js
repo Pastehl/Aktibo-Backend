@@ -55,6 +55,41 @@ const ctx6 = document.getElementById("myChart6"); //carbs
 const ctx7 = document.getElementById("myChart7"); //protien
 const ctx8 = document.getElementById("myChart8"); //fats
 
+var downloadChoiceModal = new bootstrap.Modal('#downloadChoiceModal');
+var closedownloadChoiceModalBtn = document.getElementById('closedownloadChoiceModalBtn')
+var downloadPDFBtn = document.getElementById('downloadPDF');
+var downloadXLSX = document.getElementById('downloadXLSX')
+closedownloadChoiceModalBtn.addEventListener('click', function(){downloadChoiceModal.hide()})
+downloadPDFBtn.addEventListener('click', function(){
+ onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      console.log(uid);
+      const userRef = collection(db, "users");
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, uid));
+      generatePDF(docRef.data().weightRecords);
+    }
+  });
+  downloadChoiceModal.hide();
+  })
+downloadXLSX.addEventListener('click', function(){
+   onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      console.log(uid);
+      const userRef = collection(db, "users");
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, uid));
+      generateExcel(docRef.data().weightRecords);
+    }
+  });
+  downloadChoiceModal.hide();
+})
+
+
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -489,10 +524,15 @@ function addgenerate_reportsBtnEventListener(docId) {
     element.setAttribute("data-doc-id", docId);
     element.addEventListener("click", function (e) {
       //Download CSV File/PDF of weight data or steps data
-      getWeightData(element.dataset.docId);
+      downloadChoiceModal.show();
+      //getWeightData(element.dataset.docId);
     });
   }
 }
+function addfood_recordModalEventListener(){
+
+}
+
 //Ensure only 1 event listener is binded
 function removeAllListenersFromClass(elements) {
   Array.from(elements).forEach(function (element) {
