@@ -169,7 +169,7 @@ getUserRecord()
 const doughnutt_Steps = {
   id: "doughnut_Steps",
   beforeDatasetsDraw(chart, args, pluginOptions) {
-    console.log(pluginOptions);
+    // console.log(pluginOptions);
     const { ctx, data } = chart;
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
@@ -179,17 +179,9 @@ const doughnutt_Steps = {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const textValue = pluginOptions?.doughnut_Steps?.textValue ?? '0'; // Extract textValue from pluginOptions or use a default value
+    const textValue = data.datasets[0].data[0] ?? 'NaN'; // Extract textValue from pluginOptions or use a default value
+    console.log(data.datasets[0].data[0]);
     ctx.fillText(textValue, xCoor, yCoor);
-
-
-    // var bottomText = "Steps";
-    // var bottomTextX = ctx.canvas.width / 2.5;
-    // var bottomTextY = ctx.canvas.height / 1.5;
-    // ctx.fillStyle = "#000";
-    // ctx.font = "20px sans-serif"; //text formatting
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 
