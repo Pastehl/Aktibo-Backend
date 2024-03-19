@@ -451,8 +451,8 @@ function setChartData(
 
 function setBarData(chartctx,datavalues){
 //bar chart test config Steps Per Day
-console.log(datavalues[0]);
-console.log(datavalues[1]);
+// console.log(datavalues[0]);
+// console.log(datavalues[1]);
 new Chart(ctx3, {
   type: "bar",
   data: {
@@ -460,7 +460,7 @@ new Chart(ctx3, {
     datasets: [
       {
         label: "# of Steps",
-        data: datavalues[1][0],
+        data: datavalues[1],
         borderWidth: 1,
       },
     ],
