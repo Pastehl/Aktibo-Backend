@@ -126,7 +126,7 @@ function setUserData(docSnap) {
 // Update doughnut chart for steps
   const stepsChartCtx = ctx; // Assuming myChart is the ID of the doughnut chart for steps
 
-  //setChartData(stepsChartCtx, [steps, 10000 - steps], ["rgb(99,169,31)", "rgb(40,54,26)"], [doughnutt_Steps], { textValue: '10000' });
+  setChartData(stepsChartCtx, [steps, 10000 - steps], ["rgb(99,169,31)", "rgb(40,54,26)"], [doughnutt_Steps], { textValue: '10000' });
 
   // Update doughnut chart for calories burned
   // const caloriesChartCtx = ctx2; // Assuming myChart2 is the ID of the doughnut chart for calories
