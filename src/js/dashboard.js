@@ -132,7 +132,6 @@ async function getUserRecord() {
     if (user) {
       // User is signed in
       const uid = user.uid;
-      console.log(uid);
       const userRef = collection(db, "users");
       //const docRef = await getDoc(doc(userRef, uid));
       const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
@@ -152,13 +151,15 @@ function setUserData(docSnap) {
   let mealRecords = docSnap.data().mealRecords;
 
   //Get Extracted Values
-  getWeekStepData(dailyStepsCount); // Array Week Steps Count
+  let weekStepData = getWeekStepData(dailyStepsCount); // Array Week Steps Count
   getWeekWeightData(dailyWeightRecords) // Array Week Weight Count
   getTodayMealData(mealRecords)// Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
   callCalendar(exercise_dates); // Arraw Monthly Plot Points
 
+  // console.log(`weekstepdata: ${weekStepData[0]}`);
+  // console.log(`weekstepdata: ${weekStepData[1]}`);
   // Call setChartData to update the doughnut charts
   // Update doughnut chart for steps
   const stepsChartCtx = ctx; // Assuming myChart is the ID of the doughnut chart for steps
@@ -204,6 +205,10 @@ function setUserData(docSnap) {
     ["rgb(54, 69, 79)", "rgb(115, 147, 179)"],
     [grayGraph]
   );
+  setBarData(
+    ctx3,
+    weekStepData
+  )
 }
 
 getUserRecord();
@@ -248,7 +253,7 @@ const doughnutt_Steps = {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const textValue = data.datasets[0].data[0] ?? "NaN"; // Extract textValue from pluginOptions or use a default value
-    console.log(data.datasets[0].data[0]);
+    // console.log(data.datasets[0].data[0]);
     ctx.fillText(textValue, xCoor, yCoor);
   },
 };
@@ -305,7 +310,6 @@ const doughnutt_Calories = {
 };
 
 //Red Graph
-//Template for Graph
 const redGraph = {
   id: "redGraph",
   beforeDatasetsDraw(chart, args, pluginOptions) {
@@ -331,7 +335,6 @@ const redGraph = {
 };
 
 //Blue Graph
-//Template for Graph
 const blueGraph = {
   id: "blueGraph",
   beforeDatasetsDraw(chart, args, pluginOptions) {
@@ -357,7 +360,6 @@ const blueGraph = {
 };
 
 //Yellow Graph
-//Template for Graph
 const yellowGraph = {
   id: "yellowGraph",
   beforeDatasetsDraw(chart, args, pluginOptions) {
@@ -383,7 +385,6 @@ const yellowGraph = {
 };
 
 //Gray Graph
-//Template for Graph
 const grayGraph = {
   id: "grayGraph",
   beforeDatasetsDraw(chart, args, pluginOptions) {
@@ -448,23 +449,18 @@ function setChartData(
 
 // Then call the function for each chart:
 
+function setBarData(chartctx,datavalues){
 //bar chart test config Steps Per Day
+console.log(datavalues[0]);
+console.log(datavalues[1]);
 new Chart(ctx3, {
   type: "bar",
   data: {
-    labels: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
+    labels: datavalues[0],
     datasets: [
       {
         label: "# of Steps",
-        data: [5000, 500, 3000, 10000, 12500, 18030, 20000],
+        data: datavalues[1][0],
         borderWidth: 1,
       },
     ],
@@ -483,6 +479,8 @@ new Chart(ctx3, {
     },
   },
 });
+}
+
 // Weight per day Chart
 new Chart(ctx4, {
   type: "line",
