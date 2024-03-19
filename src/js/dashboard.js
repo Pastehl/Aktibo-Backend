@@ -55,6 +55,41 @@ const ctx6 = document.getElementById("myChart6"); //carbs
 const ctx7 = document.getElementById("myChart7"); //protien
 const ctx8 = document.getElementById("myChart8"); //fats
 
+var downloadChoiceModal = new bootstrap.Modal('#downloadChoiceModal');
+var closedownloadChoiceModalBtn = document.getElementById('closedownloadChoiceModalBtn')
+var downloadPDFBtn = document.getElementById('downloadPDF');
+var downloadXLSX = document.getElementById('downloadXLSX')
+closedownloadChoiceModalBtn.addEventListener('click', function(){downloadChoiceModal.hide()})
+downloadPDFBtn.addEventListener('click', function(){
+ onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      console.log(uid);
+      const userRef = collection(db, "users");
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      generatePDF(docRef.data().weightRecords);
+    }
+  });
+  downloadChoiceModal.hide();
+  })
+downloadXLSX.addEventListener('click', function(){
+   onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      console.log(uid);
+      const userRef = collection(db, "users");
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      generateExcel(docRef.data().weightRecords);
+    }
+  });
+  downloadChoiceModal.hide();
+})
+
+
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -487,10 +522,15 @@ function addgenerate_reportsBtnEventListener(docId) {
     element.setAttribute("data-doc-id", docId);
     element.addEventListener("click", function (e) {
       //Download CSV File/PDF of weight data or steps data
-      getWeightData(element.dataset.docId);
+      downloadChoiceModal.show();
+      //getWeightData(element.dataset.docId);
     });
   }
 }
+function addfood_recordModalEventListener(){
+
+}
+
 //Ensure only 1 event listener is binded
 function removeAllListenersFromClass(elements) {
   Array.from(elements).forEach(function (element) {
@@ -654,6 +694,7 @@ function generateExcel(data) {
 }
 
 function getWeekStepData(data) {
+  console.log(data, "CHCHCHCH");
   let dates = [];
   let steps = [];
 
@@ -670,17 +711,19 @@ function getWeekStepData(data) {
   let currentDateIterator = new Date(monday);
   while (currentDateIterator <= sunday) {
     // Check if there is a corresponding entry in data for the current date
+    console.log(currentDateIterator, "watch here");
     let entry = data.find(
       (item) =>
-        item.date.toDate().toDateString() === currentDateIterator.toDateString()
+        item.date.toDate().toDateString() ==
+        currentDateIterator.toDateString()
     );
     if (entry) {
       // If entry exists, push date and steps into respective arrays
-      dates.push(currentDateIterator);
+      dates.push(new Date(currentDateIterator)); // Create a new Date object
       steps.push(entry.steps);
     } else {
       // If no entry exists, push 0 steps for the current date
-      dates.push(currentDateIterator);
+      dates.push(new Date(currentDateIterator)); // Create a new Date object
       steps.push(0);
     }
     // Move to the next day
@@ -688,10 +731,11 @@ function getWeekStepData(data) {
   }
 
   // Now you have separate arrays for dates and steps representing Monday to Sunday of the current week
-  //console.log("Dates:", dates);
-  //console.log("Steps:", steps);
-  return [[dates], [steps]];
+  console.log("Dates!!!:", dates);
+  console.log("Steps:", steps);
+  return [dates, steps];
 }
+
 
 function getWeekWeightData(data) {
     let currentDate = new Date();
