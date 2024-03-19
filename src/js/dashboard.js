@@ -29,6 +29,10 @@ import {
 import * as bootstrap from "bootstrap";
 import "../scss/styles.scss";
 import { main, start } from "@popperjs/core";
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
+
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAH168KKUYGhSGV_GVX5SqDGfxm4vtYR7w",
@@ -44,28 +48,38 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
 
+
+const ctx = document.getElementById("myChart");//steps
+const ctx2 = document.getElementById("myChart2");//calories burned
+const ctx3 = document.getElementById("myChart3");//bar steps per day
+const ctx4 = document.getElementById("myChart4");//line weight per day
+const ctx5 = document.getElementById("myChart5");//total cal
+const ctx6 = document.getElementById("myChart6");//carbs
+const ctx7 = document.getElementById("myChart7");//protien
+const ctx8 = document.getElementById("myChart8");//fats
+
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
-  // if (user) {
-  //   // User is signed in
-  //   const uid = user.uid;
-  //   const userRef = collection(db, "users");
-  //   const docRef = await getDoc(doc(userRef, uid));
-  //   if (docRef.exists()) {
-  //     const isAdmin = docRef.data().isAdmin;
-  //     if (!isAdmin) {
-  //       window.location.href = "dashboard.html";
-  //     }
-  //   } else {
-  //     // Handle the case where the user document doesn't exist
-  //     console.error("User document does not exist");
-  //     // You may want to redirect or handle this case appropriately
-  //   }
-  // } else {
-  //   // User is signed out
-  //   window.location.href = "index.html";
-  //   // Handle signed-out state if needed
-  // }
+  if (user) {
+    // User is signed in
+    const uid = user.uid;
+    const userRef = collection(db, "users");
+    const docRef = await getDoc(doc(userRef, uid));
+    if (docRef.exists()) {
+      const isAdmin = docRef.data().isAdmin;
+      if (!isAdmin) {
+        window.location.href = "dashboard.html";
+      }
+    } else {
+      // Handle the case where the user document doesn't exist
+      console.error("User document does not exist");
+      // You may want to redirect or handle this case appropriately
+    }
+  } else {
+    // User is signed out
+    window.location.href = "index.html";
+    // Handle signed-out state if needed
+  }
 });
 
 // logout
@@ -80,54 +94,93 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     });
 });
 
-const ctx = document.getElementById("myChart");
-const ctx2 = document.getElementById("myChart2");
-const ctx3 = document.getElementById("myChart3");
-const ctx4 = document.getElementById("myChart4");
-const ctx5 = document.getElementById("myChart5");
-const ctx6 = document.getElementById("myChart6");
-const ctx7 = document.getElementById("myChart7");
-const ctx8 = document.getElementById("myChart8");
+//User Data
+async function getUserRecord(){
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      console.log(uid)
+      const userRef = collection(db, "users");
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+      setUserData(docRef)
+      setCalendar();
+    }
+  });
+}
+function setUserData(docSnap) {
+  let weight =docSnap.data().weight;
+  let height =docSnap.data().height;
+  let exercise_dates = docSnap.data().exerciseRecords;
+  let bmi = weight / ((height/100)**2)
+  let steps = docSnap.data().totalSteps
+  let caloriesBurned = docSnap.data().totalCaloriesBurned
+  let dailyStepsCount = docSnap.data().dailyStepsCount
+
+  //setBMI(bmi.toFixed(1))
+  //addgenerate_reportsBtnEventListener(docSnap.id); 
+  //setCalendar(exercise_dates);
+
+  // Call setChartData to update the doughnut charts
+// Update doughnut chart for steps
+  const stepsChartCtx = ctx; // Assuming myChart is the ID of the doughnut chart for steps
+
+  //setChartData(stepsChartCtx, [steps, 10000 - steps], ["rgb(99,169,31)", "rgb(40,54,26)"], [doughnutt_Steps], { textValue: '10000' });
+
+  // Update doughnut chart for calories burned
+  // const caloriesChartCtx = ctx2; // Assuming myChart2 is the ID of the doughnut chart for calories
+  // setChartData(caloriesChartCtx, [caloriesBurned, 500 - caloriesBurned], ["rgb(255,127,17)", "rgb(243,223,194)"], [doughnutt_Calories]);
+  // setChartData(ctx5, [100, 2500], ["rgb(255,0,0)", "rgb(255,114,118)"], [redGraph], { maintainAspectRatio: false });
+  // setChartData(ctx6, [240, 110], ["rgb(0, 0, 255)", "rgb(37, 207, 240)"], [blueGraph]);
+  // setChartData(ctx7, [300, 50], ["rgb(218, 165, 32)", "rgb(255, 192, 0)"], [yellowGraph]);
+  // setChartData(ctx8, [300, 50], ["rgb(54, 69, 79)", "rgb(115, 147, 179)"], [grayGraph]);
+}
+getUserRecord()
+
 
 //Green Test Graph
 //Template for Graph
-const doughnut_Steps = {
-  id: "doughnut_Steps",
-  beforeDatasetsDraw(chart, args, pluginOptions) {
-    const { ctx, data } = chart;
-    ctx.save();
-    const xCoor = chart.getDatasetMeta(0).data[0].x;
-    const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
-    ctx.fillStyle = "rgb(99,169,31)";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(`Steps`, xCoor, yCoor); //Change first argument to change text inside the circle
+// const doughnut_Steps = {
+//   id: "doughnut_Steps",
+//   beforeDatasetsDraw(chart, args, pluginOptions) {
+//     const { ctx, data } = chart;
+//     ctx.save();
+//     const xCoor = chart.getDatasetMeta(0).data[0].x;
+//     const yCoor = chart.getDatasetMeta(0).data[0].y;
+//     ctx.font = "bold 30px sans-serif"; //text formatting
+//     ctx.fillStyle = "rgb(99,169,31)";
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillText(`Steps`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    var bottomText = "Steps";
-    var bottomTextX = ctx.canvas.width / 2;
-    var bottomTextY = ctx.canvas.height;
-    ctx.fillStyle = "#000";
-    ctx.font = "20px sans-serif"; //text formatting
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(bottomText, bottomTextX, bottomTextY);
-  },
-};
+//     var bottomText = "Steps";
+//     var bottomTextX = ctx.canvas.width / 2;
+//     var bottomTextY = ctx.canvas.height;
+//     ctx.fillStyle = "#000";
+//     ctx.font = "20px sans-serif"; //text formatting
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillText(bottomText, bottomTextX, bottomTextY);
+//   },
+// };
 
 //modified doughnut_Steps
 const doughnutt_Steps = {
   id: "doughnut_Steps",
   beforeDatasetsDraw(chart, args, pluginOptions) {
+    console.log(pluginOptions);
     const { ctx, data } = chart;
     ctx.save();
     const xCoor = chart.getDatasetMeta(0).data[0].x;
     const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 1.3rem sans-serif"; //text formatting
+    ctx.font = "bold 1.3rem sans-serif";
     ctx.fillStyle = "rgb(99,169,31)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`10000`, xCoor, yCoor); //Change first argument to change text inside the circle
+    const textValue = pluginOptions?.doughnut_Steps?.textValue ?? '10000'; // Extract textValue from pluginOptions or use a default value
+    ctx.fillText(textValue, xCoor, yCoor);
+
 
     // var bottomText = "Steps";
     // var bottomTextX = ctx.canvas.width / 2.5;
@@ -142,29 +195,29 @@ const doughnutt_Steps = {
 
 //Orange Time Graph
 //Template for Graph
-const doughnut_Calories = {
-  id: "doughnut_Calories",
-  beforeDatasetsDraw(chart, args, pluginOptions) {
-    const { ctx, data } = chart;
-    ctx.save();
-    const xCoor = chart.getDatasetMeta(0).data[0].x;
-    const yCoor = chart.getDatasetMeta(0).data[0].y;
-    ctx.font = "bold 30px sans-serif"; //text formatting
-    ctx.fillStyle = "rgb(255,127,17)";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(`Calories`, xCoor, yCoor); //Change first argument to change text inside the circle
+// const doughnut_Calories = {
+//   id: "doughnut_Calories",
+//   beforeDatasetsDraw(chart, args, pluginOptions) {
+//     const { ctx, data } = chart;
+//     ctx.save();
+//     const xCoor = chart.getDatasetMeta(0).data[0].x;
+//     const yCoor = chart.getDatasetMeta(0).data[0].y;
+//     ctx.font = "bold 30px sans-serif"; //text formatting
+//     ctx.fillStyle = "rgb(255,127,17)";
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillText(`Calories`, xCoor, yCoor); //Change first argument to change text inside the circle
 
-    var bottomText = "Calories Burned";
-    var bottomTextX = ctx.canvas.width / 2;
-    var bottomTextY = ctx.canvas.height - 80;
-    ctx.fillStyle = "#000";
-    ctx.font = "20px sans-serif"; //text formatting
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(bottomText, bottomTextX, bottomTextY);
-  },
-};
+//     var bottomText = "Calories Burned";
+//     var bottomTextX = ctx.canvas.width / 2;
+//     var bottomTextY = ctx.canvas.height - 80;
+//     ctx.fillStyle = "#000";
+//     ctx.font = "20px sans-serif"; //text formatting
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillText(bottomText, bottomTextX, bottomTextY);
+//   },
+// };
 
 //modified dougnut_Calories
 const doughnutt_Calories = {
@@ -294,135 +347,42 @@ const grayGraph = {
     // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
+//set all dougnut datas
+function setChartData(chartCtx, dataValues, backgroundColors, plugins = [], options = {}) {
+  // Construct the pluginOptions object
+  const pluginOptions = Object.fromEntries(plugins.map(plugin => [plugin.id, options[plugin.id] ?? {}]));
+  
+  new Chart(chartCtx, {
+    type: "doughnut",
+    data: {
+      datasets: [
+        {
+          data: dataValues,
+          backgroundColor: backgroundColors,
+        },
+      ],
+    },
+    plugins: plugins,
+    options: {
+      maintainAspectRatio: true,
+      responsive: true,
+      cutout: "80%",
+      ...options,
+      doughnut_Steps: pluginOptions["doughnut_Steps"], // Pass options specific to doughnutt_Steps
+    },
+  });
+}
 
-new Chart(ctx, {
-  type: "doughnut",
-  data: {
-    datasets: [
-      {
-        data: [250, 50], //data
-        backgroundColor: [
-          "rgb(99,169,31)", //dark color
-          "rgb(40,54,26)", //light color
-        ],
-      },
-    ],
-  },
-  plugins: [doughnutt_Steps], //doughnut_Steps
-  options: {
-    maintainAspectRatio: true,
-    responsive: true,
 
-    //adjust to resize thickness of doughnut
-    cutout: "80%",
-  },
-});
 
-new Chart(ctx2, {
-  type: "doughnut",
-  data: {
-    datasets: [
-      {
-        data: [240, 170], //data
-        backgroundColor: [
-          "rgb(255,127,17)", //dark color
-          "rgb(243,223,194)", //light color
-        ],
-      },
-    ],
-  },
-  plugins: [doughnutt_Calories],
-  options: {
-    maintainAspectRatio: true,
-    responsive: true,
-    cutout: "80%",
-  },
-});
+// Example usage:
+// Define your chart contexts (ctx1, ctx2, ..., ctx8)
+// Define your plugins (doughnutt_Steps, doughnutt_Calories, ...)
+// Define your options for each chart if needed
 
-new Chart(ctx5, {
-  type: "doughnut",
-  data: {
-    datasets: [
-      {
-        data: [100, 250], //data
-        backgroundColor: [
-          "rgb(255,0,0)", //dark color
-          "rgb(255,114,118)", //light color
-        ],
-      },
-    ],
-  },
-  plugins: [redGraph],
-  options: {
-    maintainAspectRatio: false,
-    responsive: true,
-    cutout: "80%",
-  },
-});
+// Then call the function for each chart:
 
-new Chart(ctx6, {
-  type: "doughnut",
-  data: {
-    datasets: [
-      {
-        data: [240, 110], //data
-        backgroundColor: [
-          "rgb(0, 0, 255)", //dark color
-          "rgb(37, 207, 240)", //light color
-        ],
-      },
-    ],
-  },
-  plugins: [blueGraph],
-  options: {
-    maintainAspectRatio: true,
-    responsive: true,
-    cutout: "80%",
-  },
-});
-
-new Chart(ctx7, {
-  type: "doughnut",
-  data: {
-    datasets: [
-      {
-        data: [300, 50], //data
-        backgroundColor: [
-          "rgb(218, 165, 32)", //dark color
-          "rgb(255, 192, 0)", //light color
-        ],
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: true,
-    responsive: true,
-    cutout: "80%",
-  },
-  plugins: [yellowGraph],
-});
-
-new Chart(ctx8, {
-  type: "doughnut",
-  data: {
-    datasets: [
-      {
-        data: [300, 50], //data
-        backgroundColor: [
-          "rgb(54, 69, 79)", //dark color
-          "rgb(115, 147, 179)", //light color
-        ],
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: true,
-    responsive: true,
-    cutout: "80%",
-  },
-  plugins: [grayGraph],
-});
-//bar chart test config
+//bar chart test config Steps Per Day
 new Chart(ctx3, {
   type: "bar",
   data: {
@@ -438,7 +398,7 @@ new Chart(ctx3, {
     datasets: [
       {
         label: "# of Steps",
-        data: [12, 19, 3, 5, 2, 3, 5],
+        data: [5000, 500, 3000, 10000, 12500, 18030, 20000],
         borderWidth: 1,
       },
     ],
@@ -457,7 +417,7 @@ new Chart(ctx3, {
     },
   },
 });
-
+// Weight per day Chart
 new Chart(ctx4, {
   type: "line",
   data: {
@@ -473,7 +433,7 @@ new Chart(ctx4, {
     datasets: [
       {
         label: "Weight per Day",
-        data: [12, 19, 3, 5, 2, 3, 1],
+        data: [71, 71, 70, 69, 71, 75, 70],
         borderWidth: 1,
       },
     ],
@@ -489,11 +449,38 @@ new Chart(ctx4, {
     },
   },
 });
+function addgenerate_reportsBtnEventListener(docId) {
+  var generate_reportsBtn = document.getElementsByClassName("generate_reports");
+  removeAllListenersFromClass(generate_reportsBtn);
 
+  for (let index = 0; index < generate_reportsBtn.length; index++) {
+    const element = generate_reportsBtn[index];
+    element.setAttribute("data-doc-id", docId);
+    element.addEventListener("click", function (e) {
+      //Download CSV File/PDF of weight data or steps data
+      getWeightData(element.dataset.docId);
+    });
+  }
+}
+//Ensure only 1 event listener is binded
+function removeAllListenersFromClass(elements) {
+  Array.from(elements).forEach(function (element) {
+    var clonedElement = element.cloneNode(true);
+    element.parentNode.replaceChild(clonedElement, element);
+  });
+}
+function removeAllListeners(element) {
+  if (element) {
+    const clone = element.cloneNode(true);
+    element.replaceWith(clone);
+  } else {
+    console.error(`Element with id "${elementId}" not found.`);
+  }
+}
 
 //need to pass an array with object to "events"
 // '\u2B50' = star emoji 
-
+//Calendar
 document.addEventListener("DOMContentLoaded", function () {
   var calendarEl = document.getElementById("calendarContainer");
 
@@ -542,31 +529,102 @@ document.addEventListener("DOMContentLoaded", function () {
     toolbarElement.removeChild(toolbarElement.lastChild);
   }
 });
+function setBMI(bmi) {
+  console.log("executed")
+  let pointerPosition = 0;
+  let bmidata = bmi; // Example value retrieved from backend
+  let category = "";
 
-let pointerPosition = 0;
-let bmidata = 36; // Example value retrieved from backend
-const pointer = document.querySelector('.pointer');
-const barWidth = document.querySelector('.bar').offsetWidth;
-if (bmidata < 18.5) {
-  pointerPosition = ((bmidata / 18.5) * 100) / 4; 
-  console.log(pointerPosition);
+  const pointer = document.querySelector('.pointer');
+  const barWidth = document.querySelector('.bar').offsetWidth;
+
+  if (bmidata < 18.5) {
+    pointerPosition = ((bmidata / 18.5) * 100) / 4;
+    category = "underweight category.";
+  } else if (bmidata >= 18.5 && bmidata <= 24.9) {
+    pointerPosition = ((bmidata - 18.5) / (24.9 - 18.5) * 25) + 24;
+    category = "normal category.";
+  } else if (bmidata >= 25 && bmidata <= 29.9) {
+    pointerPosition = ((bmidata - 25) / (29.9 - 25) * 25) + 49;
+    category = "overweight category.";
+  } else if (bmidata >= 30 && bmidata < 40) {
+    pointerPosition = (bmidata / 40) * 98.1;
+    category = "overweight category.";
+  } else if (bmidata >= 40) {
+    pointerPosition = 98.1;
+    category = "obese category.";
+  }
+
+  pointer.style.left = pointerPosition + '%';
+
+  // Get a reference to the paragraph element
+  const bmipParagraph = document.querySelector('.bmip');
+
+  // Update the paragraph text to include the value of bmidata and category
+  bmipParagraph.textContent = `Your current BMI is ${bmidata}. You are within the ${category}`;
+}
+function setCalendar(dates) {
+  
 }
 
-else if (bmidata >= 18.5 && bmidata <=24.9){
-  pointerPosition = ((bmidata - 18.5) / (24.9 - 18.5) * 25) + 24;
+async function getWeightData(uid,choice){
+  const userRef = collection(db, "users");
+  const docRef = await getDoc(doc(userRef, uid));
+
+  if(choice == 0){
+    generatePDF(docRef.data().weightRecords)
+  }
+  else{
+    generateExcel(docRef.data().weightRecords)
+  }
+  
+}
+function generatePDF(data){
+  var doc = new jsPDF();
+  
+  // Set initial y position for text
+  let yPos = 20;
+
+   // Loop through the data array and add each element to the PDF
+  data.forEach((item, index) => {
+    // Extract date from the timestamp and format it
+    const date = item.date.toDate(); // Assuming 'date' is a Firestore Timestamp
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    
+    // Add date and weight to the PDF document
+    doc.text(20, yPos, `Date: ${formattedDate}, Weight: ${item.weight}`);
+    // Increment y position for next item
+    yPos += 10; // Adjust as needed
+  });
+
+  // Save the PDF
+  doc.save('output.pdf');
+
 }
 
-else if (bmidata >= 25 && bmidata <=29.9){
-  pointerPosition = ((bmidata - 25) / (29.9 - 25) * 25) + 49;
-  console.log(pointerPosition);
-}
+// Function to generate Excel file
+function generateExcel(data) {
+  // Create a new workbook
+  var wb = XLSX.utils.book_new();
 
-else if (bmidata >= 30 && bmidata < 40){
-  pointerPosition = (bmidata / 40) * 98.1; 
-}
+  // Map data to extract only date part and format it
+  var formattedData = data.map(item => ({
+    Date: new Date(item.date.toDate()).toLocaleDateString(), // Extract and format date
+    Weight: item.weight // Keep weight as is
+  }));
 
-else if (bmidata >= 40){
-  pointerPosition = 98.1;
-}
+  // Extract headers from the first object in the data array
+  var headers = Object.keys(formattedData[0]);
 
-pointer.style.left = pointerPosition + '%';
+  // Slice the formattedData array to remove the indices
+  var slicedData = formattedData.map(item => Object.values(item));
+
+  // Create a new worksheet
+  var ws = XLSX.utils.aoa_to_sheet([headers].concat(slicedData), { header: headers });
+
+  // Add the worksheet to the workbook
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+  // Write the workbook to a file
+  XLSX.writeFile(wb, 'output.xlsx');
+}
