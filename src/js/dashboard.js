@@ -656,6 +656,7 @@ function generateExcel(data) {
 }
 
 function getWeekStepData(data) {
+  console.log(data, "CHCHCHCH");
   let dates = [];
   let steps = [];
 
@@ -672,17 +673,19 @@ function getWeekStepData(data) {
   let currentDateIterator = new Date(monday);
   while (currentDateIterator <= sunday) {
     // Check if there is a corresponding entry in data for the current date
+    console.log(currentDateIterator, "watch here");
     let entry = data.find(
       (item) =>
-        item.date.toDate().toDateString() === currentDateIterator.toDateString()
+        item.date.toDate().toDateString() ==
+        currentDateIterator.toDateString()
     );
     if (entry) {
       // If entry exists, push date and steps into respective arrays
-      dates.push(currentDateIterator);
+      dates.push(new Date(currentDateIterator)); // Create a new Date object
       steps.push(entry.steps);
     } else {
       // If no entry exists, push 0 steps for the current date
-      dates.push(currentDateIterator);
+      dates.push(new Date(currentDateIterator)); // Create a new Date object
       steps.push(0);
     }
     // Move to the next day
@@ -690,10 +693,11 @@ function getWeekStepData(data) {
   }
 
   // Now you have separate arrays for dates and steps representing Monday to Sunday of the current week
-  console.log("Dates:", dates);
+  console.log("Dates!!!:", dates);
   console.log("Steps:", steps);
   return [dates, steps];
 }
+
 
 function getWeekWeightData(data) {
     let currentDate = new Date();
