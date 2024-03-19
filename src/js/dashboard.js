@@ -178,7 +178,7 @@ const doughnutt_Steps = {
     ctx.fillStyle = "rgb(99,169,31)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    const textValue = pluginOptions?.doughnut_Steps?.textValue ?? '10000'; // Extract textValue from pluginOptions or use a default value
+    const textValue = pluginOptions?.doughnut_Steps?.textValue ?? '0'; // Extract textValue from pluginOptions or use a default value
     ctx.fillText(textValue, xCoor, yCoor);
 
 
