@@ -574,16 +574,7 @@ function setBMI(bmi) {
   // Update the paragraph text to include the value of bmidata and category
   bmipParagraph.textContent = `Your current BMI is ${bmidata}. You are within the ${category}`;
 }
-async function getWeightData(uid, choice) {
-  const userRef = collection(db, "users");
-  const docRef = await getDoc(doc(userRef, uid));
 
-  if (choice == 0) {
-    generatePDF(docRef.data().weightRecords);
-  } else {
-    generateExcel(docRef.data().weightRecords);
-  }
-}
 function generatePDF(data) {
   var doc = new jsPDF();
 
