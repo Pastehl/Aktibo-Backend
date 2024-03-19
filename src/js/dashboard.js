@@ -68,7 +68,7 @@ downloadPDFBtn.addEventListener('click', function(){
       console.log(uid);
       const userRef = collection(db, "users");
       //const docRef = await getDoc(doc(userRef, uid));
-      const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
       generatePDF(docRef.data().weightRecords);
     }
   });
@@ -82,7 +82,7 @@ downloadXLSX.addEventListener('click', function(){
       console.log(uid);
       const userRef = collection(db, "users");
       //const docRef = await getDoc(doc(userRef, uid));
-      const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
       generateExcel(docRef.data().weightRecords);
     }
   });
