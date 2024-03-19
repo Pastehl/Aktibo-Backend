@@ -117,12 +117,12 @@ function setUserData(docSnap) {
   let mealRecords = docSnap.data().mealRecords;
 
   //Get Extracted Values
-  getWeekStepData(dailyStepsCount);
-  getWeekWeightData(dailyWeightRecords)
-  getTodayMealData(mealRecords)
+  getWeekStepData(dailyStepsCount); // Array Week Steps Count
+  getWeekWeightData(dailyWeightRecords) // Array Week Weight Count
+  getTodayMealData(mealRecords)// Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
-  callCalendar(exercise_dates);
+  callCalendar(exercise_dates); // Arraw Monthly Plot Points
 
   // Call setChartData to update the doughnut charts
   // Update doughnut chart for steps
@@ -756,12 +756,7 @@ function getTodayMealData(mealRecords) {
 
     // Return an object containing the sums for today
     console.log([calories,carbohydrates,fat,protein])
-    return {
-        calories: calories,
-        carbohydrates: carbohydrates,
-        fat: fat,
-        protein: protein
-    };
+    return [calories,carbohydrates,fat,protein];
 }
 function callCalendar(data) {
     if (!Array.isArray(data)) {
