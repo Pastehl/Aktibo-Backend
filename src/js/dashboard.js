@@ -152,14 +152,12 @@ function setUserData(docSnap) {
 
   //Get Extracted Values
   let weekStepData = getWeekStepData(dailyStepsCount); // Array Week Steps Count
-  getWeekWeightData(dailyWeightRecords) // Array Week Weight Count
+  let weekWeightData = getWeekWeightData(dailyWeightRecords); // Array Week Weight Count
   getTodayMealData(mealRecords)// Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
-  callCalendar(exercise_dates); // Arraw Monthly Plot Points
+  let calendarDates = callCalendar(exercise_dates); // Arraw Monthly Plot Points
 
-  // console.log(`weekstepdata: ${weekStepData[0]}`);
-  // console.log(`weekstepdata: ${weekStepData[1]}`);
   // Call setChartData to update the doughnut charts
   // Update doughnut chart for steps
   const stepsChartCtx = ctx; // Assuming myChart is the ID of the doughnut chart for steps
@@ -208,7 +206,12 @@ function setUserData(docSnap) {
   setBarData(
     ctx3,
     weekStepData
-  )
+  );
+  setLineData(
+    ctx4,
+    weekWeightData
+  );
+document.addEventListener("DOMContentLoaded", setCalendarData(calendarDates));
 }
 
 getUserRecord();
@@ -252,7 +255,7 @@ const doughnutt_Steps = {
     ctx.fillStyle = "rgb(99,169,31)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    const textValue = data.datasets[0].data[0] ?? "NaN"; // Extract textValue from pluginOptions or use a default value
+    const textValue = data.datasets[0].data[0] ?? "0"; // Extract textValue from pluginOptions or use a default value
     // console.log(data.datasets[0].data[0]);
     ctx.fillText(textValue, xCoor, yCoor);
   },
@@ -296,7 +299,7 @@ const doughnutt_Calories = {
     ctx.fillStyle = "rgb(255,127,17)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`325`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(data.datasets[0].data[0] ?? "0", xCoor, yCoor); //Change first argument to change text inside the circle
 
     // var bottomText = "Calories Burned";
     // var bottomTextX = ctx.canvas.width / 2;
@@ -321,16 +324,7 @@ const redGraph = {
     ctx.fillStyle = "rgb(255,0,0)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`595`, xCoor, yCoor); //Change first argument to change text inside the circle
-
-    // var bottomText = 'Red';
-    // var bottomTextX = ctx.canvas.width / 2
-    // var bottomTextY = ctx.canvas.height - 1;
-    // ctx.fillStyle = '#000';
-    // ctx.font = '20px sans-serif';
-    // ctx.textAlign = 'center';
-    // ctx.textBaseline = 'middle';
-    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    ctx.fillText(`${data.datasets[0].data[0]}` ?? "0", xCoor, yCoor); //Change first argument to change text inside the circle
   },
 };
 
@@ -346,7 +340,7 @@ const blueGraph = {
     ctx.fillStyle = "rgb(0, 0, 255)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`48g`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(data.datasets[0].data[0] ?? "0", xCoor, yCoor); //Change first argument to change text inside the circle
 
     // var bottomText = "Blue";
     // var bottomTextX = ctx.canvas.width / 2;
@@ -371,16 +365,7 @@ const yellowGraph = {
     ctx.fillStyle = "rgb(218, 165, 32)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`22g`, xCoor, yCoor); //Change first argument to change text inside the circle
-
-    // var bottomText = "Yellow";
-    // var bottomTextX = ctx.canvas.width / 2;
-    // var bottomTextY = ctx.canvas.height - 10;
-    // ctx.fillStyle = "#000";
-    // ctx.font = "20px sans-serif"; //text formatting
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
+    ctx.fillText(data.datasets[0].data[0] ?? "0", xCoor, yCoor); //Change first argument to change text inside the circle
   },
 };
 
@@ -396,16 +381,8 @@ const grayGraph = {
     ctx.fillStyle = "rgb(54, 69, 79)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`22g`, xCoor, yCoor); //Change first argument to change text inside the circle
+    ctx.fillText(data.datasets[0].data[0] ?? "0", xCoor, yCoor); //Change first argument to change text inside the circle
 
-    // var bottomText = "Gray";
-    // var bottomTextX = ctx.canvas.width / 2;
-    // var bottomTextY = ctx.canvas.height - 10;
-    // ctx.fillStyle = "#000";
-    // ctx.font = "20px sans-serif"; //text formatting
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillText(bottomText, bottomTextX, bottomTextY);
   },
 };
 //set all dougnut datas
@@ -453,7 +430,7 @@ function setBarData(chartctx,datavalues){
 //bar chart test config Steps Per Day
 // console.log(datavalues[0]);
 // console.log(datavalues[1]);
-new Chart(ctx3, {
+new Chart(chartctx, {
   type: "bar",
   data: {
     labels: datavalues[0],
@@ -481,8 +458,9 @@ new Chart(ctx3, {
 });
 }
 
+function setLineData(chartctx,dataValues){
 // Weight per day Chart
-new Chart(ctx4, {
+new Chart(chartctx, {
   type: "line",
   data: {
     labels: [
@@ -497,7 +475,7 @@ new Chart(ctx4, {
     datasets: [
       {
         label: "Weight per Day",
-        data: [71, 71, 70, 69, 71, 75, 70],
+        data: dataValues,
         borderWidth: 1,
       },
     ],
@@ -513,6 +491,8 @@ new Chart(ctx4, {
     },
   },
 });
+}
+
 function addgenerate_reportsBtnEventListener(docId) {
   var generate_reportsBtn = document.getElementsByClassName("generate_reports");
   removeAllListenersFromClass(generate_reportsBtn);
@@ -526,9 +506,6 @@ function addgenerate_reportsBtnEventListener(docId) {
       //getWeightData(element.dataset.docId);
     });
   }
-}
-function addfood_recordModalEventListener(){
-
 }
 
 //Ensure only 1 event listener is binded
@@ -547,47 +524,13 @@ function removeAllListeners(element) {
   }
 }
 
-//need to pass an array with object to "events"
-// '\u2B50' = star emoji
-//Calendar
-document.addEventListener("DOMContentLoaded", function () {
+function setCalendarData(calendarDates) {
   var calendarEl = document.getElementById("calendarContainer");
-
   var calendar = new Calendar(calendarEl, {
     plugins: [dayGridPlugin],
-    events: [
-      {
-        title: "\u2B50",
-        start: "2024-03-01",
-      },
-      {
-        title: "\u2B50",
-        start: "2024-03-02",
-      },
-      {
-        title: "\u2B50",
-        start: "2024-03-04",
-      },
-      {
-        title: "\u2B50",
-        start: "2024-03-05",
-      },
-      {
-        title: "\u2B50",
-        start: "2024-03-08",
-      },
-      {
-        title: "\u2B50",
-        start: "2024-03-07",
-      },
-      {
-        title: "\u2B50",
-        start: "2024-03-12",
-      },
-    ],
+    events: calendarDates,
     eventBackgroundColor: "transparent",
     eventBorderColor: "transparent",
-    event,
   });
 
   calendar.render();
@@ -596,7 +539,8 @@ document.addEventListener("DOMContentLoaded", function () {
     toolbarElement.removeChild(toolbarElement.lastChild);
     toolbarElement.removeChild(toolbarElement.lastChild);
   }
-});
+}
+
 function setBMI(bmi) {
   let pointerPosition = 0;
   let bmidata = bmi; // Example value retrieved from backend
@@ -711,7 +655,7 @@ function getWeekStepData(data) {
     let currentDateIterator = new Date(monday);
     while (currentDateIterator <= sunday) {
         // Check if there is a corresponding entry in data for the current date
-        console.log(currentDateIterator, "watch here");
+        // console.log(currentDateIterator, "watch here");
         let entry = data.find(
             (item) =>
                 item.date.toDate().toDateString() ==
@@ -729,12 +673,10 @@ function getWeekStepData(data) {
     }
 
     // Now you have an array containing steps for each day of the week
-     console.log("Dates!!!:", days);
-    console.log("Steps:", steps);
+    //  console.log("Dates!!!:", days);
+    // console.log("Steps:", steps);
     return [days, steps];
 }
-
-
 
 function getWeekWeightData(data) {
     let currentDate = new Date();
@@ -765,7 +707,7 @@ function getWeekWeightData(data) {
             weekWeightData.push(0);
         }
     }
-  console.log(weekWeightData)
+  // console.log(`wwd: ${weekWeightData}`)
     return weekWeightData;
 }
 
@@ -819,9 +761,22 @@ function callCalendar(data) {
     });
 
     // Extract the dates from date objects
-    let resultDates = datesInCurrentMonth.map(dateObj => dateObj.date.toDate());
+    // let resultDates = datesInCurrentMonth.map(dateObj => dateObj.date.toDate());
+    let resultDates = datesInCurrentMonth.map(dateObj => {
+      let currDate = dateObj.date.toDate();
+      let date = currDate.getDate().toString().padStart(2, "0");
+      let month = (currDate.getMonth() + 1).toString().padStart(2, "0");
+      let year = currDate.getFullYear();
+      console.log(`${year}-${month}-${date}`);
 
-    // Return the array of dates
-    console.log(resultDates,"LOOK")
+      //return event object as specified by FullCalendar
+      return {
+        title: "\u2B50",
+        start: `${year}-${month}-${date}`,
+      };
+    });
+
+    // Return the array of event objects
+    console.log(resultDates);
     return resultDates;
 }
