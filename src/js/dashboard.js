@@ -696,47 +696,46 @@ function generateExcel(data) {
 }
 
 function getWeekStepData(data) {
-  console.log(data, "CHCHCHCH");
-  let dates = [];
-  let steps = [];
+    console.log(data, "CHCHCHCH");
+    let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    let steps = [];
 
-  // Get current date
-  let currentDate = new Date();
-  // Calculate Monday of the current week
-  let monday = new Date(currentDate);
-  monday.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-  // Calculate Sunday of the current week
-  let sunday = new Date(currentDate);
-  sunday.setDate(currentDate.getDate() - currentDate.getDay() + 7);
+    // Get current date
+    let currentDate = new Date();
+    // Calculate Monday of the current week
+    let monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+    // Calculate Sunday of the current week
+    let sunday = new Date(currentDate);
+    sunday.setDate(currentDate.getDate() - currentDate.getDay() + 7);
 
-  // Iterate over each day of the week
-  let currentDateIterator = new Date(monday);
-  while (currentDateIterator <= sunday) {
-    // Check if there is a corresponding entry in data for the current date
-    console.log(currentDateIterator, "watch here");
-    let entry = data.find(
-      (item) =>
-        item.date.toDate().toDateString() ==
-        currentDateIterator.toDateString()
-    );
-    if (entry) {
-      // If entry exists, push date and steps into respective arrays
-      dates.push(new Date(currentDateIterator)); // Create a new Date object
-      steps.push(entry.steps);
-    } else {
-      // If no entry exists, push 0 steps for the current date
-      dates.push(new Date(currentDateIterator)); // Create a new Date object
-      steps.push(0);
+    // Iterate over each day of the week
+    let currentDateIterator = new Date(monday);
+    while (currentDateIterator <= sunday) {
+        // Check if there is a corresponding entry in data for the current date
+        console.log(currentDateIterator, "watch here");
+        let entry = data.find(
+            (item) =>
+                item.date.toDate().toDateString() ==
+                currentDateIterator.toDateString()
+        );
+        if (entry) {
+            // If entry exists, push steps into the steps array
+            steps.push(entry.steps);
+        } else {
+            // If no entry exists, push 0 steps for the current date
+            steps.push(0);
+        }
+        // Move to the next day
+        currentDateIterator.setDate(currentDateIterator.getDate() + 1);
     }
-    // Move to the next day
-    currentDateIterator.setDate(currentDateIterator.getDate() + 1);
-  }
 
-  // Now you have separate arrays for dates and steps representing Monday to Sunday of the current week
-  console.log("Dates!!!:", dates);
-  console.log("Steps:", steps);
-  return [dates, steps];
+    // Now you have an array containing steps for each day of the week
+     console.log("Dates!!!:", days);
+    console.log("Steps:", steps);
+    return [days, steps];
 }
+
 
 
 function getWeekWeightData(data) {
