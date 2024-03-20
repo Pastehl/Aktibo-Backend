@@ -56,6 +56,7 @@ const ctx7 = document.getElementById("myChart7"); //protien
 const ctx8 = document.getElementById("myChart8"); //fats
 
 var downloadChoiceModal = new bootstrap.Modal("#downloadChoiceModal");
+var food_recordModal = new bootstrap.Modal("#viewRecipeModal");
 var closedownloadChoiceModalBtn = document.getElementById(
   "closedownloadChoiceModalBtn"
 );
@@ -170,6 +171,7 @@ function setUserData(docSnap) {
   let macros = getTodayMealData(mealRecords); // Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
+  addFood_RecordBtnEventListener(docSnap.id);
   let calendarDates = callCalendar(exercise_dates); // Arraw Monthly Plot Points
 
   // Call setChartData to update the doughnut charts
@@ -512,6 +514,21 @@ function addgenerate_reportsBtnEventListener(docId) {
     });
   }
 }
+function addFood_RecordBtnEventListener(docId){
+ var food_recordBtn = document.getElementsByClassName("food_record");
+  removeAllListenersFromClass(food_recordBtn);
+
+  for (let index = 0; index < food_recordBtn.length; index++) {
+    const element = food_recordBtn[index];
+    element.setAttribute("data-doc-id", docId);
+    element.addEventListener("click", function (e) {
+      //Download CSV File/PDF of weight data or steps data
+      getRecipesData(docId)
+      food_recordModal.show()
+      
+    });
+  }
+}
 
 //Ensure only 1 event listener is binded
 function removeAllListenersFromClass(elements) {
@@ -850,4 +867,50 @@ function callCalendar(data) {
 
   // Return the array of event objects
   return resultDates;
+}
+
+async function getRecipesData(docId){
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      console.log(uid);
+      const userRef = collection(db, "users");
+      const docRef = await getDoc(doc(userRef, uid));
+      //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      showBookmarks(docRef.data().bookmarkedRecipes)
+    }
+  });
+}
+
+function showBookmarks() {
+  // Loop through each recipe object in the array
+  var recipeContentArray = [
+  {"foodLabel": "Recipe 1", "calories": 200, "carbs": 30, "protein": 20, "fat": 10, "instructions": "Recipe 1 instructions"},
+  {"foodLabel": "Recipe 2", "calories": 300, "carbs": 40, "protein": 25, "fat": 15, "instructions": "Recipe 2 instructions"}
+];
+  var recipeContent = document.getElementById("recipeContent");
+  recipeContentArray.forEach(recipe => {
+    var name = recipe["foodLabel"];
+    var calories = recipe["calories"];
+    var carbohydrates = recipe["carbs"];
+    var protein = recipe["protein"];
+    var fats = recipe["fat"];
+    var instructions = recipe["instructions"];
+    var ingredients = recipe["ingredients"];
+    
+
+    // Append a row to the table for each recipe
+    recipeContent.innerHTML +=
+      `
+      <tr class="row bg-white">
+        <th class="col" >${name}</th>
+        <th class="col" >${calories}</th>
+        <th class="col" >${carbohydrates}</th>
+        <th class="col" >${protein}</th>
+        <th class="col" >${fats}</th>
+        <th class="col" >${instructions}</th>
+      </tr>
+    `;
+  });
 }

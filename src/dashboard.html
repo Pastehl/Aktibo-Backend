@@ -134,7 +134,7 @@
           </div>
         </div>
       </div>
-      <!-- modal Instructions -->
+      <!-- modal DonwloadBtn -->
 <div class="modal fade show" id="downloadChoiceModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
   <div class="modal-dialog" role="document"
     style="width: 60vw; height: 60vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
@@ -154,6 +154,51 @@
     </div>
   </div>
 </div>
+      <!-- modal recipe List -->
+<div class="modal fade show" id="viewRecipeModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog" role="document"
+    style="width: 60vw; height: 60vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="modal-content"
+      style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+      <button type="button" id="viewRecipeModalBtn" class="viewRecipeModal modalCloseBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="">
+            <div class="table-responsive">
+              <table class="table project-list-table table-nowrap align-middle table-hover ">
+                <thead class="table-dark">
+                  <tr class="row">
+                    <th class="col">Name</th>
+                    <th class="col">Calories</th>
+                    <th class="col">Carbohydrates</th>
+                    <th class="col">Protein</th>
+                    <th class="col">Fats</th>
+                    <th class="col">Instructions</th>
+                  </tr>
+                </thead>
+                <tbody id="recipeContent">
+                  <!-- Recipe content goes here -->
+                  <!-- Example row: -->
+                  <!-- <tr>
+                    <td>Recipe Name</td>
+                    <td>Calories</td>
+                    <td>Carbohydrates</td>
+                    <td>Protein</td>
+                    <td>Fats</td>
+                    <td>Instructions</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
