@@ -780,11 +780,12 @@ article:has(:hover, :focus) {
     padding: .5em .5em; /* Adjust padding as needed */
     // align-items: center;
      justify-content: center;
-    overflow: visible;
+    overflow: hidden;
 }
 
-.food_record {
+.food_record, .generate_reports {
     border-radius: 20px;
+    cursor: pointer;
 }
 
 .chart-green-border {
@@ -1493,8 +1494,8 @@ modal exercise .modal {
 
 .barcontainer {
     margin: auto;
-    width: 20rem;
-    height: 2.5rem;
+    width: 72%;
+    height: 15%;
     border-radius: 1rem;
     background-color: lightgrey;
     position: relative;
@@ -1551,4 +1552,11 @@ modal exercise .modal {
 
   .bmip {
     margin-top: 0.4rem;
+    font-size: 0.7rem;
   }
+
+  .food_record, .generate_reports{
+    width: 75%;
+  }
+
+ 
