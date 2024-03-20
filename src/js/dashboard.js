@@ -520,14 +520,7 @@ function removeAllListenersFromClass(elements) {
     element.parentNode.replaceChild(clonedElement, element);
   });
 }
-function removeAllListeners(element) {
-  if (element) {
-    const clone = element.cloneNode(true);
-    element.replaceWith(clone);
-  } else {
-    console.error(`Element with id "${elementId}" not found.`);
-  }
-}
+
 
 function setCalendarData(calendarDates) {
   var calendarEl = document.getElementById("calendarContainer");
@@ -705,18 +698,21 @@ function getWeekStepData(data) {
   // console.log("Steps:", steps);
   return [days, steps];
 }
+
 function getWeekWeightData(data) {
   if (data == undefined) {
-    let val = [0, 0, 0, 0, 0, 0, 0];
+    let val = [1, 1, 1, 1, 1, 1, 1];
     return val;
   }
 
-  let currentDate = new Date();
-  let sunday = new Date(currentDate);
-  sunday.setDate(currentDate.getDate() - currentDate.getDay()); // Sunday of the current week
+  let lastWeightData = getLastEntryBeforeMonday(data);
 
-  let saturday = new Date(sunday);
-  saturday.setDate(sunday.getDate() + 6); // Saturday of the current week
+  let currentDate = new Date();
+  let monday = new Date(currentDate);
+  monday.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Monday of the current week
+
+  let sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6); // Sunday of the current week
 
   let today = new Date(currentDate);
   today.setHours(0, 0, 0, 0); // Set current time to midnight
@@ -724,8 +720,8 @@ function getWeekWeightData(data) {
   let weekWeightData = [];
   let lastValidWeight = 0; // Variable to store the last valid weight
 
-  // Iterate over each day of the week (Sunday to Saturday) up to today
-  for (let d = new Date(sunday); d <= saturday && d <= today; d.setDate(d.getDate() + 1)) {
+  // Iterate over each day of the week (Monday to Sunday) up to today
+  for (let d = new Date(monday); d <= today && d <= sunday; d.setDate(d.getDate() + 1)) {
     let found = false;
 
     // Search for the weight entry corresponding to the current date
@@ -741,26 +737,39 @@ function getWeekWeightData(data) {
 
     // If no entry is found for the current date, push the last valid weight
     if (!found) {
-      // If it's Monday and lastValidWeight is 0, search for previous dates
-      if (d.getDay() === 1 && lastValidWeight === 0) {
-        for (let i = data.length - 1; i >= 0; i--) {
-          let entryDate = data[i].date.toDate();
-          if (entryDate < d) {
-            lastValidWeight = data[i].weight;
-            weekWeightData.push(data[i].weight);
-            found = true;
-            break;
-          }
-        }
-      }
-      if (!found) {
-        weekWeightData.push(lastValidWeight);
-      }
+      weekWeightData.push(lastValidWeight);
     }
   }
-  // console.log(`wwd: ${weekWeightData}`)
+  if(weekWeightData[0] == 0 && lastWeightData != 0){
+    weekWeightData[0] = lastWeightData;
+  }
+
   return weekWeightData;
 }
+
+function getLastEntryBeforeMonday(data) {
+  if (!data || data.length === 0) {
+    return null; // Return null if data is empty or undefined
+  }
+
+  let currentDate = new Date();
+  let monday = new Date(currentDate);
+  monday.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Monday of the current week
+
+  let lastEntry = null;
+
+  // Iterate through data to find the last entry before Monday
+  for (let i = data.length - 1; i >= 0; i--) {
+    let entryDate = new Date(data[i].date.toDate()); // Convert Firestore Timestamp to JavaScript Date object
+    if (entryDate < monday) {
+      lastEntry = data[i];
+      break;
+    }
+  }
+
+  return lastEntry ? lastEntry.weight : null; // Return weight if last entry found, else return null
+}
+
 
 
 function getTodayMealData(mealRecords) {
