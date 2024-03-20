@@ -190,13 +190,13 @@ function setUserData(docSnap) {
   const caloriesChartCtx = ctx2; // Assuming myChart2 is the ID of the doughnut chart for calories
   setChartData(
     caloriesChartCtx,
-    [caloriesBurned, 500 - caloriesBurned],
+    [caloriesBurned, 2500 - caloriesBurned],
     ["rgb(255,127,17)", "rgb(243,223,194)"],
     [doughnutt_Calories]
   );
   setChartData(
     ctx5,
-    [macros[0], 2000],
+    [macros[0], 2500],
     ["rgb(255,0,0)", "rgb(255,114,118)"],
     [redGraph],
     { maintainAspectRatio: false }
