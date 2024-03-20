@@ -55,40 +55,43 @@ const ctx6 = document.getElementById("myChart6"); //carbs
 const ctx7 = document.getElementById("myChart7"); //protien
 const ctx8 = document.getElementById("myChart8"); //fats
 
-var downloadChoiceModal = new bootstrap.Modal('#downloadChoiceModal');
-var closedownloadChoiceModalBtn = document.getElementById('closedownloadChoiceModalBtn')
-var downloadPDFBtn = document.getElementById('downloadPDF');
-var downloadXLSX = document.getElementById('downloadXLSX')
-closedownloadChoiceModalBtn.addEventListener('click', function(){downloadChoiceModal.hide()})
-downloadPDFBtn.addEventListener('click', function(){
- onAuthStateChanged(auth, async (user) => {
+var downloadChoiceModal = new bootstrap.Modal("#downloadChoiceModal");
+var closedownloadChoiceModalBtn = document.getElementById(
+  "closedownloadChoiceModalBtn"
+);
+var downloadPDFBtn = document.getElementById("downloadPDF");
+var downloadXLSX = document.getElementById("downloadXLSX");
+closedownloadChoiceModalBtn.addEventListener("click", function () {
+  downloadChoiceModal.hide();
+});
+downloadPDFBtn.addEventListener("click", function () {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in
       const uid = user.uid;
       console.log(uid);
       const userRef = collection(db, "users");
-      //const docRef = await getDoc(doc(userRef, uid));
-      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      const docRef = await getDoc(doc(userRef, uid));
+      //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
       generatePDF(docRef.data().weightRecords);
     }
   });
   downloadChoiceModal.hide();
-  })
-downloadXLSX.addEventListener('click', function(){
-   onAuthStateChanged(auth, async (user) => {
+});
+downloadXLSX.addEventListener("click", function () {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in
       const uid = user.uid;
       console.log(uid);
       const userRef = collection(db, "users");
-      //const docRef = await getDoc(doc(userRef, uid));
-      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      const docRef = await getDoc(doc(userRef, uid));
+      //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
       generateExcel(docRef.data().weightRecords);
     }
   });
   downloadChoiceModal.hide();
-})
-
+});
 
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
@@ -97,15 +100,10 @@ onAuthStateChanged(auth, async (user) => {
     const uid = user.uid;
     const userRef = collection(db, "users");
     const docRef = await getDoc(doc(userRef, uid));
-    if (docRef.exists()) {
-      const isAdmin = docRef.data().isAdmin;
-      if (!isAdmin) {
-        window.location.href = "dashboard.html";
-      }
-    } else {
-      // Handle the case where the user document doesn't exist
-      console.error("User document does not exist");
-      // You may want to redirect or handle this case appropriately
+    if (!docRef.exists()) {
+      // User is signed out
+      window.location.href = "index.html";
+      // Handle signed-out state if needed
     }
   } else {
     // User is signed out
@@ -142,10 +140,26 @@ async function getUserRecord() {
 function setUserData(docSnap) {
   let weight = docSnap.data().weight;
   let height = docSnap.data().height;
+  let bmi;
+
+  if (weight == undefined || height == undefined) {
+    bmi = 0;
+  } else {
+    bmi = weight / (height / 100) ** 2;
+  }
+
   let exercise_dates = docSnap.data().exerciseRecords;
-  let bmi = weight / (height / 100) ** 2;
+
   let steps = docSnap.data().totalSteps;
+  if (steps == undefined) {
+    steps = 1;
+  }
+
   let caloriesBurned = docSnap.data().totalCaloriesBurned;
+  if (caloriesBurned == undefined) {
+    caloriesBurned = 1;
+  }
+
   let dailyStepsCount = docSnap.data().dailyStepCounts;
   let dailyWeightRecords = docSnap.data().weightRecords;
   let mealRecords = docSnap.data().mealRecords;
@@ -153,7 +167,7 @@ function setUserData(docSnap) {
   //Get Extracted Values
   let weekStepData = getWeekStepData(dailyStepsCount); // Array Week Steps Count
   let weekWeightData = getWeekWeightData(dailyWeightRecords); // Array Week Weight Count
-  getTodayMealData(mealRecords)// Daily Macros
+  let macros = getTodayMealData(mealRecords); // Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
   let calendarDates = callCalendar(exercise_dates); // Arraw Monthly Plot Points
@@ -180,38 +194,32 @@ function setUserData(docSnap) {
   );
   setChartData(
     ctx5,
-    [100, 2500],
+    [macros[0], 2000],
     ["rgb(255,0,0)", "rgb(255,114,118)"],
     [redGraph],
     { maintainAspectRatio: false }
   );
   setChartData(
     ctx6,
-    [240, 110],
+    [macros[1], 150],
     ["rgb(0, 0, 255)", "rgb(37, 207, 240)"],
     [blueGraph]
   );
   setChartData(
     ctx7,
-    [300, 50],
+    [macros[2], 150],
     ["rgb(218, 165, 32)", "rgb(255, 192, 0)"],
     [yellowGraph]
   );
   setChartData(
     ctx8,
-    [300, 50],
+    [macros[3], 150],
     ["rgb(54, 69, 79)", "rgb(115, 147, 179)"],
     [grayGraph]
   );
-  setBarData(
-    ctx3,
-    weekStepData
-  );
-  setLineData(
-    ctx4,
-    weekWeightData
-  );
-document.addEventListener("DOMContentLoaded", setCalendarData(calendarDates));
+  setBarData(ctx3, weekStepData);
+  setLineData(ctx4, weekWeightData);
+  document.addEventListener("DOMContentLoaded", setCalendarData(calendarDates));
 }
 
 getUserRecord();
@@ -382,7 +390,6 @@ const grayGraph = {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(data.datasets[0].data[0] ?? "0", xCoor, yCoor); //Change first argument to change text inside the circle
-
   },
 };
 //set all dougnut datas
@@ -426,71 +433,69 @@ function setChartData(
 
 // Then call the function for each chart:
 
-function setBarData(chartctx,datavalues){
-//bar chart test config Steps Per Day
-// console.log(datavalues[0]);
-// console.log(datavalues[1]);
-new Chart(chartctx, {
-  type: "bar",
-  data: {
-    labels: datavalues[0],
-    datasets: [
-      {
-        label: "# of Steps",
-        data: datavalues[1],
-        borderWidth: 1,
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    responsive: true,
+function setBarData(chartctx, datavalues) {
+  //bar chart test config Steps Per Day
+  new Chart(chartctx, {
+    type: "bar",
+    data: {
+      labels: datavalues[0],
+      datasets: [
+        {
+          label: "# of Steps",
+          data: datavalues[1],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
 
-    //change bar color, same with line chart
-    backgroundColor: "#63A91F",
+      //change bar color, same with line chart
+      backgroundColor: "#63A91F",
 
-    scales: {
-      y: {
-        beginAtZero: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
       },
     },
-  },
-});
+  });
 }
 
-function setLineData(chartctx,dataValues){
-// Weight per day Chart
-new Chart(chartctx, {
-  type: "line",
-  data: {
-    labels: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
-    datasets: [
-      {
-        label: "Weight per Day",
-        data: dataValues,
-        borderWidth: 1,
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    responsive: true,
-    backgroundColor: "#63A91F",
-    scales: {
-      y: {
-        beginAtZero: true,
+function setLineData(chartctx, dataValues) {
+  // Weight per day Chart
+  new Chart(chartctx, {
+    type: "line",
+    data: {
+      labels: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      datasets: [
+        {
+          label: "Weight per Day",
+          data: dataValues,
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      backgroundColor: "#63A91F",
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
       },
     },
-  },
-});
+  });
 }
 
 function addgenerate_reportsBtnEventListener(docId) {
@@ -629,145 +634,199 @@ function generateExcel(data) {
 }
 
 function getWeekStepData(data) {
-    console.log(data, "CHCHCHCH");
-    let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    let steps = [];
+  if (data == undefined) {
+    return [
+      [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      [1, 1, 1, 1, 1, 1, 1],
+    ];
+  }
+  let days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  let steps = [];
 
-    // Get current date
-    let currentDate = new Date();
-    // Calculate Monday of the current week
-    let monday = new Date(currentDate);
-    monday.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-    // Calculate Sunday of the current week
-    let sunday = new Date(currentDate);
-    sunday.setDate(currentDate.getDate() - currentDate.getDay() + 7);
+  // Get current date
+  let currentDate = new Date();
+  // Calculate Monday of the current week
+  let monday = new Date(currentDate);
+  monday.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+  // Calculate Sunday of the current week
+  let sunday = new Date(currentDate);
+  sunday.setDate(currentDate.getDate() - currentDate.getDay() + 7);
 
-    // Iterate over each day of the week
-    let currentDateIterator = new Date(monday);
-    while (currentDateIterator <= sunday) {
-        // Check if there is a corresponding entry in data for the current date
-        // console.log(currentDateIterator, "watch here");
-        let entry = data.find(
-            (item) =>
-                item.date.toDate().toDateString() ==
-                currentDateIterator.toDateString()
-        );
-        if (entry) {
-            // If entry exists, push steps into the steps array
-            steps.push(entry.steps);
-        } else {
-            // If no entry exists, push 0 steps for the current date
-            steps.push(0);
-        }
-        // Move to the next day
-        currentDateIterator.setDate(currentDateIterator.getDate() + 1);
+  // Iterate over each day of the week
+  let currentDateIterator = new Date(monday);
+  while (currentDateIterator <= sunday) {
+    // Check if there is a corresponding entry in data for the current date
+    // console.log(currentDateIterator, "watch here");
+    let entry = data.find(
+      (item) =>
+        item.date.toDate().toDateString() == currentDateIterator.toDateString()
+    );
+    if (entry) {
+      // If entry exists, push steps into the steps array
+      steps.push(entry.steps);
+    } else {
+      // If no entry exists, push 0 steps for the current date
+      steps.push(0);
     }
+    // Move to the next day
+    currentDateIterator.setDate(currentDateIterator.getDate() + 1);
+  }
 
-    // Now you have an array containing steps for each day of the week
-    //  console.log("Dates!!!:", days);
-    // console.log("Steps:", steps);
-    return [days, steps];
+  // Now you have an array containing steps for each day of the week
+  //  console.log("Dates!!!:", days);
+  // console.log("Steps:", steps);
+  return [days, steps];
 }
-
 function getWeekWeightData(data) {
-    let currentDate = new Date();
-    let monday = new Date(currentDate);
-    monday.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Monday of the current week
+  if (data == undefined) {
+    let val = [1, 1, 1, 1, 1, 1, 1];
+    return val;
+  }
 
-    let friday = new Date(monday);
-    friday.setDate(monday.getDate() + 4); // Friday of the current week
+  let currentDate = new Date();
+  let sunday = new Date(currentDate);
+  sunday.setDate(currentDate.getDate() - currentDate.getDay()); // Sunday of the current week
 
-    let weekWeightData = [];
+  let saturday = new Date(sunday);
+  saturday.setDate(sunday.getDate() + 6); // Saturday of the current week
 
-    // Iterate over each day of the week (Monday to Friday)
-    for (let d = new Date(monday); d <= friday; d.setDate(d.getDate() + 1)) {
-        let found = false;
+  let today = new Date(currentDate);
+  today.setHours(0, 0, 0, 0); // Set current time to midnight
 
-        // Search for the weight entry corresponding to the current date
-        for (let i = 0; i < data.length; i++) {
-            let entryDate = data[i].date.toDate(); // Convert Firestore Timestamp to JavaScript Date object
-            if (entryDate.toDateString() === d.toDateString()) {
-                weekWeightData.push(data[i].weight);
-                found = true;
-                break;
-            }
-        }
+  let weekWeightData = [];
+  let lastValidWeight = 0; // Variable to store the last valid weight
 
-        // If no entry is found for the current date, push 0
-        if (!found) {
-            weekWeightData.push(0);
-        }
+  // Iterate over each day of the week (Sunday to Saturday) up to today
+  for (let d = new Date(sunday); d <= saturday && d <= today; d.setDate(d.getDate() + 1)) {
+    let found = false;
+
+    // Search for the weight entry corresponding to the current date
+    for (let i = 0; i < data.length; i++) {
+      let entryDate = data[i].date.toDate(); // Convert Firestore Timestamp to JavaScript Date object
+      if (entryDate.toDateString() === d.toDateString()) {
+        lastValidWeight = data[i].weight;
+        weekWeightData.push(data[i].weight);
+        found = true;
+        break;
+      }
     }
+
+    // If no entry is found for the current date, push the last valid weight
+    if (!found) {
+      // If it's Monday and lastValidWeight is 0, search for previous dates
+      if (d.getDay() === 1 && lastValidWeight === 0) {
+        for (let i = data.length - 1; i >= 0; i--) {
+          let entryDate = data[i].date.toDate();
+          if (entryDate < d) {
+            lastValidWeight = data[i].weight;
+            weekWeightData.push(data[i].weight);
+            found = true;
+            break;
+          }
+        }
+      }
+      if (!found) {
+        weekWeightData.push(lastValidWeight);
+      }
+    }
+  }
   // console.log(`wwd: ${weekWeightData}`)
-    return weekWeightData;
+  return weekWeightData;
 }
+
 
 function getTodayMealData(mealRecords) {
-    // Get today's date
-    let today = new Date();
-    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
+  if (mealRecords == undefined) {
+    return [100.0, 10.0, 10.0, 10.0];
+  }
+  // Get today's date
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
 
-    // Initialize variables to store sums
-    let calories = 0;
-    let carbohydrates = 0;
-    let fat = 0;
-    let protein = 0;
+  // Initialize variables to store sums
+  let calories = 0;
+  let carbohydrates = 0;
+  let fat = 0;
+  let protein = 0;
 
-    // Iterate over mealRecords array
-    mealRecords.forEach(record => {
-        // Convert date to JavaScript Date object
-        let recordDate = record.date.toDate(); // Assuming date is a Firestore Timestamp
+  // Iterate over mealRecords array
+  mealRecords.forEach((record) => {
+    // Convert date to JavaScript Date object
+    let recordDate = record.date.toDate(); // Assuming date is a Firestore Timestamp
 
-        // Check if the record's date matches today's date
-        if (recordDate.toDateString() === today.toDateString()) {
-            // Add the values to the sums
-            calories += record.calories;
-            carbohydrates += record.carbohydrates;
-            fat += record.fat;
-            protein += record.protein;
-        }
-    });
-
-    // Return an object containing the sums for today
-    console.log([calories,carbohydrates,fat,protein])
-    return [calories,carbohydrates,fat,protein];
-}
-function callCalendar(data) {
-    if (!Array.isArray(data)) {
-        console.error("Input is not an array.");
-        return [];
+    // Check if the record's date matches today's date
+    if (recordDate.toDateString() === today.toDateString()) {
+      // Add the values to the sums
+      calories += record.calories;
+      carbohydrates += record.carbohydrates;
+      fat += record.fat;
+      protein += record.protein;
     }
+  });
 
-    // Get current date
-    let currentDate = new Date();
-    // Get the first day of the current month
-    let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    // Get the last day of the current month
-    let lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  // Return an object containing the sums for today
+  return [parseFloat(calories.toFixed(1)), parseFloat(carbohydrates.toFixed(1)), parseFloat(protein.toFixed(1)), parseFloat(fat.toFixed(1))];
+}
 
-    // Filter dates in the current month
-    let datesInCurrentMonth = data.filter(dateObj => {
-        let date = dateObj.date.toDate(); // Convert Firestore Timestamp to JavaScript Date object
-        return date >= firstDayOfMonth && date <= lastDayOfMonth;
-    });
+function callCalendar(data) {
+  if (!Array.isArray(data)) {
+    console.error("Input is not an array.");
+    return [];
+  }
 
-    // Extract the dates from date objects
-    // let resultDates = datesInCurrentMonth.map(dateObj => dateObj.date.toDate());
-    let resultDates = datesInCurrentMonth.map(dateObj => {
-      let currDate = dateObj.date.toDate();
-      let date = currDate.getDate().toString().padStart(2, "0");
-      let month = (currDate.getMonth() + 1).toString().padStart(2, "0");
-      let year = currDate.getFullYear();
-      console.log(`${year}-${month}-${date}`);
+  // Get current date
+  let currentDate = new Date();
+  // Get the first day of the current month
+  let firstDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  );
+  // Get the last day of the current month
+  let lastDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  );
 
-      //return event object as specified by FullCalendar
-      return {
-        title: "\u2B50",
-        start: `${year}-${month}-${date}`,
-      };
-    });
+  // Filter dates in the current month
+  let datesInCurrentMonth = data.filter((dateObj) => {
+    let date = dateObj.date.toDate(); // Convert Firestore Timestamp to JavaScript Date object
+    return date >= firstDayOfMonth && date <= lastDayOfMonth;
+  });
 
-    // Return the array of event objects
-    console.log(resultDates);
-    return resultDates;
+  // Extract the dates from date objects
+  // let resultDates = datesInCurrentMonth.map(dateObj => dateObj.date.toDate());
+  let resultDates = datesInCurrentMonth.map((dateObj) => {
+    let currDate = dateObj.date.toDate();
+    let date = currDate.getDate().toString().padStart(2, "0");
+    let month = (currDate.getMonth() + 1).toString().padStart(2, "0");
+    let year = currDate.getFullYear();
+    //console.log(`${year}-${month}-${date}`);
+
+    //return event object as specified by FullCalendar
+    return {
+      title: "\u2B50",
+      start: `${year}-${month}-${date}`,
+    };
+  });
+
+  // Return the array of event objects
+  return resultDates;
 }
