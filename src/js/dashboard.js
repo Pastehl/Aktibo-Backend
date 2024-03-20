@@ -581,6 +581,11 @@ function setBMI(bmi) {
 }
 
 function generatePDF(data) {
+
+  if (data === undefined || data.length === 0) {
+    alert("No data found");
+    return;
+  }
   var doc = new jsPDF();
 
   // Set initial y position for text
@@ -606,6 +611,12 @@ function generatePDF(data) {
 
 // Function to generate Excel file
 function generateExcel(data) {
+  // Check if data is undefined
+  if (data === undefined || data.length === 0) {
+    alert("No data found");
+    return;
+  }
+
   // Create a new workbook
   var wb = XLSX.utils.book_new();
 
@@ -633,6 +644,7 @@ function generateExcel(data) {
   XLSX.writeFile(wb, "output.xlsx");
 }
 
+
 function getWeekStepData(data) {
   if (data == undefined) {
     return [
@@ -645,7 +657,7 @@ function getWeekStepData(data) {
         "Saturday",
         "Sunday",
       ],
-      [1, 1, 1, 1, 1, 1, 1],
+      [0, 0, 0, 0, 0, 0, 0],
     ];
   }
   let days = [
@@ -695,7 +707,7 @@ function getWeekStepData(data) {
 }
 function getWeekWeightData(data) {
   if (data == undefined) {
-    let val = [1, 1, 1, 1, 1, 1, 1];
+    let val = [0, 0, 0, 0, 0, 0, 0];
     return val;
   }
 
