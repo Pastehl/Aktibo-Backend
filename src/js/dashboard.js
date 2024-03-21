@@ -66,6 +66,7 @@ var downloadXLSX = document.getElementById("downloadXLSX");
 
 closeDataModalBtn.addEventListener("click", function () {
   dataModal.hide();
+  food_recordModal.show();
 });
 closedownloadChoiceModalBtn.addEventListener("click", function () {
   downloadChoiceModal.hide();
