@@ -465,8 +465,9 @@ async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
       reports: arrayUnion(myMap),
       reportsCount: increment(1)
     })
-    dropDownContentContainerDiv.style.display = "none";
-    }
+  const parentToRemove = dropDownContentContainerDiv.parentNode.parentNode.parentNode;
+  parentToRemove.parentNode.removeChild(parentToRemove);    
+  }
   })
 }
 

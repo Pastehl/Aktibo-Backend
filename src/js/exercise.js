@@ -113,7 +113,6 @@ openModalBtn.addEventListener("click", function () {
 });
 
 cancelButton.onclick = function () {
-  console.log("close cancel");
   modal.hide();
   clearModal();
 };
@@ -164,9 +163,7 @@ exerciseSearchBtn.addEventListener('click', function () {
 const ulInst = document.querySelector(".inst-ul");
 var inputInst = document.getElementById("instructions");
 
-// console.log(ulInst)
-// console.log(inputInst)
-// console.log('-----------------')
+
 let instArr = ["do 1", "do 2"];
 
 //Tags Variables
@@ -174,9 +171,7 @@ const ul = document.querySelector(".tags-ul");
 var input = document.getElementById("tags");
 var tagNumb = document.querySelector(".details-tags span");
 
-// console.log(ul)
-// console.log(input)
-// console.log(tagNumb)
+
 
 let maxTags = 10,
   tags = ["test1", "test2"];
@@ -197,7 +192,6 @@ function createTag() {
     .slice()
     .reverse()
     .forEach((tag) => {
-      //console.log(tag)
       let liTag = `<li>${tag} <i class="bx bxs-x-circle tagClose" ></i></li>`;
       ul.insertAdjacentHTML("afterbegin", liTag);
     });
@@ -209,7 +203,6 @@ function createInst() {
     .slice()
     .reverse()
     .forEach((inst) => {
-      //console.log(inst)
       let liInst = `<li>${inst} <i class="bx bxs-x-circle instClose" ></i></li>`;
       ulInst.insertAdjacentHTML("afterbegin", liInst);
     });
@@ -217,37 +210,27 @@ function createInst() {
 }
 
 function remove(element, tag) {
-  console.log(tags);
+
   tags.splice(tags.indexOf(tag), 1);
-  console.log("after");
   element.parentElement.remove();
-  console.log(tags);
   countTags();
 }
 function removeInst(element, inst) {
-  console.log(instArr);
   instArr.splice(instArr.indexOf(inst), 1);
-  console.log("after");
   element.parentElement.remove();
-  console.log(instArr);
 }
 
 //Check for enter in Instructions
 inputInst.addEventListener("keydown", function (e) {
-  console.log(e.key + "*INST*");
   if (e.key === "Enter") {
-    console.log(e.target.value);
     e.preventDefault();
     inputInst.focus();
-    console.log(inputInst.value);
     addInst(e);
   }
 });
 //Check for enter in tags
 input.addEventListener("keydown", function (e) {
-  console.log(e.key);
   if (e.key === "Enter") {
-    console.log(e.target.value);
     e.preventDefault();
     input.focus();
     addTag(e);
@@ -255,17 +238,14 @@ input.addEventListener("keydown", function (e) {
 });
 //Check for enter in Instructions
 function addInst(e) {
-  console.log("Instruction ADD");
-  console.log("*******");
-  console.log(e.target.value);
+
+
   let inst = e.target.value.replace(/\s+/g, " ");
-  console.log(typeof inst);
-  console.log(inst);
+
   if (!instArr.includes(inst)) {
     inst.split(",").forEach((inst) => {
       if (inst != "") {
         instArr.push(inst);
-        console.log(instArr);
         createInst();
         // Create toast? tag sucessfully added?
       }
@@ -277,11 +257,8 @@ function addInst(e) {
 }
 //Add element in Tags []
 function addTag(e) {
-  console.log("TAG ADD");
   if (e.key == "Enter") {
-    console.log(e.target);
     let tag = e.target.value.replace(/\s+/g, " ");
-    console.log(tag);
     if (tag.length > 1 && !tags.includes(tag)) {
       if (tags.length < 10) {
         tag.split(",").forEach((tag) => {
@@ -325,14 +302,10 @@ function addRemoveTagBtnEventlistener() {
 
     if (elemClassList.contains("instClose")) {
       element.addEventListener("click", function (e) {
-        console.log("clicked");
-        console.log();
         removeInst(e.target, text);
       });
     } else {
       element.addEventListener("click", function (e) {
-        console.log("clicked");
-        console.log();
         remove(e.target, text);
       });
     }
@@ -683,8 +656,6 @@ async function addExerciseVideoSrc(docId) {
   const docRef = doc(db, "exercises", docId);
   const docSnap = await getDoc(docRef);
   let src = docSnap.data().video;
-  console.log(src);
-  console.log(videoModalSrc.src);
   if (src == null) {
     src = "";
     showToast("Video does not exist.");
@@ -786,8 +757,6 @@ async function sortBySearchName(tag) {
     const lowercaseDocName = doc.data().name.toLowerCase();
     const lowercaseTag = tag.toLowerCase();
     if (lowercaseDocName.includes(lowercaseTag)) {
-      console.log(lowercaseDocName);
-      console.log(doc.id);
       showExercise(doc, exerciseListContainer);
     }
   });
@@ -827,7 +796,6 @@ async function createNewExerciseDocument() {
       video: await uploadVideo(file),
     });
     showToast("Exercise Successfully Created.");
-    console.log("Document written with ID: ", docRef.id);
   } catch (error) {
     if (error.code === "already-exists") {
       // Handle the case where the document with the specified ID already exists

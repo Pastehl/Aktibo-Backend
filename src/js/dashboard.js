@@ -57,13 +57,21 @@ const ctx8 = document.getElementById("myChart8"); //fats
 
 var downloadChoiceModal = new bootstrap.Modal("#downloadChoiceModal");
 var food_recordModal = new bootstrap.Modal("#viewRecipeModal");
-var closedownloadChoiceModalBtn = document.getElementById(
-  "closedownloadChoiceModalBtn"
-);
+var dataModal = new bootstrap.Modal("#dataModal");
+var closedownloadChoiceModalBtn = document.getElementById("closedownloadChoiceModalBtn");
+var closeFood_RecordModalBtn =  document.getElementById("viewRecipeModalBtn");
+var closeDataModalBtn = document.getElementById("dataModalBtn");
 var downloadPDFBtn = document.getElementById("downloadPDF");
 var downloadXLSX = document.getElementById("downloadXLSX");
+
+closeDataModalBtn.addEventListener("click", function () {
+  dataModal.hide();
+});
 closedownloadChoiceModalBtn.addEventListener("click", function () {
   downloadChoiceModal.hide();
+});
+closeFood_RecordModalBtn.addEventListener("click", function () {
+  food_recordModal.hide();
 });
 downloadPDFBtn.addEventListener("click", function () {
   onAuthStateChanged(auth, async (user) => {
@@ -734,7 +742,7 @@ function getWeekWeightData(data) {
   let today = new Date(currentDate);
   today.setHours(0, 0, 0, 0); // Set current time to midnight
 
-  let weekWeightData = [];
+  const weekWeightData = [];
   let lastValidWeight = 0; // Variable to store the last valid weight
 
   // Iterate over each day of the week (Monday to Sunday) up to today
@@ -760,7 +768,10 @@ function getWeekWeightData(data) {
   if(weekWeightData[0] == 0 && lastWeightData != 0){
     weekWeightData[0] = lastWeightData;
   }
-
+  if(weekWeightData[today.getDay()] == undefined){
+    const lastNonZeroValue = weekWeightData[today.getDay() - 2];
+    weekWeightData.push(lastNonZeroValue);  
+  }
   return weekWeightData;
 }
 
@@ -786,7 +797,40 @@ function getLastEntryBeforeMonday(data) {
 
   return lastEntry ? lastEntry.weight : null; // Return weight if last entry found, else return null
 }
+function adjustArrayForWeekdays(array) {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, etc.
 
+    if (dayOfWeek > 0) {
+        // If it's not Sunday, shift the array by the current day of the week
+        const shiftedArray = array.slice(dayOfWeek).concat(array.slice(0, dayOfWeek));
+
+        // Find the last non-zero element
+        let lastNonZeroIndex = -1;
+        for (let i = shiftedArray.length - 1; i >= 0; i--) {
+            if (shiftedArray[i] !== 0) {
+                lastNonZeroIndex = i;
+                break;
+            }
+        }
+
+        // If a non-zero element is found, assign its value to the last zero element
+        if (lastNonZeroIndex !== -1) {
+            const lastNonZeroValue = shiftedArray[lastNonZeroIndex];
+            for (let i = shiftedArray.length - 1; i >= 0; i--) {
+                if (shiftedArray[i] === 0) {
+                    shiftedArray[i] = lastNonZeroValue;
+                    break;
+                }
+            }
+        }
+
+        return shiftedArray;
+    } else {
+        // If it's Sunday, return the array unchanged
+        return array;
+    }
+}
 
 
 function getTodayMealData(mealRecords) {
@@ -876,41 +920,218 @@ async function getRecipesData(docId){
       const uid = user.uid;
       console.log(uid);
       const userRef = collection(db, "users");
-      const docRef = await getDoc(doc(userRef, uid));
-      //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
-      showBookmarks(docRef.data().bookmarkedRecipes)
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      showBookmarks(docRef)
     }
   });
 }
 
-function showBookmarks() {
+function showBookmarks(data) {
+  console.log(data);
   // Loop through each recipe object in the array
-  var recipeContentArray = [
-  {"foodLabel": "Recipe 1", "calories": 200, "carbs": 30, "protein": 20, "fat": 10, "instructions": "Recipe 1 instructions"},
-  {"foodLabel": "Recipe 2", "calories": 300, "carbs": 40, "protein": 25, "fat": 15, "instructions": "Recipe 2 instructions"}
-];
   var recipeContent = document.getElementById("recipeContent");
+  recipeContent.innerHTML = ""
+  var recipeContentArray = data.data().bookmarkedRecipes;
+  var counter = 0
+  // Append a row to the table for each recipe
   recipeContentArray.forEach(recipe => {
-    var name = recipe["foodLabel"];
-    var calories = recipe["calories"];
-    var carbohydrates = recipe["carbs"];
-    var protein = recipe["protein"];
-    var fats = recipe["fat"];
-    var instructions = recipe["instructions"];
-    var ingredients = recipe["ingredients"];
-    
-
-    // Append a row to the table for each recipe
+    var { foodLabel, calories, carbs, protein, fat } = recipe;
     recipeContent.innerHTML +=
       `
-      <tr class="row bg-white">
-        <th class="col" >${name}</th>
-        <th class="col" >${calories}</th>
-        <th class="col" >${carbohydrates}</th>
-        <th class="col" >${protein}</th>
-        <th class="col" >${fats}</th>
-        <th class="col" >${instructions}</th>
+      <tr class="row bg-white" data-doc-id="${data.id}">
+        <th class="col">${foodLabel}</th>
+        <th class="col">${calories}</th>
+        <th class="col">${carbs}</th>
+        <th class="col">${protein}</th>
+        <th class="col">${fat}</th>
+        <th class="col"><button type="button" class="btn btn-secondary btn-sm instructionBtn" data-doc-id="${counter}"><i class='bx bx-book-open bx-sm'></i></button></th>
+        <th class="col"><button type="button" class="btn btn-secondary btn-sm ingredientsBtn" data-doc-id="${counter}"><i class='bx bx-book-open bx-sm'></i></button></th>
+        <th class="col"><button type="button" class="btn btn-secondary btn-sm downloadRecipeBtn" data-doc-id="${counter}"><i class='bx bxs-download bx-sm'></i></button></th>
       </tr>
     `;
+    counter++;
   });
+  instructionsAddEventListener();
+  ingredientsAddEventListener();
+  downloadRecipeBtnAddEventlistener();
+};
+
+
+
+function instructionsAddEventListener(){
+  var instructionBtn = document.getElementsByClassName("instructionBtn");
+  removeAllListenersFromClass(instructionBtn);
+
+  for (let index = 0; index < instructionBtn.length; index++) {
+    const element = instructionBtn[index];
+    element.addEventListener("click", function (e) {
+      modalContent(element.dataset.docId,1);
+    });
+  }
+}
+function ingredientsAddEventListener(){
+  var ingredientsBtn = document.getElementsByClassName("ingredientsBtn");
+  removeAllListenersFromClass(ingredientsBtn);
+
+  for (let index = 0; index < ingredientsBtn.length; index++) {
+    const element = ingredientsBtn[index];
+    element.addEventListener("click", function (e) {
+      modalContent(element.dataset.docId,2);
+    });
+  }
+}
+function downloadRecipeBtnAddEventlistener(){
+    var downloadRecipe = document.getElementsByClassName("downloadRecipeBtn");
+  removeAllListenersFromClass(downloadRecipe);
+
+  for (let index = 0; index < downloadRecipe.length; index++) {
+    const element = downloadRecipe[index];
+    element.addEventListener("click", function (e) {
+      downloadRecipePDF(element.parentNode.parentNode,element.dataset.docId)
+    });
+  }
+}
+async function downloadRecipePDF(parentDiv, index) {
+  const dataDocId = parentDiv.getAttribute("data-doc-id");
+  const userRef = collection(db, "users");
+  const docSnap = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+  const recipe = docSnap.data().bookmarkedRecipes[index];
+  recipePDFFunc(recipe);
+}
+
+function recipePDFFunc(recipe) {
+  console.log(recipe);
+  // Now, let's use jsPDF to generate the PDF
+  let doc = new jsPDF();
+
+  // Add recipe name
+  let recipeNameText = `Recipe Name: ${recipe.foodLabel}`;
+  let recipeNameLines = doc.splitTextToSize(recipeNameText, doc.internal.pageSize.width - 20); // Adjust width as needed
+  doc.text(10, 10, recipeNameLines);
+
+  // Add nutritional values
+  let y = 20; // Initial y position for nutritional values
+  doc.text(10, y, `Calories: ${recipe.calories}`);
+  y += 10;
+  doc.text(10, y, `Carbs: ${recipe.carbs}`);
+  y += 10;
+  doc.text(10, y, `Protein: ${recipe.protein}`);
+  y += 10;
+  doc.text(10, y, `Fat: ${recipe.fat}`);
+  y += 10;
+
+  // Add ingredients
+  recipe.ingredients.forEach((ingredient, i) => {
+    let ingredientText = `${i + 1}. ${ingredient}`;
+    let ingredientLines = doc.splitTextToSize(ingredientText, doc.internal.pageSize.width - 20); // Adjust width as needed
+    ingredientLines.forEach(line => {
+      doc.text(10, y, line);
+      y += 10; // Increment y position for the next line
+    });
+  });
+
+  // Add instructions
+  y += 10; // Add some space between ingredients and instructions
+  doc.text(10, y, "Instructions:");
+  y += 10; // Increment y position for instructions
+  recipe.instructions.forEach((instruction, i) => {
+    let instructionText = `${i + 1}. ${instruction}`;
+    let instructionLines = doc.splitTextToSize(instructionText, doc.internal.pageSize.width - 20); // Adjust width as needed
+    instructionLines.forEach(line => {
+      doc.text(10, y, line);
+      y += 10; // Increment y position for the next line
+    });
+  });
+
+  // Finally, initiate the download of the PDF
+  doc.save('recipe.pdf');
+}
+
+
+async function modalContent(indexRecord,choice) { 
+  const modal = document.getElementById("dataModal");
+  const modalBody = modal.querySelector(".modal-body");
+
+  modalBody.innerHTML = "";
+
+  const userRef = collection(db, "users");
+  const docSnap = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+  const recipe = docSnap.data().bookmarkedRecipes[indexRecord];
+  console.log(recipe,"CHECK ME")
+  // Ensure indexRecord is within bounds
+  if (indexRecord < 0 || indexRecord >= recipe.length) {
+    const p = document.createElement('p');
+    p.textContent = "Invalid index";
+    modalBody.appendChild(p);
+    food_recordModal.hide();
+    dataModal.show();
+    return;
+  }
+  // Display recipe title
+  const title = document.createElement('h3');
+  if(choice == 1){
+    title.textContent = `${indexRecord + 1}. ${recipe.foodLabel} - Recipe Instructions`;
+  }
+  else{
+    title.textContent = `${indexRecord + 1}. ${recipe.foodLabel} - Recipe Ingredients List`;
+
+  }
+
+  modalBody.appendChild(title);
+
+  // Display nutritional information
+  // const nutrition = document.createElement('ul');
+  // nutrition.innerHTML = `
+  //   <li>Calories: ${recipe.calories}</li>
+  //   <li>Carbs: ${recipe.carbs}</li>
+  //   <li>Protein: ${recipe.protein}</li>
+  //   <li>Fat: ${recipe.fat}</li>
+  // `;
+  // modalBody.appendChild(nutrition);
+
+  // Display instructions or ingredients based on choice
+  if (choice == 1) {
+    if (typeof recipe.instructions === 'string') {
+      const instructions = document.createElement('p');
+      instructions.textContent = recipe.instructions;
+      modalBody.appendChild(instructions);
+    } else if (Array.isArray(recipe.instructions)) {
+      const instructionsList = document.createElement('ul');
+      var counter = 1
+      recipe.instructions.forEach(instruction => {
+        const instructionItem = document.createElement('li');
+        instructionItem.textContent = counter+". " +instruction;
+        instructionsList.appendChild(instructionItem);
+        counter++;
+      });
+      modalBody.appendChild(instructionsList);
+    } else {
+      const noInstructions = document.createElement('p');
+      noInstructions.textContent = "No instructions available.";
+      modalBody.appendChild(noInstructions);
+    }
+  } else { // choice == 2 for ingredients
+    if (typeof recipe.ingredients === 'string') {
+      const ingredients = document.createElement('p');
+      ingredients.textContent = recipe.ingredients;
+      modalBody.appendChild(ingredients);
+    } else if (Array.isArray(recipe.ingredients)) {
+      const ingredientList = document.createElement('ul');
+      recipe.ingredients.forEach(ingredient => {
+        const ingredientItem = document.createElement('li');
+        ingredientItem.textContent = ingredient;
+        ingredientList.appendChild(ingredientItem);
+      });
+      modalBody.appendChild(ingredientList);
+    } else {
+      const noIngredients = document.createElement('p');
+      noIngredients.textContent = "No ingredients available.";
+      modalBody.appendChild(noIngredients);
+    }
+  }
+
+  // Show the modal
+  food_recordModal.hide();
+  dataModal.show();
 }
