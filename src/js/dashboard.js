@@ -107,6 +107,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     // User is signed in
     const uid = user.uid;
+    console.log(uid);
     const userRef = collection(db, "users");
     const docRef = await getDoc(doc(userRef, uid));
     if (!docRef.exists()) {
