@@ -1001,9 +1001,14 @@ async function downloadRecipePDF(parentDiv, index) {
 }
 
 function recipePDFFunc(recipe) {
+ let doc = new jsPDF();
+  if(recipe == undefined){
+    alert("No data found");
+    return
+  }
   console.log(recipe);
   // Now, let's use jsPDF to generate the PDF
-  let doc = new jsPDF();
+ 
 
   // Add recipe name
   let recipeNameText = `Recipe Name: ${recipe.foodLabel}`;
