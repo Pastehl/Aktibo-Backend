@@ -14,6 +14,7 @@ let pages = [
     "exerciseForms",
     "dashboard",
     "userMoments",
+    "adminPortal",
 ];
 
 module.exports = {
