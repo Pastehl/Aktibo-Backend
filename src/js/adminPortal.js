@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   getFirestore,
+  getUser,
   addDoc,
   collection,
   query,
@@ -85,3 +86,50 @@ document.getElementById("logout_btn").addEventListener("click", function () {
       // An error happened.
     });
 });
+
+async function geSnapShotFirebase() {
+  const userRef = collection(db, "users");
+  const querySnapshot = await getDocs(userRef);
+  return querySnapshot;
+}
+
+async function getUsers() {
+  const querySnapshot = await geSnapShotFirebase(); // Await the result
+
+  const userListContent = document.getElementById("userListContent");
+  const h1Content = document.getElementById('h1Content');
+  h1Content.textContent = ""
+  let userListHTML = '';
+
+  const numberofUsers = querySnapshot.size;
+  h1Content.textContent = "Current Users: " + numberofUsers;
+
+  querySnapshot.forEach((doc) => {
+    const userData = doc.data();
+    const userId = doc.id;
+    const reportsCount = userData.reportsCount ?? 0;
+    const email = userData.email ?? "No Data"
+    const active = userData.active ?? "No Data"
+
+    // Check if user has logged in the last 3 months
+    // const lastLoginTimestamp = new Date(userRecord.metadata.lastSignInTime);
+    // const active = lastLoginTimestamp > threeMonthsAgo ? 'Yes' : userData.active ? 'Yes' : 'No';
+
+    userListHTML += `
+      <tr>
+        <td class="col">${userId}</td>
+        <td class="col">${userData.username}</td>
+        <td class="col">${email}</td>
+        <td class="col"> ${active}</td>
+        <td class="col">${reportsCount}</td>
+
+      </tr>
+    `;
+  });
+
+  userListContent.innerHTML = userListHTML;
+}
+
+
+ getUsers();
+//'0y9Kkgd303QrsKSuXzKvqG2DI4E2'
