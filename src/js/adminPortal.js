@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp,initializeFirestore } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   getFirestore,
@@ -19,7 +19,11 @@ import {
   arrayUnion,
   arrayRemove,
   documentId,
-  deleteDoc
+  deleteDoc,
+  CACHE_SIZE_UNLIMITED,
+  enablePersistence,
+  persistentMultipleTabManager,
+  
 } from "firebase/firestore";
 import {
   getStorage,
@@ -27,6 +31,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
   uploadBytes,
+
 } from "firebase/storage";
 import * as bootstrap from "bootstrap";
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
@@ -48,6 +53,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
 const storage = getStorage();
+
 
 // redirect user if user is NOT signed in
 onAuthStateChanged(auth, async (user) => {
@@ -107,6 +113,7 @@ async function getUsers() {
   querySnapshot.forEach((doc) => {
     const userData = doc.data();
     const userId = doc.id;
+    const username = userData.username ?? "No Data";
     const reportsCount = userData.reportsCount ?? 0;
     const email = userData.email ?? "No Data"
     const active = userData.active ?? "No Data"
@@ -118,7 +125,7 @@ async function getUsers() {
     userListHTML += `
       <tr>
         <td class="col">${userId}</td>
-        <td class="col">${userData.username}</td>
+        <td class="col">${username}</td>
         <td class="col">${email}</td>
         <td class="col"> ${active}</td>
         <td class="col">${reportsCount}</td>

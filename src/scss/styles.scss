@@ -425,6 +425,10 @@ header {
 }
 
 .bx-heart,
+.bx-upvote,
+.bx-downvote,
+.bxs-upvote,
+.bxs-downvote,
 .bxs-heart,
 .bx-comment-detail {
     cursor: pointer;
@@ -437,6 +441,12 @@ header {
     transition: .5s;
 }
 
+.bxs-upvote {
+    color:#65a054
+}
+.bxs-downvote{
+    color: red
+}
 
 
 .bx-heart:hover {

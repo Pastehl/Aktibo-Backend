@@ -169,7 +169,8 @@ function showMoment(doc, uid) {
   var comments = doc.data().comments;
   var usersLiked = doc.data().usersLiked;
   var reportCount = doc.data().reportsCount
-  let heartStyle = "bx-heart";
+  let heartStyle = "bx-upvote";
+  let downvoteStyle = "bx-downvote"
 
 
   // if(reportCount >= 5){
@@ -211,7 +212,7 @@ function showMoment(doc, uid) {
 
   if (usersLiked && usersLiked.length > 0) {
     if (usersLiked.includes(uid)) {
-      heartStyle = "bxs-heart liked";
+      heartStyle = "bxs-upvote liked";
     }
   }
 
@@ -270,7 +271,8 @@ function showMoment(doc, uid) {
       `</div>
       <div class = "interact_content">
         <i class='bx `+heartStyle+` likeButton' data-doc-id ="`+doc.id+`"></i>
-        <span id = "`+`"class="button-number">`+likes+`</span>
+        <span id = "`+ `"class="button-number">` + likes +`</span>
+        <i class='bx `+downvoteStyle+` downvoteButton' data-doc-id ="`+doc.id+`"></i>
         <i id = '`+`' class='bx bx-comment-detail showCommentButton' data-doc-id ="`+doc.id+`"></i>
         <span class="button-number" id = "`+`">
           `+comments+`
@@ -284,6 +286,7 @@ function showMoment(doc, uid) {
   addLikeButtonEventListeners()
   addOpenReportButtonEventListeners()
   addReportPostButtonEventListener()
+  addDownvoteButtonEventListeners()
 }
 
 function removeAllListenersFromClass(elements) {
@@ -295,6 +298,7 @@ function removeAllListenersFromClass(elements) {
 
 function addLikeButtonEventListeners() {
   let likeButtons = document.getElementsByClassName("likeButton");
+  let downvoteButtons = document.getElementsByClassName("downvoteButton");
   removeAllListenersFromClass(likeButtons)
 
   for (let index = 0; index < likeButtons.length; index++) {
@@ -305,10 +309,29 @@ function addLikeButtonEventListeners() {
       // Your code here, you can use docID, postSpan, likeCount, and elementId as needed
       let likeCount = postSpan.textContent; // Get the content of the <span>
       console.log("OG likeCount:", likeCount);
-      toggleLike(element, docID, postSpan, likeCount);
+      toggleLike(element, downvoteButtons[index], docID, postSpan, likeCount, 0);
     });
   }
 }
+
+function addDownvoteButtonEventListeners() {
+  let likeButtons = document.getElementsByClassName("likeButton");
+  let downvoteButtons = document.getElementsByClassName("downvoteButton");
+  removeAllListenersFromClass(downvoteButtons)
+
+  for (let index = 0; index < downvoteButtons.length; index++) {
+    const element = downvoteButtons[index];
+    const docID = element.dataset.docId; // Get the data-doc-id attribute
+    const postSpan = element.nextElementSibling; // Get the <span> element
+    element.addEventListener("click", function (e) {
+      // Your code here, you can use docID, postSpan, likeCount, and elementId as needed
+      let likeCount = postSpan.textContent; // Get the content of the <span>
+      console.log("OG likeCount:", likeCount);
+      toggleLike(likeButtons[index], element, docID, postSpan, likeCount, 1);
+    });
+  }
+}
+
 //ORIGNAL  FUNCTION BELOW
 // function addOpenReportButtonEventListeners(){
 //     let reportBtn = document.getElementsByClassName('bx-dots-vertical')
@@ -397,39 +420,66 @@ function addReportPostButtonEventListener(){
  }
 }
 
-function toggleLike(likeBtn,docId,postSpan,likeCount){
- if (likeBtn.classList.contains('liked')) {
-    likeBtn.classList.remove('liked');
-    likeBtn.classList.remove('bxs-heart');
-    likeBtn.classList.add('bx-heart');
-    console.log('removed 1 like')
-    console.log("Toggle likecount decrease:",likeCount)
-    updateLikesCount(docId, -1)
-    console.log(postSpan)
-    let likeCtr = parseInt(likeCount)
-    likeCtr --
-    console.log(likeCtr)
+function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
+  // Remove dislike if present and like is clicked
+  if (type === 0) {
+    if (likeBtn.classList.contains('liked')) {
+      likeBtn.classList.remove('liked');
+      console.log('removed 1 like');
+      //updateLikesCount(docId, -1);
+    } else {
+      likeBtn.classList.add('liked');
+      console.log('added 1 like');
+      updateLikesCount(docId, 1);
+      
+      // Clear dislike if present
+      if (downvoteBtn.classList.contains('disliked')) {
+        downvoteBtn.classList.remove('disliked');
+        console.log('removed 1 dislike');
+        // TODO: decrease dislike count
+      }
+    }
+  }
+  // Remove like if present and dislike is clicked
+  else if (type === 1) {
+    if (downvoteBtn.classList.contains('disliked')) {
+      downvoteBtn.classList.remove('disliked');
+      console.log('removed 1 dislike');
+      // TODO: decrease dislike count
+    } else {
+      downvoteBtn.classList.add('disliked');
+      console.log('added 1 dislike');
+      // TODO: increase dislike count
+      
+      // Clear like if present
+      if (likeBtn.classList.contains('liked')) {
+        likeBtn.classList.remove('liked');
+        console.log('removed 1 like');
+        //updateLikesCount(docId, -1);
+      }
+    }
+  }
 
-    postSpan.innerText = likeCtr;
-
+  // Toggle like/dislike icon class
+  if (likeBtn.classList.contains('liked')) {
+    likeBtn.classList.remove('bxs-downvote');
+    likeBtn.classList.add('bxs-upvote');
+    likeBtn.classList.remove('bx-upvote'); // Remove 'bx-upvote' class
   } else {
-    likeBtn.classList.add('liked');
-    likeBtn.classList.remove('bx-heart');
-    likeBtn.classList.add('bxs-heart');
-    console.log('added 1 like')
-    console.log("Toggle likecount increase:",likeCount)
+    likeBtn.classList.remove('bxs-upvote');
+    likeBtn.classList.add('bx-upvote'); // Add 'bx-upvote' class when neither liked nor disliked
+  }
 
-    updateLikesCount(docId, 1)
-    console.log(postSpan)
-    //const spanElement = document.getElementById(postSpan); // why is this null lol
-    let likeCtr = parseInt(likeCount)
-    likeCtr ++
-    console.log(likeCtr)
-
-    //console.log(spanElement)
-    postSpan.innerText = likeCtr;
+  if (downvoteBtn.classList.contains('disliked')) {
+    downvoteBtn.classList.remove('bxs-upvote');
+    downvoteBtn.classList.add('bxs-downvote');
+    downvoteBtn.classList.remove('bx-downvote'); // Remove 'bx-downvote' class
+  } else {
+    downvoteBtn.classList.remove('bxs-downvote');
+    downvoteBtn.classList.add('bx-downvote'); // Add 'bx-downvote' class when neither liked nor disliked
   }
 }
+
 
 async function updateLikesCount(docId, num) {
   onAuthStateChanged(auth, async (user) => {
