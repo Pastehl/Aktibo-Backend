@@ -322,7 +322,7 @@ function addDownvoteButtonEventListeners() {
   for (let index = 0; index < downvoteButtons.length; index++) {
     const element = downvoteButtons[index];
     const docID = element.dataset.docId; // Get the data-doc-id attribute
-    const postSpan = element.nextElementSibling; // Get the <span> element
+    const postSpan = element.previousElementSibling; // Get the <span> element
     element.addEventListener("click", function (e) {
       // Your code here, you can use docID, postSpan, likeCount, and elementId as needed
       let likeCount = postSpan.textContent; // Get the content of the <span>
@@ -424,62 +424,92 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
   // Remove dislike if present and like is clicked
   if (type === 0) {
     if (likeBtn.classList.contains('liked')) {
+      // If already liked, remove like
       likeBtn.classList.remove('liked');
       console.log('removed 1 like');
-      //updateLikesCount(docId, -1);
+      // Decrease like count by 1
+      likeCount--;
+      updateLikesCount(docId, -1);
     } else {
-      likeBtn.classList.add('liked');
-      console.log('added 1 like');
-      updateLikesCount(docId, 1);
-      
+      if (!likeBtn.classList.contains('liked')) {
+        // If not liked, add like
+        likeBtn.classList.add('liked');
+        console.log('added 1 like');
+        // Increase like count by 1
+        likeCount++;
+        updateLikesCount(docId, 1);
+      }
+
       // Clear dislike if present
       if (downvoteBtn.classList.contains('disliked')) {
+        console.log("disliked to liked");
+        // If downvote was already present, clear it
+        likeBtn.classList.add('liked');
         downvoteBtn.classList.remove('disliked');
         console.log('removed 1 dislike');
-        // TODO: decrease dislike count
+        // Decrease like count by 1 (to offset the previous increment)
+        likeCount++;
+        // Decrease dislike count by 1
+        updateLikesCount(docId, 1);
       }
     }
   }
   // Remove like if present and dislike is clicked
   else if (type === 1) {
     if (downvoteBtn.classList.contains('disliked')) {
+      // If downvote is disliked, remove dislike and increment like count
       downvoteBtn.classList.remove('disliked');
       console.log('removed 1 dislike');
-      // TODO: decrease dislike count
+      // Decrease dislike count by 1
+      // Increment like count by 1
+      likeCount++;
+      // Update likes count by 1
+      updateLikesCount(docId, 1);
     } else {
-      downvoteBtn.classList.add('disliked');
-      console.log('added 1 dislike');
-      // TODO: increase dislike count
-      
-      // Clear like if present
-      if (likeBtn.classList.contains('liked')) {
-        likeBtn.classList.remove('liked');
-        console.log('removed 1 like');
-        //updateLikesCount(docId, -1);
+      // If downvote is not disliked, add dislike and decrement like count
+      if (!downvoteBtn.classList.contains('disliked') && !likeBtn.classList.contains('liked')) {
+        downvoteBtn.classList.add('disliked');
+        console.log('added 1 dislike');
+        likeCount-= 1;
+        // Update likes count by -1
+        updateLikesCount(docId, -1);
       }
+      if (likeBtn.classList.contains('liked')) {
+        downvoteBtn.classList.add('disliked');
+        likeBtn.classList.remove('liked');
+        console.log("liked and downvoted", 'added 1 dislike');
+        likeCount-= 2;
+        // Update likes count by -1
+        updateLikesCount(docId, -2);
+      }
+
     }
   }
 
   // Toggle like/dislike icon class
   if (likeBtn.classList.contains('liked')) {
+    // If liked, set like icon
     likeBtn.classList.remove('bxs-downvote');
     likeBtn.classList.add('bxs-upvote');
     likeBtn.classList.remove('bx-upvote'); // Remove 'bx-upvote' class
   } else {
+    // If not liked, set default like icon
     likeBtn.classList.remove('bxs-upvote');
     likeBtn.classList.add('bx-upvote'); // Add 'bx-upvote' class when neither liked nor disliked
   }
 
   if (downvoteBtn.classList.contains('disliked')) {
+    // If disliked, set dislike icon
     downvoteBtn.classList.remove('bxs-upvote');
     downvoteBtn.classList.add('bxs-downvote');
     downvoteBtn.classList.remove('bx-downvote'); // Remove 'bx-downvote' class
   } else {
+    // If not disliked, set default dislike icon
     downvoteBtn.classList.remove('bxs-downvote');
     downvoteBtn.classList.add('bx-downvote'); // Add 'bx-downvote' class when neither liked nor disliked
   }
+  postSpan.textContent = likeCount;
 }
-
 
 async function updateLikesCount(docId, num) {
   onAuthStateChanged(auth, async (user) => {
