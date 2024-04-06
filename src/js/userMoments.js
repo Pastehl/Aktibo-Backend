@@ -17,7 +17,8 @@ import {
   arrayUnion,
   arrayRemove,
   serverTimestamp,
-  Timestamp  
+  Timestamp,
+  deleteDoc
 } from "firebase/firestore";
 import * as bootstrap from "bootstrap";
 import "../scss/styles.scss";
@@ -58,12 +59,21 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     });
 });
 
+
+var editPostModal = new bootstrap.Modal("#editPostModal");
+var closeEditPostModal = document.getElementById("editPostModalBtn");
+
+closeEditPostModal.addEventListener("click", function () {
+  editPostModal.hide();
+})
+
+
 // clear content
 let main_content = document.getElementById("main_content");
 main_content.innerHTML = "";
 
 // pagination (Moments)
-let canLoadMoreData = true;
+let canLoadMoreData = false;
 window.addEventListener("scroll", async function () {
   const lastChild = main_content.lastElementChild;
   if (lastChild) {
@@ -77,58 +87,45 @@ window.addEventListener("scroll", async function () {
 
       canLoadMoreData = false;
       getMomentsData(3).then(() => {
-        canLoadMoreData = true;
+        canLoadMoreData = false;
       });
     }
   }
 });
 
 // get data from firestore
-let momentsRef = collection(db, "moments");
+let userPostRef = doc(db, "users", '0y9Kkgd303QrsKSuXzKvqG2DI4E2')
+const userRef = await getDoc(userPostRef);
+
 let lastVisible; // last loaded post
 getMomentsData(5); // first shown posts
 let hasNotShownLastPostToast = true; // for last post Toast message
 
 async function getMomentsData(amount) {
-  let q;
-  if (lastVisible) {
-    // get posts after initial query
-    q = query(
-      momentsRef,
-      orderBy("datePosted", "desc"),
-      limit(amount),
-      startAfter(lastVisible)
-    );
-  } else {
-    // initial query
-    q = query(momentsRef, orderBy("datePosted", "desc"), limit(amount));
-  }
+  // Check if the userRef contains posts data
+  if (userRef.exists() && userRef.data().posts) {
+    const posts = userRef.data().posts;
 
-  const documentSnapshots = await getDocs(q);
+    // Fetch moments for each momentId
+    for (const post of posts) {
+      const momentRef = doc(db, "moments", post['momentID']);
+      const momentSnap = await getDoc(momentRef);
 
-  if (documentSnapshots.docs.length > 0) {
-    // still have posts left to show
-    lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
-    documentSnapshots.forEach((doc) => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const uid = user.uid;
-          showMoment(doc, uid);
-        } else {
-          window.location.href = "index.html";
-        }
-      });
-    });
-
-    
-    
-  } else {
-    // no more posts to show
-    if (hasNotShownLastPostToast) {
-      toastMessage("No more additional posts.");
-      hasNotShownLastPostToast = false;
+      if (momentSnap.exists()) {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            const uid = user.uid;
+            showMoment(momentSnap, uid);
+          } else {
+            window.location.href = "index.html";
+          }
+        });
+      } else {
+        console.log(`Moment with ID ${post['momentID']} not found`);
+      }
     }
+  } else {
+    console.log("User has no posts data");
   }
 }
 
@@ -151,35 +148,17 @@ function showMoment(doc, uid) {
   var commentsList = doc.data().commentsList;
   var comments = doc.data().comments;
   var usersLiked = doc.data().usersLiked;
+  var usersDisliked = doc.data().usersDisliked;
   var reportCount = doc.data().reportsCount
-  let heartStyle = "bx-heart";
+  let heartStyle = "bx-upvote";
+  let downvoteStyle = "bx-downvote"
 
-
-  // if(reportCount >= 5){
-  //   return
-  // }
-  // hides report Un comment in regular user  
-  // if(reports.includes(uid)){
-  //   return
-  // }
-
-  if (isDisabled) {
-    // don't show post if disabled
+  // Check if moment is disabled or user has reported it
+  if (isDisabled || (reports && reports.includes(uid))) {
     return;
   }
-  if(reports != null || reports != undefined){
-    for(const report of reports){
-      if(report.userId === uid){
-          return;
-      }
-    }
-  }
 
-
-  
-
-
-  if (isNaN(likes) || likes == null || likes < 0) {
+  if (isNaN(likes) || likes == null ) {
     likes = 0;
   }
 
@@ -191,14 +170,20 @@ function showMoment(doc, uid) {
   if (imageSrc != null && imageSrc != "") {
     imageHTML = `<img src="` + imageSrc + `">`;
   }
-
-  if (usersLiked && usersLiked.length > 0) {
-    if (usersLiked.includes(uid)) {
-      heartStyle = "bxs-heart liked";
-    }
+  if (usersLiked == undefined) {
+    usersLiked = []
+  }
+    if (usersDisliked == undefined) {
+    usersDisliked = []
   }
 
-  // populate comments section
+if (usersLiked && usersLiked.includes(uid)) {
+  heartStyle = "bxs-upvote liked";
+} else if (usersDisliked && usersDisliked.includes(uid)) {
+  downvoteStyle = "bxs-downvote disliked";
+}
+   console.log(usersLiked.includes(uid),usersDisliked.includes(uid),"!!!")
+  // Populate comments section
   let commentHTML = ``; 
 
   for (let index = 0; index < commentsList.length; index++) {
@@ -253,7 +238,8 @@ function showMoment(doc, uid) {
       `</div>
       <div class = "interact_content">
         <i class='bx `+heartStyle+` likeButton' data-doc-id ="`+doc.id+`"></i>
-        <span id = "`+`"class="button-number">`+likes+`</span>
+        <span id = "`+ `"class="button-number">` + likes +`</span>
+        <i class='bx `+downvoteStyle+` downvoteButton' data-doc-id ="`+doc.id+`"></i>
         <i id = '`+`' class='bx bx-comment-detail showCommentButton' data-doc-id ="`+doc.id+`"></i>
         <span class="button-number" id = "`+`">
           `+comments+`
@@ -263,10 +249,11 @@ function showMoment(doc, uid) {
         +commentHTML+
       `</div>`;
 
-  // add event listeners
+  // Add event listeners
   addLikeButtonEventListeners()
   addOpenReportButtonEventListeners()
   addReportPostButtonEventListener()
+  addDownvoteButtonEventListeners()
 }
 
 function removeAllListenersFromClass(elements) {
@@ -292,29 +279,6 @@ function addLikeButtonEventListeners() {
     });
   }
 }
-//ORIGNAL  FUNCTION BELOW
-// function addOpenReportButtonEventListeners(){
-//     let reportBtn = document.getElementsByClassName('bx-dots-vertical')
-//     removeAllListenersFromClass(reportBtn)
-
-//     for (let index = 0; index < reportBtn.length; index++) {
-//     const element = reportBtn[index];
-//     element.addEventListener('click', function (e) {
-//       console.log(element)
-//       const dropDownContentContainerDiv = element.parentNode.nextElementSibling // get the
-//       console.log(dropDownContentContainerDiv)
-//       if (dropDownContentContainerDiv.style.display === "block") {
-//             console.log("Close")
-//             dropDownContentContainerDiv.style.display = "none";   
-//         } else {
-//             console.log("Open")
-//             dropDownContentContainerDiv.style.display = "block";
-//             //  || dropDownContentContainerDiv.style.display == ""; 
-
-//         }
-//     });
-//  }
-// }
 
 //NEW DROPDOWN FUNCTION
 function addOpenReportButtonEventListeners() {
@@ -365,16 +329,37 @@ function addOpenReportButtonEventListeners() {
     }
 }
 
-function addReportPostButtonEventListener(){
-    let reportBtn = document.getElementsByClassName('reportBtn')
-    removeAllListenersFromClass(reportBtn)
-    for (let index = 0; index < reportBtn.length; index++) {
-    const element = reportBtn[index];
+function addEditPostButtonEventListener() {
+    let editBtn = document.getElementsByClassName('editBtn')
+    removeAllListenersFromClass(editBtn)
+    for (let index = 0; index < editBtn.length; index++) {
+    const element = editBtn[index];
+    element.addEventListener('click', function (e) {
+      loadPostModal(element.dataset.docId,element.parentNode.parentNode.parentNode.parentNode.nextElementSibling);
+    });
+ }
+}
+
+function loadPostModal(docID,h6Element) {
+    var h6Text = h6Element.innerText;
+    document.getElementById('postTextInput').value = h6Text;
+    editPostModal.show();
+
+}
+function updateCaption(docId) {
+  
+}
+
+function addDeletePostButtonEventListener(){
+    let deleteBtn = document.getElementsByClassName('deleteBtn')
+    removeAllListenersFromClass(deleteBtn)
+    for (let index = 0; index < deleteBtn.length; index++) {
+    const element = deleteBtn[index];
     element.addEventListener('click', function (e) {
       console.log(element.dataset.docId)
       console.log(element.innerHTML)
       console.log(element.parentNode.parentNode)
-      flagMomentsPost(element.dataset.docId,element.parentNode.parentNode,element.innerHTML)
+      deletePost(element.dataset.docId,element.parentNode.parentNode)
       toastMessage("Post has been reported.")
     });
  }
@@ -415,59 +400,101 @@ function toggleLike(likeBtn,docId,postSpan,likeCount){
 }
 
 async function updateLikesCount(docId, num) {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const momentRef = doc(db, "moments", docId);
-        if (num > 0){ // add like
-          await updateDoc(momentRef, {
-            likes: increment(num),
-            usersLiked: arrayUnion(user.uid)
-          })
-        } else { // remove like
-          await updateDoc(momentRef, {
-            likes: increment(num),
-            usersLiked: arrayRemove(user.uid)
-          })
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const momentRef = doc(db, "moments", docId);
+            const momentSnap = await getDoc(momentRef);
+            const momentData = momentSnap.data();
+            
+            if (!momentData) { // Document doesn't exist, create new document
+                await updateDoc(momentRef, {
+                    usersLiked: [],
+                    usersDisliked: []
+                });
+            }
+            
+            if (num > 0) { // Handling like
+                if (momentData.usersLiked && momentData.usersLiked.includes(user.uid)) {
+                    // User has already liked the moment, so remove the like
+                    await updateDoc(momentRef, {
+                        likes: increment(num),
+                        usersLiked: arrayRemove(user.uid)
+                    });
+                } else {
+                    // User hasn't liked the moment yet, so add the like
+                    // If the user disliked the moment before, remove the dislike
+                    if (momentData.usersDisliked && momentData.usersDisliked.includes(user.uid)) {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersDisliked: arrayRemove(user.uid)
+                        });
+                    } else {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersLiked: arrayUnion(user.uid)
+                        });
+                    }
+                }
+            } else if (num < 0) { // Handling dislike
+                if (momentData.usersDisliked && momentData.usersDisliked.includes(user.uid)) {
+                    // User has already disliked the moment, so remove the dislike
+                    await updateDoc(momentRef, {
+                        likes: increment(num),
+                        usersDisliked: arrayRemove(user.uid)
+                    });
+                } else {
+                    // User hasn't disliked the moment yet, so add the dislike
+                    // If the user liked the moment before, remove the like
+                    if (momentData.usersLiked && momentData.usersLiked.includes(user.uid)) {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersLiked: arrayRemove(user.uid)
+                        });
+                    } else {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersDisliked: arrayUnion(user.uid)
+                        });
+                    }
+                }
+            }
         }
-    }
-  })
+    });
 }
 
-async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
-  const momentRef = doc(db, "moments", docId);
+
+async function deletePost(docId, dropDownContentContainerDiv, reason) {
   onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const docRef = await getDoc(momentRef)    
-    let arrObj = docRef.data().reports
-    if(arrObj!= undefined ){
-    for (let index = 0; index < arrObj.length; index++) {
-      const element = arrObj[index].userId;
-        if(element == user.uid){
-        console.log("already reported")
-        return
+    if (user) {
+      try {
+        // Delete the moment document directly using docId
+        await deleteDoc(doc(db, "moments", docId));
+
+        // Remove the deleted post from the user's posts array
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const updatedPosts = userData.posts.filter(post => post.momentId !== docId);
+          await setDoc(userRef, { posts: updatedPosts }, { merge: true });
         }
-      }      
-    }
 
-    const userColRef = doc(db, "users", user.uid)
-    const userRef = await getDoc(userColRef)
-    const myMap = {
-      time: Timestamp.now(),
-      userId: user.uid,
-      userImageSrc: userRef.data().userImage,
-      username: userRef.data().username,
-      violation: reason
-    }
+        // Remove the deleted post from the UI
+        dropDownContentContainerDiv.remove();
 
-    console.log(myMap)
-    await updateDoc(momentRef, {
-      isReported: true,
-      reports: arrayUnion(myMap),
-      reportsCount: increment(1)
-    })
-  const parentToRemove = dropDownContentContainerDiv.parentNode.parentNode.parentNode;
-  parentToRemove.parentNode.removeChild(parentToRemove);    
-  }
-  })
+        // Notify the user about the deletion
+        console.log("Post deleted successfully");
+
+        // You can also add additional logic here, such as displaying a confirmation message or updating UI.
+      } catch (error) {
+        console.error("Error deleting post:", error);
+
+        // You can handle the error appropriately, such as displaying an error message to the user.
+      }
+    } else {
+      console.log("User is not authenticated. Redirecting to index page.");
+      window.location.href = "index.html"; // Redirect to index page if user is not authenticated
+    }
+  });
 }
 

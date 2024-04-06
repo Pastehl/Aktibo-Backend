@@ -168,36 +168,17 @@ function showMoment(doc, uid) {
   var commentsList = doc.data().commentsList;
   var comments = doc.data().comments;
   var usersLiked = doc.data().usersLiked;
+  var usersDisliked = doc.data().usersDisliked;
   var reportCount = doc.data().reportsCount
   let heartStyle = "bx-upvote";
   let downvoteStyle = "bx-downvote"
 
-
-  // if(reportCount >= 5){
-  //   return
-  // }
-  // hides report Un comment in regular user  
-  // if(reports.includes(uid)){
-  //   return
-  // }
-
-  if (isDisabled) {
-    // don't show post if disabled
+  // Check if moment is disabled or user has reported it
+  if (isDisabled || (reports && reports.includes(uid))) {
     return;
   }
-  if(reports != null || reports != undefined){
-    for(const report of reports){
-      if(report.userId === uid){
-          return;
-      }
-    }
-  }
 
-
-  
-
-
-  if (isNaN(likes) || likes == null || likes < 0) {
+  if (isNaN(likes) || likes == null ) {
     likes = 0;
   }
 
@@ -209,14 +190,20 @@ function showMoment(doc, uid) {
   if (imageSrc != null && imageSrc != "") {
     imageHTML = `<img src="` + imageSrc + `">`;
   }
-
-  if (usersLiked && usersLiked.length > 0) {
-    if (usersLiked.includes(uid)) {
-      heartStyle = "bxs-upvote liked";
-    }
+  if (usersLiked == undefined) {
+    usersLiked = []
+  }
+    if (usersDisliked == undefined) {
+    usersDisliked = []
   }
 
-  // populate comments section
+if (usersLiked && usersLiked.includes(uid)) {
+  heartStyle = "bxs-upvote liked";
+} else if (usersDisliked && usersDisliked.includes(uid)) {
+  downvoteStyle = "bxs-downvote disliked";
+}
+   console.log(usersLiked.includes(uid),usersDisliked.includes(uid),"!!!")
+  // Populate comments section
   let commentHTML = ``; 
 
   for (let index = 0; index < commentsList.length; index++) {
@@ -282,12 +269,13 @@ function showMoment(doc, uid) {
         +commentHTML+
       `</div>`;
 
-  // add event listeners
+  // Add event listeners
   addLikeButtonEventListeners()
   addOpenReportButtonEventListeners()
   addReportPostButtonEventListener()
   addDownvoteButtonEventListeners()
 }
+
 
 function removeAllListenersFromClass(elements) {
   Array.from(elements).forEach(function(element) {
@@ -423,7 +411,7 @@ function addReportPostButtonEventListener(){
 function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
   // Remove dislike if present and like is clicked
   if (type === 0) {
-    if (likeBtn.classList.contains('liked')) {
+    if (likeBtn.classList.contains('liked')) { // Like to remove like = 0
       // If already liked, remove like
       likeBtn.classList.remove('liked');
       console.log('removed 1 like');
@@ -431,7 +419,7 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
       likeCount--;
       updateLikesCount(docId, -1);
     } else {
-      if (!likeBtn.classList.contains('liked')) {
+      if (!likeBtn.classList.contains('liked')) { // Add Like = 1
         // If not liked, add like
         likeBtn.classList.add('liked');
         console.log('added 1 like');
@@ -441,7 +429,7 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
       }
 
       // Clear dislike if present
-      if (downvoteBtn.classList.contains('disliked')) {
+      if (downvoteBtn.classList.contains('disliked')) { // dislike to like = 1 ..... -1 to 1
         console.log("disliked to liked");
         // If downvote was already present, clear it
         likeBtn.classList.add('liked');
@@ -456,7 +444,7 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
   }
   // Remove like if present and dislike is clicked
   else if (type === 1) {
-    if (downvoteBtn.classList.contains('disliked')) {
+    if (downvoteBtn.classList.contains('disliked')) { // dislike to reset = 0
       // If downvote is disliked, remove dislike and increment like count
       downvoteBtn.classList.remove('disliked');
       console.log('removed 1 dislike');
@@ -467,14 +455,14 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
       updateLikesCount(docId, 1);
     } else {
       // If downvote is not disliked, add dislike and decrement like count
-      if (!downvoteBtn.classList.contains('disliked') && !likeBtn.classList.contains('liked')) {
+      if (!downvoteBtn.classList.contains('disliked') && !likeBtn.classList.contains('liked')) { // dislike = -1
         downvoteBtn.classList.add('disliked');
         console.log('added 1 dislike');
         likeCount-= 1;
         // Update likes count by -1
         updateLikesCount(docId, -1);
       }
-      if (likeBtn.classList.contains('liked')) {
+      if (likeBtn.classList.contains('liked')) { // Liked to dislike = -1
         downvoteBtn.classList.add('disliked');
         likeBtn.classList.remove('liked');
         console.log("liked and downvoted", 'added 1 dislike');
@@ -482,7 +470,6 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
         // Update likes count by -1
         updateLikesCount(docId, -2);
       }
-
     }
   }
 
@@ -512,23 +499,68 @@ function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
 }
 
 async function updateLikesCount(docId, num) {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const momentRef = doc(db, "moments", docId);
-        if (num > 0){ // add like
-          await updateDoc(momentRef, {
-            likes: increment(num),
-            usersLiked: arrayUnion(user.uid)
-          })
-        } else { // remove like
-          await updateDoc(momentRef, {
-            likes: increment(num),
-            usersLiked: arrayRemove(user.uid)
-          })
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const momentRef = doc(db, "moments", docId);
+            const momentSnap = await getDoc(momentRef);
+            const momentData = momentSnap.data();
+            
+            if (!momentData) { // Document doesn't exist, create new document
+                await updateDoc(momentRef, {
+                    usersLiked: [],
+                    usersDisliked: []
+                });
+            }
+            
+            if (num > 0) { // Handling like
+                if (momentData.usersLiked && momentData.usersLiked.includes(user.uid)) {
+                    // User has already liked the moment, so remove the like
+                    await updateDoc(momentRef, {
+                        likes: increment(num),
+                        usersLiked: arrayRemove(user.uid)
+                    });
+                } else {
+                    // User hasn't liked the moment yet, so add the like
+                    // If the user disliked the moment before, remove the dislike
+                    if (momentData.usersDisliked && momentData.usersDisliked.includes(user.uid)) {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersDisliked: arrayRemove(user.uid)
+                        });
+                    } else {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersLiked: arrayUnion(user.uid)
+                        });
+                    }
+                }
+            } else if (num < 0) { // Handling dislike
+                if (momentData.usersDisliked && momentData.usersDisliked.includes(user.uid)) {
+                    // User has already disliked the moment, so remove the dislike
+                    await updateDoc(momentRef, {
+                        likes: increment(num),
+                        usersDisliked: arrayRemove(user.uid)
+                    });
+                } else {
+                    // User hasn't disliked the moment yet, so add the dislike
+                    // If the user liked the moment before, remove the like
+                    if (momentData.usersLiked && momentData.usersLiked.includes(user.uid)) {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersLiked: arrayRemove(user.uid)
+                        });
+                    } else {
+                        await updateDoc(momentRef, {
+                            likes: increment(num),
+                            usersDisliked: arrayUnion(user.uid)
+                        });
+                    }
+                }
+            }
         }
-    }
-  })
+    });
 }
+
 
 async function flagMomentsPost(docId,dropDownContentContainerDiv,reason){
   const momentRef = doc(db, "moments", docId);
