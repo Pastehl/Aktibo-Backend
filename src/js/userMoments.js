@@ -70,6 +70,7 @@ closeEditPostModal.addEventListener("click", function () {
   editPostModal.hide();
 });
 saveCaption.addEventListener("click", function () {
+  console.log("checkEngine")
   editPostSightEngieCheck();
 })
 
@@ -595,7 +596,21 @@ function editPostSightEngieCheck() {
   })
     .then(function (response) {
       // on success: handle response
-      console.log(response);
+      
+      const moderationClasses = response.data.moderation_classes;
+      const arrFilter = response.data.moderation_classes.available
+      let arrFilterValues = []
+      console.log(arrFilter)
+      
+      for (let i = 0; i < arrFilter.length; i++){
+        if (moderationClasses[arrFilter[i]] >= 0.25) {
+          arrFilterValues.push(arrFilter[i]);
+        }
+
+        console.log(arrFilter[i])
+        console.log(moderationClasses[arrFilter[i]])
+        arrFilterValues.forEach(item => console.log(item));
+      }
     })
     .catch(function (error) {
       // handle error

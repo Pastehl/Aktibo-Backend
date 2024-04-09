@@ -368,7 +368,7 @@ function validateExercise() {
 
   //Video Validation
   var fileInput = document.getElementById("video");
-
+  var UploadedFileState = document.getElementById("fileUploadState").style.display ;
   // Set the accept attribute to allow only .mp4 files
   fileInput.accept = ".mp4";
   var file = fileInput.files[0]; // Get the selected file
@@ -377,6 +377,9 @@ function validateExercise() {
     // No file selected
     showToast("Please select a file.");
     return false;
+  }
+  if (UploadedFileState != 'inline') {
+    return false
   }
 
   return true;
@@ -391,9 +394,10 @@ function addFileUploadStateEventListener() {
     var file = fileInput.files[0];
     // Check if the file type is .mp4 and the size is within the limit (7 MB)
     if (
-      file != undefined &&
+      file != undefined && 
       file.type === "video/mp4" &&
-      file.size <= 7 * 1024 * 1024
+      file.size <= 7 * 1024 * 1024 &&
+      file.length > 0
     ) {
     } else {
       // Optionally clear the file input to prevent an invalid file from being selected
@@ -782,9 +786,10 @@ async function createNewExerciseDocument() {
     intensity,
     file
   );
+
   try {
-    // Add a new document with a generated id.
-    const docRef = await addDoc(collection(db, "exercises"), {
+    // Prepare the data to be added to the document
+    const exerciseData = {
       category: category,
       est_time: est_time,
       instructions: instArr,
@@ -793,8 +798,16 @@ async function createNewExerciseDocument() {
       reps_duration: reps,
       sets: Number(sets),
       tags: tags,
-      video: await uploadVideo(file),
-    });
+    };
+
+    // If a file is selected, upload the video and add the video URL to the exercise data
+    if (file) {
+      exerciseData.video = await uploadVideo(file);
+    }
+
+    // Add a new document with the exercise data
+    const docRef = await addDoc(collection(db, "exercises"), exerciseData);
+    
     showToast("Exercise Successfully Created.");
   } catch (error) {
     if (error.code === "already-exists") {
@@ -806,6 +819,7 @@ async function createNewExerciseDocument() {
     }
   }
 }
+
 
 async function uploadVideo(file) {
   // Upload file and metadata to the object 'exercise_videos/' + file.name

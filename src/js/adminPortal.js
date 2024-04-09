@@ -116,7 +116,7 @@ async function getUsers() {
     const username = userData.username ?? "No Data";
     const reportsCount = userData.reportsCount ?? 0;
     const email = userData.email ?? "No Data"
-    const active = userData.active ?? "No Data"
+    const active = checkActiveLast3Months(userData.lastLoggedInTimestamp) ?? "No Data"
 
     // Check if user has logged in the last 3 months
     // const lastLoginTimestamp = new Date(userRecord.metadata.lastSignInTime);
@@ -127,16 +127,42 @@ async function getUsers() {
         <td class="col">${userId}</td>
         <td class="col">${username}</td>
         <td class="col">${email}</td>
-        <td class="col"> ${active}</td>
+        <td class="col">${active ? 'Yes' : 'No'}</td>
         <td class="col">${reportsCount}</td>
 
       </tr>
     `;
+    console.log(userId)
   });
-
+  
   userListContent.innerHTML = userListHTML;
 }
 
 
  getUsers();
 //'0y9Kkgd303QrsKSuXzKvqG2DI4E2'
+function checkActiveLast3Months(lastLogin) {
+  if (lastLogin === undefined) {
+    return false;
+  }
+
+
+  // Current date
+  const currentDate = new Date();
+
+  // Date 3 months ago
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+  threeMonthsAgo.setHours(0, 0, 0, 0); // Set time to 00:00:00 to ignore time part
+  console.log(threeMonthsAgo, "3 months ago ");
+
+  // Assuming lastLogin is the timestamp
+  const lastLoggedInDate = lastLogin.toDate();
+  console.log(lastLoggedInDate);
+
+  // Check if the last logged-in date is within the last 3 months
+  const withinLast3Months = lastLoggedInDate >= threeMonthsAgo && lastLoggedInDate <= currentDate;
+  console.log(withinLast3Months,"isLater than 3 months Ago and less than current Date");
+
+  return withinLast3Months
+}

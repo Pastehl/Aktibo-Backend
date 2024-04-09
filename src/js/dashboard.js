@@ -954,9 +954,11 @@ function showBookmarks(data) {
     `;
     counter++;
   });
+
   instructionsAddEventListener();
   ingredientsAddEventListener();
   downloadRecipeBtnAddEventlistener();
+  
 };
 
 
