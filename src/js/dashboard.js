@@ -774,6 +774,18 @@ function getWeekWeightData(data) {
     const lastNonZeroValue = weekWeightData[today.getDay() - 2];
     weekWeightData.push(lastNonZeroValue);  
   }
+  for (let i = 0; i < weekWeightData.length; i++) {
+    if (weekWeightData[i] === 0 && i > 0) {
+        // Find the previous non-zero number
+        let j = i - 1;
+        while (j >= 0 && weekWeightData[j] === 0) {
+            j--;
+        }
+        if (j >= 0) {
+            weekWeightData[i] = weekWeightData[j];
+        }
+    }
+}
   return weekWeightData;
 }
 
