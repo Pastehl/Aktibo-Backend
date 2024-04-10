@@ -71,7 +71,7 @@ closeEditPostModal.addEventListener("click", function () {
 });
 saveCaption.addEventListener("click", function () {
   console.log("checkEngine")
-  editPostSightEngieCheck();
+  editPostSightEngieCheck(saveCaption.getAttribute("data-doc-id"));
 })
 
 // clear content
@@ -365,10 +365,9 @@ function addEditPostButtonEventListener() {
 function loadPostModal(docID, h6Element) {
   var h6Text = h6Element.innerText;
   document.getElementById("postTextInput").value = h6Text;
+  saveCaption.removeAttribute("data-doc-id");
+  saveCaption.setAttribute("data-doc-id", docID);
   editPostModal.show();
-}
-function updateCaptionFirebase(docId) {
-  //Firebase update
 }
 
 function addDeletePostButtonEventListener() {
@@ -576,7 +575,7 @@ async function deletePost(docId, dropDownContentContainerDiv, reason) {
   });
 }
 
-function editPostSightEngieCheck() {
+function editPostSightEngieCheck(docID) {
   var postTextInput = document.getElementById("postTextInput").value;
   var caption = postTextInput;
   var data = new FormData();
@@ -602,14 +601,17 @@ function editPostSightEngieCheck() {
       let arrFilterValues = []
       console.log(arrFilter)
       
-      for (let i = 0; i < arrFilter.length; i++){
+      for (let i = 0; i < arrFilter.length; i++) {
         if (moderationClasses[arrFilter[i]] >= 0.25) {
           arrFilterValues.push(arrFilter[i]);
         }
-
-        console.log(arrFilter[i])
-        console.log(moderationClasses[arrFilter[i]])
-        arrFilterValues.forEach(item => console.log(item));
+      }
+      console.log(arrFilterValues)
+      if (arrFilterValues.length == 0) {
+        updateCaptionFirebase(docID)
+      } else {
+          const combinedString = arrFilter.join(', ');
+        toastMessage(`Caption is flagged for the following ${combinedString}. Please change your caption.`);
       }
     })
     .catch(function (error) {
@@ -617,4 +619,9 @@ function editPostSightEngieCheck() {
       if (error.response) console.log(error.response.data);
       else console.log(error.message);
     });
+}
+
+function updateCaptionFirebase(docId) {
+  console.log(docId)
+  toastMessage("Caption Updated Successfully")
 }
