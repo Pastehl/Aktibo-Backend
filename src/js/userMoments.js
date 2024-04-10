@@ -608,7 +608,7 @@ function editPostSightEngieCheck(docID) {
       }
       console.log(arrFilterValues)
       if (arrFilterValues.length == 0) {
-        updateCaptionFirebase(docID)
+        updateCaptionFirebase(docID,caption)
       } else {
           const combinedString = arrFilter.join(', ');
         toastMessage(`Caption is flagged for the following ${combinedString}. Please change your caption.`);
@@ -621,7 +621,11 @@ function editPostSightEngieCheck(docID) {
     });
 }
 
-function updateCaptionFirebase(docId) {
+async function updateCaptionFirebase(docId,caption) {
   console.log(docId)
+  const momentRef = doc(db, "moments", docId);
+  await updateDoc(momentRef, {
+         caption: caption
+  });
   toastMessage("Caption Updated Successfully")
 }
