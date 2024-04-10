@@ -151,6 +151,8 @@ async function getUserRecord() {
 function setUserData(docSnap) {
   let weight = docSnap.data().weight;
   let height = docSnap.data().height;
+  let physicalActivityLevel = docSnap.data().physicalActivityLevel || 0;
+  let weightGoal = docSnap.data().exerciseGoal;
   let bmi;
 
   if (weight == undefined || height == undefined) {
@@ -183,7 +185,7 @@ function setUserData(docSnap) {
   addgenerate_reportsBtnEventListener(docSnap.id);
   addFood_RecordBtnEventListener(docSnap.id);
   let calendarDates = callCalendar(exercise_dates); // Arraw Monthly Plot Points
-
+  let maxValuesMacros = macrosCalCPF(weight,height,physicalActivityLevel,weightGoal)
   // Call setChartData to update the doughnut charts
   // Update doughnut chart for steps
   const stepsChartCtx = ctx; // Assuming myChart is the ID of the doughnut chart for steps
@@ -206,26 +208,26 @@ function setUserData(docSnap) {
   );
   setChartData(
     ctx5,
-    [macros[0], 2500],
+    [macros[0], maxValuesMacros[0]],
     ["rgb(255,0,0)", "rgb(255,114,118)"],
     [redGraph],
     { maintainAspectRatio: false }
   );
   setChartData(
     ctx6,
-    [macros[1], 150],
+    [macros[1], maxValuesMacros[1]],
     ["rgb(0, 0, 255)", "rgb(37, 207, 240)"],
     [blueGraph]
   );
   setChartData(
     ctx7,
-    [macros[2], 150],
+    [macros[2], maxValuesMacros[2]],
     ["rgb(218, 165, 32)", "rgb(255, 192, 0)"],
     [yellowGraph]
   );
   setChartData(
     ctx8,
-    [macros[3], 150],
+    [macros[3], maxValuesMacros[3]],
     ["rgb(54, 69, 79)", "rgb(115, 147, 179)"],
     [grayGraph]
   );
@@ -236,31 +238,49 @@ function setUserData(docSnap) {
 
 getUserRecord();
 
-//Green Test Graph
-//Template for Graph
-// const doughnut_Steps = {
-//   id: "doughnut_Steps",
-//   beforeDatasetsDraw(chart, args, pluginOptions) {
-//     const { ctx, data } = chart;
-//     ctx.save();
-//     const xCoor = chart.getDatasetMeta(0).data[0].x;
-//     const yCoor = chart.getDatasetMeta(0).data[0].y;
-//     ctx.font = "bold 30px sans-serif"; //text formatting
-//     ctx.fillStyle = "rgb(99,169,31)";
-//     ctx.textAlign = "center";
-//     ctx.textBaseline = "middle";
-//     ctx.fillText(`Steps`, xCoor, yCoor); //Change first argument to change text inside the circle
-
-//     var bottomText = "Steps";
-//     var bottomTextX = ctx.canvas.width / 2;
-//     var bottomTextY = ctx.canvas.height;
-//     ctx.fillStyle = "#000";
-//     ctx.font = "20px sans-serif"; //text formatting
-//     ctx.textAlign = "center";
-//     ctx.textBaseline = "middle";
-//     ctx.fillText(bottomText, bottomTextX, bottomTextY);
-//   },
-// };
+function macrosCalCPF(weight,height,physicalActivityLevel,weightGoal) {
+  let desirableBodyWeight = (height - 100) - (0.1 * (height - 100))
+  let totalEnergyRequirement = 0.0
+  let carbs = 0
+  let fats = 0
+  let protein = 0
+  switch (physicalActivityLevel) {
+    case 0:
+        totalEnergyRequirement = desirableBodyWeight * 30;
+        break;
+    case 1:
+        totalEnergyRequirement = desirableBodyWeight * 35;
+        break;
+    case 2:
+        totalEnergyRequirement = desirableBodyWeight * 40;
+        break;
+    case 3:
+        totalEnergyRequirement = desirableBodyWeight * 45;
+        break;
+    default:
+        // Handle other cases if needed
+        break;
+  }  
+  let progressBarCaloriesMax = 0
+  switch (weightGoal) {
+      case 0:
+          progressBarCaloriesMax = Math.round(totalEnergyRequirement);
+          break;
+      case 1:
+          progressBarCaloriesMax = Math.round(totalEnergyRequirement + 500);
+          break;
+      case 2:
+          progressBarCaloriesMax = Math.round(totalEnergyRequirement - 500);
+          break;
+      default:
+          // Handle other cases if needed
+          break;
+  }
+  carbs = Math.round(((totalEnergyRequirement * 0.60) / 4))
+  protein = Math.round(((totalEnergyRequirement*0.15)/4))
+  fats = Math.round(((totalEnergyRequirement * 0.25) / 4))
+  return [progressBarCaloriesMax,carbs,protein,fats]
+}
 
 //modified doughnut_Steps
 const doughnutt_Steps = {
