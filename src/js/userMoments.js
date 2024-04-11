@@ -67,6 +67,7 @@ var editConfirmModal = new bootstrap.Modal("#editConfirmModal");
 var closeEditPostModal = document.getElementById("editPostModalBtn");
 var closeEditConfirm = document.getElementById("closeEditConfirm");
 var saveCaption = document.getElementById("saveCaption")
+var editYes = document.getElementById("editYes")
 var editNo = document.getElementById("editNo");
 
 editNo.addEventListener("click", function () {
@@ -76,10 +77,17 @@ editNo.addEventListener("click", function () {
 closeEditPostModal.addEventListener("click", function () {
   editPostModal.hide();
 });
-saveCaption.addEventListener("click", function () {
-  console.log("checkEngine")
+
+saveCaption.addEventListener("click", function(){
   editConfirmModal.show();
-  // editPostSightEngieCheck(saveCaption.getAttribute("data-doc-id"));
+});
+
+editYes.addEventListener("click", function () {
+  console.log("checkEngine")
+  editPostSightEngieCheck(editYes.getAttribute("data-doc-id"));
+  editConfirmModal.hide();
+  editPostModal.hide();
+  // location.reload();
 });
 
 closeEditConfirm.addEventListener("click", function () {
@@ -377,8 +385,8 @@ function addEditPostButtonEventListener() {
 function loadPostModal(docID, h6Element) {
   var h6Text = h6Element.innerText;
   document.getElementById("postTextInput").value = h6Text;
-  saveCaption.removeAttribute("data-doc-id");
-  saveCaption.setAttribute("data-doc-id", docID);
+  editYes.removeAttribute("data-doc-id");
+  editYes.setAttribute("data-doc-id", docID);
   editPostModal.show();
 }
 
