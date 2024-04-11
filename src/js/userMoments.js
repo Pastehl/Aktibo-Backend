@@ -64,11 +64,16 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 
 var editPostModal = new bootstrap.Modal("#editPostModal");
 var editConfirmModal = new bootstrap.Modal("#editConfirmModal");
+
 var closeEditPostModal = document.getElementById("editPostModalBtn");
 var closeEditConfirm = document.getElementById("closeEditConfirm");
 var saveCaption = document.getElementById("saveCaption")
-var editYes = document.getElementById("editYes")
+var editYes = document.getElementById("editYes");
 var editNo = document.getElementById("editNo");
+var deleteYes = document.getElementById("deleteYes");
+var deleteNo = document.getElementById("deleteNo");
+
+
 
 editNo.addEventListener("click", function () {
   editConfirmModal.hide();
@@ -390,20 +395,67 @@ function loadPostModal(docID, h6Element) {
   editPostModal.show();
 }
 
+//OLD DELETE FUNCTION
+// function addDeletePostButtonEventListener() {
+//   let deleteBtn = document.getElementsByClassName("deleteBtn");
+//   removeAllListenersFromClass(deleteBtn);
+//   for (let index = 0; index < deleteBtn.length; index++) {
+//     const element = deleteBtn[index];
+//     element.addEventListener("click", function (e) {
+//       console.log(element.dataset.docId);
+//       console.log(element.innerHTML);
+//       console.log(element.parentNode.parentNode);
+//       deletePost(element.dataset.docId, element.parentNode.parentNode);
+//       toastMessage("Post has been reported.");
+//     });
+//   }
+// }
+
+// Initialize the modal
+var deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
+
+// Store variables for deletion
+let deletePostId = null;
+let deletePostParent = null;
+
 function addDeletePostButtonEventListener() {
   let deleteBtn = document.getElementsByClassName("deleteBtn");
   removeAllListenersFromClass(deleteBtn);
   for (let index = 0; index < deleteBtn.length; index++) {
     const element = deleteBtn[index];
     element.addEventListener("click", function (e) {
-      console.log(element.dataset.docId);
-      console.log(element.innerHTML);
-      console.log(element.parentNode.parentNode);
-      deletePost(element.dataset.docId, element.parentNode.parentNode);
-      toastMessage("Post has been reported.");
+      // Show confirmation modal
+      deletePostId = element.dataset.docId;
+      deletePostParent = element.parentNode.parentNode;
+      showConfirmationModal();
     });
   }
+
+  // Add event listener for the modal's Yes button
+  document.getElementById("deleteYes").addEventListener("click", function () {
+    if (deletePostId && deletePostParent) {
+      deletePost(deletePostId, deletePostParent);
+      toastMessage("Post has been deleted.");
+    }
+    deleteConfirmModal.hide(); // Close the modal after deletion
+  });
+
+  // Add event listener for the modal's No button
+  document.getElementById("deleteNo").addEventListener("click", function () {
+    deleteConfirmModal.hide(); // Close the modal if No is clicked
+  });
+
+  // Add event listener for the modal's close button
+  document.getElementById("closeDeleteConfirm").addEventListener("click", function () {
+    deleteConfirmModal.hide(); // Close the modal if the close button is clicked
+  });
 }
+
+function showConfirmationModal() {
+  // Show the modal
+  deleteConfirmModal.show();
+}
+
 
 function toggleLike(likeBtn, downvoteBtn, docId, postSpan, likeCount, type) {
   // Remove dislike if present and like is clicked
