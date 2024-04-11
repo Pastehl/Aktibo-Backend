@@ -63,16 +63,28 @@ document.getElementById("logout_btn").addEventListener("click", function () {
 });
 
 var editPostModal = new bootstrap.Modal("#editPostModal");
+var editConfirmModal = new bootstrap.Modal("#editConfirmModal");
 var closeEditPostModal = document.getElementById("editPostModalBtn");
+var closeEditConfirm = document.getElementById("closeEditConfirm");
 var saveCaption = document.getElementById("saveCaption")
+var editNo = document.getElementById("editNo");
+
+editNo.addEventListener("click", function () {
+  editConfirmModal.hide();
+});
 
 closeEditPostModal.addEventListener("click", function () {
   editPostModal.hide();
 });
 saveCaption.addEventListener("click", function () {
   console.log("checkEngine")
-  editPostSightEngieCheck(saveCaption.getAttribute("data-doc-id"));
-})
+  editConfirmModal.show();
+  // editPostSightEngieCheck(saveCaption.getAttribute("data-doc-id"));
+});
+
+closeEditConfirm.addEventListener("click", function () {
+  editConfirmModal.hide();
+});
 
 // clear content
 let main_content = document.getElementById("main_content");

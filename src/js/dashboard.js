@@ -44,6 +44,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+
 const db = getFirestore(app);
 
 const ctx = document.getElementById("myChart"); //steps
