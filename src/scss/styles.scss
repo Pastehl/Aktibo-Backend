@@ -1573,4 +1573,16 @@ modal exercise .modal {
     height: auto;
   }
 
- 
+  #flagBtn{
+    color: red;
+  }
+
+  #undoBtn{
+    color: green;
+  }
+
+  #flagBtn, #undoBtn{
+    font-size: 2rem;
+    margin: 0.5rem;
+    cursor: pointer;
+}

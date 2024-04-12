@@ -70,6 +70,36 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     });
 });
 
+//VIEW POST MODAL DRAFT
+// Wait for the document to load before attaching event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const viewPostModal = document.getElementById('viewPostModal');
+  const modalInstance = new bootstrap.Modal(viewPostModal);
+  var closeViewPostModal = document.getElementById("closeViewPostModal");
+  // Get all elements with the class 'openPostModal'
+  const openPostButtons = document.querySelectorAll('.openPostModal');
+
+  // Iterate through each button and attach a click event listener
+  openPostButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      // Get the modal element by its id
+      
+
+      // Use Bootstrap's modal API to show the modal
+      
+      modalInstance.show();
+    });
+  });
+
+  closeViewPostModal.addEventListener("click", function () {
+    modalInstance.hide();
+  });
+ 
+});
+
+
+
+
 // var main_content = document.getElementById("main_content");
 // main_content.innerHTML = "";
 // let idCounters = 1;
