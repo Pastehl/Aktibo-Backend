@@ -190,17 +190,16 @@
         <button type="button" id="closeEditConfirm" class="closeEditConfirm modalCloseBtn">
           <span aria-hidden="true">&times;</span>
         </button>
-        <ol id="inst-modal-body" style="text-align: center; align-items: center; justify-content: center; display: inline;" class="modal-body">
-          <li style="display: block; padding-bottom: 1.5rem;">
-            <h2>Confirm Edit?</h2>
-          </li>
-          <li style="display: inline-block;">
-            <button type="button" class="btn btn-primary" id ="editYes" style= "width: 5rem; background-color: #63A91F; border: none;" >Yes</button>
-          </li>
-          <li style="display: inline-block;">
-            <button type="button" class="btn btn-primary" id ="editNo" style="width: 5rem; background-color: red; border: none;">No</button>
-          </li>
-        </ol>
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Edit?</h5>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to edit this post?
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="editNo" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" id="editYes"class="btn btn-success deleteBtnFinal">Save</button>
+        </div>
       </div>
     </div>
   </div>

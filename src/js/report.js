@@ -79,8 +79,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const confirmDeleteModal = document.getElementById('confirmDeleteModal');
   const modalInstance2 = new bootstrap.Modal(confirmDeleteModal);
 
+  const confirmUnflagModal = document.getElementById('confirmUnflagModal');
+  const modalInstance3 = new bootstrap.Modal(confirmUnflagModal);
+
   const closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn');
-  const flagBtn = document.getElementById('flagBtn');
+  const closeConfirmUnflagBtn = document.getElementById('closeConfirmUnflagBtn');
+  const confirmUnflagCancelBtn = document.getElementById('confirmUnflagCancelBtn');
+
+  const disableBtn = document.getElementById('disableBtn');
+  const unflagBtn = document.getElementById('unflagBtn');
   
   // Get all elements with the class 'openPostModal'
   const openPostButtons = document.querySelectorAll('.openPostModal');
@@ -89,11 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Iterate through each button and attach a click event listener
   openPostButtons.forEach(function(button) {
     button.addEventListener('click', function() {
-      // Get the modal element by its id
-      
-
-      // Use Bootstrap's modal API to show the modal
-      
       modalInstance.show();
     });
   });
@@ -102,12 +104,28 @@ document.addEventListener('DOMContentLoaded', function() {
     modalInstance.hide();
   });
 
-  flagBtn.addEventListener('click', function() {
+  disableBtn.addEventListener('click', function() {
     modalInstance2.show();
   });
 
   closeConfirmDeleteBtn.addEventListener('click', function () {
     modalInstance2.hide();
+  });
+
+  confirmDeleteModal.addEventListener('click', function(){
+    modalInstance2.hide()
+  });
+
+  unflagBtn.addEventListener('click', function() {
+    modalInstance3.show();
+  });
+
+  closeConfirmUnflagBtn.addEventListener('click', function () {
+    modalInstance3.hide();
+  });
+
+  confirmUnflagCancelBtn.addEventListener('click', function(){
+    modalInstance3.hide()
   });
 
 
