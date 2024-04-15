@@ -67,11 +67,12 @@
             <th scope="col">Username</th>
             <th scope="col">Reason</th>
             <th scope="col">Status</th>
+            <th scope="col">Report Count</th>
             <th scope="col">View</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="tableBody">
           <tr>
             <th scope="row">1</th>
             <td>Test Name</td>
@@ -81,8 +82,8 @@
               <button type="button" class="btn btn-secondary btn-sm openPostModal" id=""><i class="bx bx-book-open bx-sm"></i></button>
             </td>
             <td>
-              <i class='bx bxs-flag-alt' id="flagBtn"></i>
-              <i class='bx bx-undo' id="undoBtn"></i>
+              <button type="button" class="btn btn-danger" id="disableBtn">Disable</button>
+              <button type="button" class="btn btn-secondary" id="unflagBtn">Unflag</button>
             </td>
             
           </tr>

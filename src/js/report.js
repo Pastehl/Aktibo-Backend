@@ -98,7 +98,50 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+var table_body = document.getElementById('tableBody');
+table_body.innerHTML = "";
 
+
+async function getReportedPosts() {
+  let reportedRef = collection(db, "moments");
+  const q = query(reportedRef, orderBy("reports", "desc"));
+  const docSnap = await getDocs(q);
+  showReportedPosts(docSnap)
+}
+
+function showReportedPosts(docSnap) {
+  var counter = 0
+  docSnap.forEach((doc) => {
+    addToTablePosts(doc, counter)
+  });
+}
+function addToTablePosts(doc,counter) {
+    let username = doc.data().reports[counter].username ?? "No Data"
+    let report_reason = doc.data().reports[counter].violation ??  "No Data"
+    let userID = doc.data().reports[counter].userID ?? "No Data"
+    let reportCount = doc.data().reportsCount ?? "No Data"
+    let status = doc.data().isDisabled ?? "Reported"
+    if (status) {
+      status = "Disabled"
+    }
+    table_body.innerHTML += `
+    <tr>
+            <th scope="row">${doc.id}</th>
+            <td>${username}</td>
+            <td>${report_reason}</td>
+            <td>${status}</td>
+            <td>${reportCount}</td>
+            <td>
+              <button type="button" class="btn btn-secondary btn-sm openPostModal" data-doc-id="${doc.id}"><i class="bx bx-book-open bx-sm"></i></button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-secondary" data-doc-id="${doc.id}">Unflag</button>
+              <button type="button" class="btn btn-danger data-doc-id="${doc.id + " " + userID}" >Disable</button>
+            </td>
+          </tr>
+    `
+}
+getReportedPosts()
 
 // var main_content = document.getElementById("main_content");
 // main_content.innerHTML = "";
@@ -190,13 +233,13 @@ document.addEventListener('DOMContentLoaded', function() {
 // const docSnap = await getDocs(q);
 
 // async function showFlaggedPosts() {
-//   docSnap.forEach((doc) => {
-//     const data = doc.data();
-//     showAllMoments(doc, idCounters);
-//     idCounters++;
-//     // move show ALL Moments here
-//     console.log(doc.id);
-//   });
+  // docSnap.forEach((doc) => {
+  //   const data = doc.data();
+  //   showAllMoments(doc, idCounters);
+  //   idCounters++;
+  //   // move show ALL Moments here
+  //   console.log(doc.id);
+  // });
 // }
 
 // showFlaggedPosts();
