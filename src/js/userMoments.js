@@ -89,7 +89,7 @@ saveCaption.addEventListener("click", function(){
 
 editYes.addEventListener("click", function () {
   console.log("checkEngine")
-  editPostSightEngieCheck(editYes.getAttribute("data-doc-id"));
+  editPostSightEngieCheck(editYes.getAttribute("data-doc-id"),);
   editConfirmModal.hide();
   editPostModal.hide();
   // location.reload();
@@ -379,6 +379,7 @@ function addEditPostButtonEventListener() {
   for (let index = 0; index < editBtn.length; index++) {
     const element = editBtn[index];
     element.addEventListener("click", function (e) {
+      console.log(element.parentNode.parentNode.parentNode.parentNode.nextElementSibling)
       loadPostModal(
         element.dataset.docId,
         element.parentNode.parentNode.parentNode.parentNode.nextElementSibling

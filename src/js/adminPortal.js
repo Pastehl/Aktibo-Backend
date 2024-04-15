@@ -23,6 +23,7 @@ import {
   CACHE_SIZE_UNLIMITED,
   enablePersistence,
   persistentMultipleTabManager,
+  deleteField,
   
 } from "firebase/firestore";
 import {
@@ -129,13 +130,14 @@ async function getUsers() {
         <td class="col">${email}</td>
         <td class="col">${active ? 'Yes' : 'No'}</td>
         <td class="col">${reportsCount}</td>
+        <td class="col"><button type="button" class="btn btn-secondary btn-sm resetBtn" data-doc-id="` + userId + `"><i class='bx bx-reset'></i></button></td>
 
       </tr>
     `;
     console.log(userId)
   });
-  
   userListContent.innerHTML = userListHTML;
+  addResetButtonEventListener()
 }
 
 
@@ -154,7 +156,6 @@ function checkActiveLast3Months(lastLogin) {
   const threeMonthsAgo = new Date();
   threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
   threeMonthsAgo.setHours(0, 0, 0, 0); // Set time to 00:00:00 to ignore time part
-  console.log(threeMonthsAgo, "3 months ago ");
 
   // Assuming lastLogin is the timestamp
   const lastLoggedInDate = lastLogin.toDate();
@@ -162,7 +163,48 @@ function checkActiveLast3Months(lastLogin) {
 
   // Check if the last logged-in date is within the last 3 months
   const withinLast3Months = lastLoggedInDate >= threeMonthsAgo && lastLoggedInDate <= currentDate;
-  console.log(withinLast3Months,"isLater than 3 months Ago and less than current Date");
 
   return withinLast3Months
+}
+function removeAllListenersFromClass(elements) {
+  Array.from(elements).forEach(function (element) {
+    var clonedElement = element.cloneNode(true);
+    element.parentNode.replaceChild(clonedElement, element);
+  });
+}
+function addResetButtonEventListener() {
+  console.log("Running ResetBTN Loop")
+  let resetBtn = document.getElementsByClassName("resetBtn");
+  removeAllListenersFromClass(resetBtn);
+  for (let index = 0; index < resetBtn.length; index++) {
+    const element = resetBtn[index];
+    element.addEventListener("click", function (e) {
+      console.log(element.dataset.docId);
+      resetStrikeCount(element.dataset.docId)
+      toastMessage("Post has been disabled");
+    });
+  }
+}
+
+async function resetStrikeCount(docID){
+  const userRef = doc(db, "users", docID)
+  await updateDoc(userRef, {
+    reportsCount: deleteField()
+  })
+}
+
+
+function toastMessage(message) {
+  // Get the toast element by its ID
+  const toastElement = document.getElementById("liveToast");
+
+  // Get the .toast-body element within the toast
+  const toastBodyElement = toastElement.querySelector(".toast-body");
+
+  // Update the content of the .toast-body element
+  toastBodyElement.textContent = message;
+
+  // Show the toast
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
 }

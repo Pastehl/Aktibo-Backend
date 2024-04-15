@@ -84,6 +84,12 @@ const closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn');
 const closeConfirmUnflagBtn = document.getElementById('closeConfirmUnflagBtn');
 const confirmUnflagCancelBtn = document.getElementById('confirmUnflagCancelBtn');
 
+const closeViewPostModal = document.getElementById("closeViewPostModal");
+
+closeViewPostModal.addEventListener('click', function () {
+  modalInstance.hide()
+})
+
 closeConfirmDeleteBtn.addEventListener('click', function () {
   modalInstance2.hide();
 });
@@ -92,29 +98,29 @@ confirmDeleteModal.addEventListener('click', function(){
   modalInstance2.hide()
 });
 
-function addConfirmDeleteEventListener() {
-  var deleteBtn = document.getElementsByClassName('deleteBtn')
-  removeAllListenersFromClass(deleteBtn)
-  for (let index = 0; index < deleteBtn.length; index++) {
-    const element = deleteBtn[index];
-    element.addEventListener('click', function (e) {
-      //showConfirmDeleteModal(element.dataset.docId)
-      console.log("confirm pre-Delete clicked")
-    });
-  }
-}
-function addConfirmDeleteButtonEventListener(){
-  var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
-  removeAllListenersFromClass(deleteBtn)
-  for (let index = 0; index < deleteBtn.length; index++) {
-    const element = deleteBtn[index];
-    element.addEventListener('click', function (e) {
-      //do this when clicked
-      console.log("confirm Delete clicked")
-      //deleteExerciseRecord(element.dataset.docId)
-    });
-  }
-}
+// function addConfirmDeleteEventListener() {
+//   var deleteBtn = document.getElementsByClassName('deleteBtn')
+//   removeAllListenersFromClass(deleteBtn)
+//   for (let index = 0; index < deleteBtn.length; index++) {
+//     const element = deleteBtn[index];
+//     element.addEventListener('click', function (e) {
+//       //showConfirmDeleteModal(element.dataset.docId)
+//       console.log("confirm pre-Delete clicked")
+//     });
+//   }
+// }
+// function addConfirmDeleteButtonEventListener(){
+//   var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
+//   removeAllListenersFromClass(deleteBtn)
+//   for (let index = 0; index < deleteBtn.length; index++) {
+//     const element = deleteBtn[index];
+//     element.addEventListener('click', function (e) {
+//       //do this when clicked
+//       console.log("confirm Delete clicked")
+//       //deleteExerciseRecord(element.dataset.docId)
+//     });
+//   }
+// }
 function removeAllListenersFromClass(elements) {
   Array.from(elements).forEach(function (element) {
     var clonedElement = element.cloneNode(true);
@@ -145,10 +151,11 @@ function showReportedPosts(docSnap) {
 function addToTablePosts(doc,counter) {
     let username = doc.data().reports[counter].username ?? "No Data"
     let report_reason = doc.data().reports[counter].violation ??  "No Data"
-    let userID = doc.data().reports[counter].userID ?? "No Data"
+    let userID = doc.data().userID ?? "No Data"
     let reportCount = doc.data().reportsCount ?? "No Data"
-    let status = doc.data().isDisabled ?? "Reported"
-    if (status) {
+  let status = doc.data().isDisabled ?? "Reported"
+  console.log(status)
+    if (status != "Reported") {
       status = "Disabled"
     }
     table_body.innerHTML += `
@@ -162,8 +169,8 @@ function addToTablePosts(doc,counter) {
               <button type="button" class="btn btn-secondary btn-sm openPostModal" data-doc-id="${doc.id}"><i class="bx bx-book-open bx-sm"></i></button>
             </td>
             <td>
-              <button type="button" class="btn btn-secondary" data-doc-id="${doc.id}">Unflag</button>
-              <button type="button" class="btn btn-danger data-doc-id="${doc.id + " " + userID}" >Disable</button>
+              <button type="button" class="btn btn-primary unflagBtn" data-doc-id="${doc.id}">Unflag</button>
+              <button type="button" class="btn btn-danger disableBtn" data-doc-id="${doc.id + " " + userID}" >Disable</button>
             </td>
           </tr>
     `
@@ -195,43 +202,33 @@ async function getSinglePost(docID) {
 }
 
 function setPostModal(doc) {
-  console.log(doc.data().username)
-  console.log("Reached")
-  viewPostModal.innerHTML = `
-    <div class="modal-dialog" role="document"
-      style="width: 30vw; height: 90vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <div class="modal-content"
-        style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
-        <button type="button" id="closeViewPostModal" class="closeViewPostModal modalCloseBtn">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="post" style="width: 90%; height: 90%; overflow: hidden; align-items: center; justify-content: center;">
-          <div class="header_content">
-            <img src="${doc.data().userImageSrc}" alt="" class="prof-pic" style="max-width: 100%; max-height: 100%;">
-            <h4>${doc.data().username}</h4>
-          </div>
-          <div class="post_caption">
-            <h6>${doc.data().caption}</h6>
-          </div>
-          <div class="info" style= "height: 30rem;">
-            <img src="${doc.data().imageSrc}" style="width: 100%; height: 100%; object-fit: contain;">
-          </div>
-        </div>
-      </div>
+  const postData = document.getElementById("postData");
+  postData.innerHTML = `
+    <div class="header_content">
+      <img src="${doc.data().userImageSrc}" alt="" class="prof-pic" style="max-width: 100%; max-height: 100%;">
+      <h4>${doc.data().username}</h4>
     </div>
-  </div>`
+    <div class="post_caption">
+      <h6>${doc.data().caption}</h6>
+    </div>
+    <div class="info" style="height: 30rem;">
+      <img src="${doc.data().imageSrc}" style="width: 100%; height: 100%; object-fit: contain;">
+    </div>
+  `;
 }
+
 
 
 // //Event Listeners
 function addUnflagButtonEventListener() {
-  let unFlagBtn = document.getElementsByClassName("unFlagBtn");
+  let unFlagBtn = document.getElementsByClassName("unflagBtn");
   removeAllListenersFromClass(unFlagBtn);
   for (let index = 0; index < unFlagBtn.length; index++) {
     const element = unFlagBtn[index];
     element.addEventListener("click", function (e) {
-      console.log(element.parentNode.dataset.docId);
-      toastMessage("Post has been disabled");
+      console.log(element.dataset.docId);
+      removeFlagMomentsPost(element.dataset.docId)
+      toastMessage("Post has been unflagged.");
     });
   }
 }
@@ -242,26 +239,34 @@ function disablePostButtonEventListener() {
   for (let index = 0; index < disableBtn.length; index++) {
     const element = disableBtn[index];
     element.addEventListener("click", function (e) {
-      console.log(element.parentNode.dataset.docId);
+      console.log(element.dataset.docId);
+      disableMomentsPost(element.dataset.docId)
       toastMessage("Post has been disabled");
     });
   }
 }
 
-async function flagMomentsPost(docId,userID) {
+async function removeFlagMomentsPost(docId) {
   const momentRef = doc(db, "moments", docId);
-  const userRef = doc(db,"users",userID)
   console.log(docId);
-    await updateDoc(momentRef, {
-      isReported:deleteField(),
-      isDisabled: true,
-      disableStrikeCount: increment(1),
-    });
     await updateDoc(momentRef, {
       isReported:deleteField(),
       reports: deleteField(),
       reportsCount: deleteField(),
     });
+}
+async function disableMomentsPost(docID) {
+  let IDs = docID.split(' ');
+  const momentRef = doc(db, "moments", IDs[0]);
+  const userRef = doc(db, "users", IDs[1])
+  await updateDoc(momentRef, {
+      isReported:deleteField(),
+      isDisabled: true,
+      disableStrikeCount: increment(1),
+  });
+  await updateDoc(userRef,{
+    reportsCount: increment(1)
+  })
 }
 
 function toastMessage(message) {
