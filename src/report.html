@@ -96,8 +96,8 @@
               <button type="button" class="btn btn-secondary btn-sm openPostModal" data-doc-id=""><i class="bx bx-book-open bx-sm"></i></button>
             </td>
             <td>
-              <i class='bx bxs-flag-alt' id="flagBtn"></i>
-              <i class='bx bx-undo' id="undoBtn"></i>
+              <i class='bx bxs-flag-alt' id="disableBtn"></i>
+              <i class='bx bx-undo' id="unflagBtn"></i>
             </td>
           </tr>
         </tbody>
@@ -139,6 +139,51 @@
     </div>
   </div>
   
+  <div class="modal fade show" id="confirmDeleteModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog" role="document"
+      style="width: 40vw; height: 40vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <div class="modal-content"
+        style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+        <button type="button" id="closeConfirmDeleteBtn" class="modalCloseBtn">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete?</h5>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to disable this post?
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="confirmDeleteCancelBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" id="confirmDeleteBtn"class="btn btn-danger deleteBtnFinal">Delete</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade show" id="confirmUnflagModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog" role="document"
+      style="width: 40vw; height: 40vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <div class="modal-content"
+        style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+        <button type="button" id="closeConfirmUnflagBtn" class="modalCloseBtn">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Unflag?</h5>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to unflag this post?
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="confirmUnflagCancelBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" id="confirmUnflagBtn"class="btn btn-success deleteBtnFinal">Unflag</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

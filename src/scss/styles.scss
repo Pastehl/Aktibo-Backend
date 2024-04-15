@@ -1573,15 +1573,15 @@ modal exercise .modal {
     height: auto;
   }
 
-  #flagBtn{
+  #disableBtn{
     color: red;
   }
 
-  #undoBtn{
+  #unflagBtn{
     color: green;
   }
 
-  #flagBtn, #undoBtn{
+  #disableBtn, #unflagBtn{
     font-size: 2rem;
     margin: 0.5rem;
     cursor: pointer;
