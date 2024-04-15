@@ -76,14 +76,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const viewPostModal = document.getElementById('viewPostModal');
   const modalInstance = new bootstrap.Modal(viewPostModal);
 
-  const opemConfirmDeleteModal = document.getElementById('confirmDeleteModal');
-  const modalInstance2 = new bootstrap.Modal(opemConfirmDeleteModal);
+  const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+  const modalInstance2 = new bootstrap.Modal(confirmDeleteModal);
 
+  const closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn');
+  const flagBtn = document.getElementById('flagBtn');
   
-  var closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn');
   // Get all elements with the class 'openPostModal'
   const openPostButtons = document.querySelectorAll('.openPostModal');
-  const openFlagButtons = document.querySelectorAll('.flagBtn');
+  
 
   // Iterate through each button and attach a click event listener
   openPostButtons.forEach(function(button) {
@@ -101,54 +102,42 @@ document.addEventListener('DOMContentLoaded', function() {
     modalInstance.hide();
   });
 
-  openFlagButtons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      // Get the modal element by its id
-      
-
-      // Use Bootstrap's modal API to show the modal
-      
-      modalInstance2.show();
-    });
+  flagBtn.addEventListener('click', function() {
+    modalInstance2.show();
   });
 
-  closeViewPostModal.addEventListener("click", function () {
-    modalInstance.hide();
-  });
-
-  closeConfirmDeleteBtn.addEventListener('click', function(){
-    confirmDeleteModal.hide();
-  });
-
-  confirmDeleteCancelBtn.addEventListener('click', function(){
-    confirmDeleteModal.hide();
+  closeConfirmDeleteBtn.addEventListener('click', function () {
+    modalInstance2.hide();
   });
 
 
 
 
-  function addConfirmDeleteEventListener() {
-    var deleteBtn = document.getElementsByClassName('deleteBtn')
-    removeAllListenersFromClass(deleteBtn)
-    for (let index = 0; index < deleteBtn.length; index++) {
-      const element = deleteBtn[index];
-      element.addEventListener('click', function (e) {
-        showConfirmDeleteModal(element.dataset.docId)
+
+
+
+  // function addConfirmDeleteEventListener() {
+  //   var deleteBtn = document.getElementsByClassName('deleteBtn')
+  //   removeAllListenersFromClass(deleteBtn)
+  //   for (let index = 0; index < deleteBtn.length; index++) {
+  //     const element = deleteBtn[index];
+  //     element.addEventListener('click', function (e) {
+  //       showConfirmDeleteModal(element.dataset.docId)
   
-      });
-    }
-  }
-  function addConfirmDeleteButtonEventListener(){
-    var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
-    removeAllListenersFromClass(deleteBtn)
-    for (let index = 0; index < deleteBtn.length; index++) {
-      const element = deleteBtn[index];
-      element.addEventListener('click', function (e) {
-        //do this when clicked
-        deleteExerciseRecord(element.dataset.docId)
-      });
-    }
-  }
+  //     });
+  //   }
+  // }
+  // function addConfirmDeleteButtonEventListener(){
+  //   var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
+  //   removeAllListenersFromClass(deleteBtn)
+  //   for (let index = 0; index < deleteBtn.length; index++) {
+  //     const element = deleteBtn[index];
+  //     element.addEventListener('click', function (e) {
+  //       //do this when clicked
+  //       deleteExerciseRecord(element.dataset.docId)
+  //     });
+  //   }
+  // }
 });
 
 
