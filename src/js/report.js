@@ -70,93 +70,57 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     });
 });
 
-//VIEW POST MODAL DRAFT
-// Wait for the document to load before attaching event listeners
-document.addEventListener('DOMContentLoaded', function() {
-  const viewPostModal = document.getElementById('viewPostModal');
-  const modalInstance = new bootstrap.Modal(viewPostModal);
+//
+const viewPostModal = document.getElementById('viewPostModal');
+const modalInstance = new bootstrap.Modal(viewPostModal);
 
-  const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-  const modalInstance2 = new bootstrap.Modal(confirmDeleteModal);
+const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+const modalInstance2 = new bootstrap.Modal(confirmDeleteModal);
 
-  const confirmUnflagModal = document.getElementById('confirmUnflagModal');
-  const modalInstance3 = new bootstrap.Modal(confirmUnflagModal);
+const confirmUnflagModal = document.getElementById('confirmUnflagModal');
+const modalInstance3 = new bootstrap.Modal(confirmUnflagModal);
 
-  const closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn');
-  const closeConfirmUnflagBtn = document.getElementById('closeConfirmUnflagBtn');
-  const confirmUnflagCancelBtn = document.getElementById('confirmUnflagCancelBtn');
+const closeConfirmDeleteBtn = document.getElementById('closeConfirmDeleteBtn');
+const closeConfirmUnflagBtn = document.getElementById('closeConfirmUnflagBtn');
+const confirmUnflagCancelBtn = document.getElementById('confirmUnflagCancelBtn');
 
-  const disableBtn = document.getElementById('disableBtn');
-  const unflagBtn = document.getElementById('unflagBtn');
-  
-  // Get all elements with the class 'openPostModal'
-  const openPostButtons = document.querySelectorAll('.openPostModal');
-  
-
-  // Iterate through each button and attach a click event listener
-  openPostButtons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      modalInstance.show();
-    });
-  });
-
-  closeViewPostModal.addEventListener("click", function () {
-    modalInstance.hide();
-  });
-
-  disableBtn.addEventListener('click', function() {
-    modalInstance2.show();
-  });
-
-  closeConfirmDeleteBtn.addEventListener('click', function () {
-    modalInstance2.hide();
-  });
-
-  confirmDeleteModal.addEventListener('click', function(){
-    modalInstance2.hide()
-  });
-
-  unflagBtn.addEventListener('click', function() {
-    modalInstance3.show();
-  });
-
-  closeConfirmUnflagBtn.addEventListener('click', function () {
-    modalInstance3.hide();
-  });
-
-  confirmUnflagCancelBtn.addEventListener('click', function(){
-    modalInstance3.hide()
-  });
-
-
-
-
-
-
-
-  // function addConfirmDeleteEventListener() {
-  //   var deleteBtn = document.getElementsByClassName('deleteBtn')
-  //   removeAllListenersFromClass(deleteBtn)
-  //   for (let index = 0; index < deleteBtn.length; index++) {
-  //     const element = deleteBtn[index];
-  //     element.addEventListener('click', function (e) {
-  //       showConfirmDeleteModal(element.dataset.docId)
-  
-  //     });
-  //   }
-  // }
-  // function addConfirmDeleteButtonEventListener(){
-  //   var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
-  //   removeAllListenersFromClass(deleteBtn)
-  //   for (let index = 0; index < deleteBtn.length; index++) {
-  //     const element = deleteBtn[index];
-  //     element.addEventListener('click', function (e) {
-  //       //do this when clicked
-  //       deleteExerciseRecord(element.dataset.docId)
-  //     });
-  //   }
-  // }
+closeConfirmDeleteBtn.addEventListener('click', function () {
+  modalInstance2.hide();
 });
+
+confirmDeleteModal.addEventListener('click', function(){
+  modalInstance2.hide()
+});
+
+function addConfirmDeleteEventListener() {
+  var deleteBtn = document.getElementsByClassName('deleteBtn')
+  removeAllListenersFromClass(deleteBtn)
+  for (let index = 0; index < deleteBtn.length; index++) {
+    const element = deleteBtn[index];
+    element.addEventListener('click', function (e) {
+      //showConfirmDeleteModal(element.dataset.docId)
+      console.log("confirm pre-Delete clicked")
+    });
+  }
+}
+function addConfirmDeleteButtonEventListener(){
+  var deleteBtn = document.getElementsByClassName('deleteBtnFinal')
+  removeAllListenersFromClass(deleteBtn)
+  for (let index = 0; index < deleteBtn.length; index++) {
+    const element = deleteBtn[index];
+    element.addEventListener('click', function (e) {
+      //do this when clicked
+      console.log("confirm Delete clicked")
+      //deleteExerciseRecord(element.dataset.docId)
+    });
+  }
+}
+function removeAllListenersFromClass(elements) {
+  Array.from(elements).forEach(function (element) {
+    var clonedElement = element.cloneNode(true);
+    element.parentNode.replaceChild(clonedElement, element);
+  });
+}
 
 
 
@@ -203,195 +167,114 @@ function addToTablePosts(doc,counter) {
             </td>
           </tr>
     `
+  addOpenViewModalEventListener()
+  addUnflagButtonEventListener()
+  disablePostButtonEventListener()
 }
 getReportedPosts()
 
-// var main_content = document.getElementById("main_content");
-// main_content.innerHTML = "";
-// let idCounters = 1;
-// let momentsRef = collection(db, "moments");
-// const q = query(momentsRef, orderBy("datePosted", "desc"));
 
-// async function showAllMoments(doc, currentPostNumber) {
-//   // if(doc.data().){
+function addOpenViewModalEventListener() {
+  var openPostModal = document.getElementsByClassName("openPostModal");
+  removeAllListenersFromClass(openPostModal);
 
-//   // }
-//   var usrName = doc.data().username;
-//   var userImageSrc = doc.data().userImageSrc;
-//   var imageSrc = doc.data().imageSrc;
-//   var caption = doc.data().caption;
-//   var likeCount = doc.data().likes;
-//   var commentCount;
-//   let likeBtnId = "likeBtn" + currentPostNumber;
-//   let commentBtnId = "commentBtn" + currentPostNumber;
-//   let commentSectionId = "commentSectionBoxId" + currentPostNumber;
-//   let commenSectionBtn = "formBtnId" + currentPostNumber;
-//   let textAreaId = "textAreaId" + currentPostNumber;
-//   let postSpanLikeId = "postSpanId" + currentPostNumber;
-//   let postSpanCommentId = "postSpanCommentId" + currentPostNumber;
-//   let isReported = doc.data().isReported;
-//   if (isReported == false || isReported == undefined || isReported == null) {
-//     return;
-//   }
+  for (let index = 0; index < openPostModal.length; index++) {
+    const element = openPostModal[index];
+    element.addEventListener("click", function (e) {
+      getSinglePost(element.dataset.docId);
+      modalInstance.show();
+    });
+  }
+}
 
-//   if (
-//     (commentCount =
-//       doc.data().commentsLlist == null ||
-//       (commentCount == doc.data().commentsLlist) == undefined)
-//   ) {
-//     commentCount = "0";
-//   }
+async function getSinglePost(docID) {
+  console.log(docID)
+  let reportedRef = doc(db, "moments",docID);
+  let docRef = await getDoc(reportedRef)
+  setPostModal(docRef)
+}
 
-//   let docId = doc.id;
-//   if (!isNaN(likeCount) == false) {
-//     likeCount = "";
-//   }
-//   if (!isNaN(commentCount) == false) {
-//     commentCount = "";
-//     console.log(commentCount);
-//   }
-//   let imageHTML = "";
-//   if (imageSrc != null && imageSrc != "") {
-//     imageHTML = `<img src="` + imageSrc + `">`;
-//   }
+function setPostModal(doc) {
+  console.log(doc.data().username)
+  console.log("Reached")
+  viewPostModal.innerHTML = `
+    <div class="modal-dialog" role="document"
+      style="width: 30vw; height: 90vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <div class="modal-content"
+        style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+        <button type="button" id="closeViewPostModal" class="closeViewPostModal modalCloseBtn">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="post" style="width: 90%; height: 90%; overflow: hidden; align-items: center; justify-content: center;">
+          <div class="header_content">
+            <img src="${doc.data().userImageSrc}" alt="" class="prof-pic" style="max-width: 100%; max-height: 100%;">
+            <h4>${doc.data().username}</h4>
+          </div>
+          <div class="post_caption">
+            <h6>${doc.data().caption}</h6>
+          </div>
+          <div class="info" style= "height: 30rem;">
+            <img src="${doc.data().imageSrc}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`
+}
 
-//   main_content.innerHTML +=
-//     `
-//     <div class = "post">
-//               <div class="header_content d-flex justify-content-end">
-//                 <img src="` +
-//     userImageSrc +
-//     `" alt="" class="prof-pic">
-//                 <h4 class="expand-width">` +
-//     usrName +
-//     `</h4>
-//                  <div class="dropdown-container" id="dropdown-container">
-//                       <i class='bx bx-dots-vertical bx-sm' ></i>
-//                   </div>
-//                   <div class="dropdown-content" id="dropdown-content">
-//                       <ul>
-//                           <div data-doc-id ="` +
-//     docId +
-//     `">
-//                           <li class = "disableBtn"> Disable </li>
-//                           <li class="unflagBtn"> Unflag Post </li>
-//                           </div>
-//                       </ul>
-//                   </div>
-//               </div>
-//               <div class="post_caption">
-//                   <h6>` +
-//     caption +
-//     `</h6>
-//               </div>
-//               <div class="info">
-//                 ` +
-//     imageHTML +
-//     `
-//               </div>
-//           </div>
-//     `;
-// }
 
-// const docSnap = await getDocs(q);
-
-// async function showFlaggedPosts() {
-  // docSnap.forEach((doc) => {
-  //   const data = doc.data();
-  //   showAllMoments(doc, idCounters);
-  //   idCounters++;
-  //   // move show ALL Moments here
-  //   console.log(doc.id);
-  // });
-// }
-
-// showFlaggedPosts();
-// addOpenReportButtonEventListeners();
-// disablePostButtonEventListener();
-// unflagPostButtonEventListener();
 // //Event Listeners
-// function addOpenReportButtonEventListeners() {
-//   let reportBtn = document.getElementsByClassName("bx-dots-vertical");
-//   for (let index = 0; index < reportBtn.length; index++) {
-//     const element = reportBtn[index];
-//     element.addEventListener("click", function (e) {
-//       console.log("Report Button Clicked");
-//       console.log(element);
-//       const dropDownContentContainerDiv = element.parentNode.nextElementSibling;
-//       if (dropDownContentContainerDiv.style.display === "block") {
-//         console.log("Close");
-//         dropDownContentContainerDiv.style.display = "none";
-//       } else {
-//         console.log("Open");
-//         dropDownContentContainerDiv.style.display = "block";
-//       }
-//     });
-//   }
-// }
+function addUnflagButtonEventListener() {
+  let unFlagBtn = document.getElementsByClassName("unFlagBtn");
+  removeAllListenersFromClass(unFlagBtn);
+  for (let index = 0; index < unFlagBtn.length; index++) {
+    const element = unFlagBtn[index];
+    element.addEventListener("click", function (e) {
+      console.log(element.parentNode.dataset.docId);
+      toastMessage("Post has been disabled");
+    });
+  }
+}
 
-// function disablePostButtonEventListener() {
-//   let reportBtn = document.getElementsByClassName("disableBtn");
-//   for (let index = 0; index < reportBtn.length; index++) {
-//     const element = reportBtn[index];
-//     element.addEventListener("click", function (e) {
-//       console.log(element.parentNode.dataset.docId);
-//       flagMomentsPost(
-//         element.parentNode.dataset.docId,
-//         element.parentNode.parentNode,
-//         "disabled"
-//       );
-//       toastMessage("Post has been disabled");
-//     });
-//   }
-// }
-// function unflagPostButtonEventListener() {
-//   let reportBtn = document.getElementsByClassName("unflagBtn");
-//   for (let index = 0; index < reportBtn.length; index++) {
-//     const element = reportBtn[index];
-//     element.addEventListener("click", function (e) {
-//       console.log(element.parentNode.dataset.docId);
-//       flagMomentsPost(
-//         element.parentNode.dataset.docId,
-//         element.parentNode.parentNode,
-//         false
-//       );
-//       toastMessage("Flag tag has been removed.");
-//     });
-//   }
-// }
+function disablePostButtonEventListener() {
+  let disableBtn = document.getElementsByClassName("disableBtn");
+  removeAllListenersFromClass(disableBtn);
+  for (let index = 0; index < disableBtn.length; index++) {
+    const element = disableBtn[index];
+    element.addEventListener("click", function (e) {
+      console.log(element.parentNode.dataset.docId);
+      toastMessage("Post has been disabled");
+    });
+  }
+}
 
-// async function flagMomentsPost(docId, dropDownContentContainerDiv, status) {
-//   const momentRef = doc(db, "moments", docId);
-//   console.log(docId);
-//   if (status === "disabled") {
-//     status = true;
-//     await updateDoc(momentRef, {
-//       isReported:deleteField(),
-//       isDisabled: status,
-//       disableStrikeCount: increment(1),
-//     });
-//   } else {
-//     await updateDoc(momentRef, {
-//       isReported:deleteField(),
-//       reports: deleteField(),
-//       reportsCount: deleteField(),
-//     });
-//   }
-//   const parentToRemove = dropDownContentContainerDiv.parentNode.parentNode.parentNode;
-//   parentToRemove.parentNode.removeChild(parentToRemove);
-// }
+async function flagMomentsPost(docId,userID) {
+  const momentRef = doc(db, "moments", docId);
+  const userRef = doc(db,"users",userID)
+  console.log(docId);
+    await updateDoc(momentRef, {
+      isReported:deleteField(),
+      isDisabled: true,
+      disableStrikeCount: increment(1),
+    });
+    await updateDoc(momentRef, {
+      isReported:deleteField(),
+      reports: deleteField(),
+      reportsCount: deleteField(),
+    });
+}
 
-// function toastMessage(message) {
-//   // Get the toast element by its ID
-//   const toastElement = document.getElementById("liveToast");
+function toastMessage(message) {
+  // Get the toast element by its ID
+  const toastElement = document.getElementById("liveToast");
 
-//   // Get the .toast-body element within the toast
-//   const toastBodyElement = toastElement.querySelector(".toast-body");
+  // Get the .toast-body element within the toast
+  const toastBodyElement = toastElement.querySelector(".toast-body");
 
-//   // Update the content of the .toast-body element
-//   toastBodyElement.textContent = message;
+  // Update the content of the .toast-body element
+  toastBodyElement.textContent = message;
 
-//   // Show the toast
-//   const toast = new bootstrap.Toast(toastElement);
-//   toast.show();
-// }
+  // Show the toast
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+}
