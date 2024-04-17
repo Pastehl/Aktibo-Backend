@@ -227,7 +227,7 @@ function addUnflagButtonEventListener() {
     const element = unFlagBtn[index];
     element.addEventListener("click", function (e) {
       console.log(element.dataset.docId);
-      removeFlagMomentsPost(element.dataset.docId)
+      removeFlagMomentsPost(element.dataset.docId,element.parentNode.parentNode)
       toastMessage("Post has been unflagged.");
     });
   }
@@ -246,7 +246,7 @@ function disablePostButtonEventListener() {
   }
 }
 
-async function removeFlagMomentsPost(docId) {
+async function removeFlagMomentsPost(docId,row) {
   const momentRef = doc(db, "moments", docId);
   console.log(docId);
     await updateDoc(momentRef, {
@@ -254,6 +254,7 @@ async function removeFlagMomentsPost(docId) {
       reports: deleteField(),
       reportsCount: deleteField(),
     });
+  row.parentNode.removeChild(row);
 }
 async function disableMomentsPost(docID) {
   let IDs = docID.split(' ');

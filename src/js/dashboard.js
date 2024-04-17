@@ -143,8 +143,8 @@ async function getUserRecord() {
       // User is signed in
       const uid = user.uid;
       const userRef = collection(db, "users");
-      //const docRef = await getDoc(doc(userRef, uid));
-      const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+      const docRef = await getDoc(doc(userRef, uid));
+      //const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
       setUserData(docRef);
     }
   });
@@ -166,12 +166,12 @@ function setUserData(docSnap) {
 
   let steps = docSnap.data().totalSteps;
   if (steps == undefined) {
-    steps = 1;
+    steps = 0;
   }
 
   let caloriesBurned = docSnap.data().totalCaloriesBurned;
   if (caloriesBurned == undefined) {
-    caloriesBurned = 1;
+    caloriesBurned = 0;
   }
 
   let dailyStepsCount = docSnap.data().dailyStepCounts;
@@ -190,7 +190,9 @@ function setUserData(docSnap) {
   // Call setChartData to update the doughnut charts
   // Update doughnut chart for steps
   const stepsChartCtx = ctx; // Assuming myChart is the ID of the doughnut chart for steps
-
+  if (maxValuesMacros[0] == 0) {
+    maxValuesMacros[0] = 2000
+  }
   setChartData(
     stepsChartCtx,
     [steps, 10000 - steps],
@@ -749,7 +751,7 @@ function getWeekStepData(data) {
 
 function getWeekWeightData(data) {
   if (data == undefined) {
-    let val = [1, 1, 1, 1, 1, 1, 1];
+    let val = [0, 0, 0, 0, 0, 0, 0];
     return val;
   }
 
@@ -870,7 +872,7 @@ function adjustArrayForWeekdays(array) {
 
 function getTodayMealData(mealRecords) {
   if (mealRecords == undefined) {
-    return [100.0, 10.0, 10.0, 10.0];
+    return [0,0,0,0];
   }
   // Get today's date
   let today = new Date();

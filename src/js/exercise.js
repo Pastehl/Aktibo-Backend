@@ -368,7 +368,6 @@ function validateExercise() {
 
   //Video Validation
   var fileInput = document.getElementById("video");
-  var UploadedFileState = document.getElementById("fileUploadState").style.display ;
   // Set the accept attribute to allow only .mp4 files
   fileInput.accept = ".mp4";
   var file = fileInput.files[0]; // Get the selected file
@@ -378,9 +377,7 @@ function validateExercise() {
     showToast("Please select a file.");
     return false;
   }
-  if (UploadedFileState != 'inline') {
-    return false
-  }
+
 
   return true;
 }
@@ -396,8 +393,7 @@ function addFileUploadStateEventListener() {
     if (
       file != undefined && 
       file.type === "video/mp4" &&
-      file.size <= 7 * 1024 * 1024 &&
-      file.length > 0
+      file.size <= 7 * 1024 * 1024
     ) {
     } else {
       // Optionally clear the file input to prevent an invalid file from being selected
