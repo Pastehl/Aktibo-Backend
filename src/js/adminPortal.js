@@ -212,24 +212,8 @@ async function showConfirmResetStreakModal(docId) {
   const modalBody = modal.querySelector('.modal-body');
   const confirmResetBtn = document.getElementById('confirmResetBtn');
 
-  // Get the document data
-  // const docRef = doc(db, "exercises", docId);
-  // const docSnap = await getDoc(docRef);
+  confirmResetBtn.setAttribute('data-doc-id', docId);
 
-  // Clear previous content
-  // modalBody.innerHTML = "";
-
-  // Create the modal body text
-  // const paragraph = document.createElement('h6');
-  // paragraph.textContent = "Are you sure you want to delete '" + docSnap.data().name + "'?";
-
-  // Append the paragraph to the modal body
-  // modalBody.appendChild(paragraph);
-
-  //Set Function call when deleted
-  // confirmDeleteBtn.setAttribute('data-doc-id', docId);
-
-  // Show the modal
   confirmResetStreakModal.show()
 }
 
