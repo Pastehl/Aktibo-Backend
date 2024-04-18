@@ -927,7 +927,7 @@ async function showConfirmDeleteModal(docId) {
   modalBody.innerHTML = "";
 
   // Create the modal body text
-  const paragraph = document.createElement('p');
+  const paragraph = document.createElement('h6');
   paragraph.textContent = "Are you sure you want to delete '" + docSnap.data().name + "'?";
 
   // Append the paragraph to the modal body

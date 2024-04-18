@@ -137,6 +137,7 @@ async function getUsers() {
     console.log(userId)
   });
   userListContent.innerHTML = userListHTML;
+  addConfirmResetEventListener()
   addResetButtonEventListener()
 }
 
@@ -172,12 +173,25 @@ function removeAllListenersFromClass(elements) {
     element.parentNode.replaceChild(clonedElement, element);
   });
 }
-function addResetButtonEventListener() {
-  console.log("Running ResetBTN Loop")
-  let resetBtn = document.getElementsByClassName("resetBtn");
-  removeAllListenersFromClass(resetBtn);
+
+function addConfirmResetEventListener() {
+  var resetBtn = document.getElementsByClassName('resetBtn')
+  removeAllListenersFromClass(resetBtn)
   for (let index = 0; index < resetBtn.length; index++) {
     const element = resetBtn[index];
+    element.addEventListener('click', function (e) {
+      showConfirmResetStreakModal(element.dataset.docId)
+    });
+  }
+}
+
+
+function addResetButtonEventListener() {
+  console.log("Running ResetBTN Loop")
+  let resetBtnFinal = document.getElementsByClassName("resetBtnFinal");
+  removeAllListenersFromClass(resetBtnFinal);
+  for (let index = 0; index < resetBtnFinal.length; index++) {
+    const element = resetBtnFinal[index];
     element.addEventListener("click", function (e) {
       console.log(element.dataset.docId);
       resetStrikeCount(element.dataset.docId)
@@ -185,6 +199,45 @@ function addResetButtonEventListener() {
     });
   }
 }
+
+//Modal
+var confirmResetStreakModal = new bootstrap.Modal('#confirmResetStreakModal');
+
+
+
+
+async function showConfirmResetStreakModal(docId) {
+  // Get the modal and its body element
+  const modal = document.getElementById('confirmResetStreakModal');
+  const modalBody = modal.querySelector('.modal-body');
+  const confirmResetBtn = document.getElementById('confirmResetBtn');
+
+  // Get the document data
+  // const docRef = doc(db, "exercises", docId);
+  // const docSnap = await getDoc(docRef);
+
+  // Clear previous content
+  // modalBody.innerHTML = "";
+
+  // Create the modal body text
+  // const paragraph = document.createElement('h6');
+  // paragraph.textContent = "Are you sure you want to delete '" + docSnap.data().name + "'?";
+
+  // Append the paragraph to the modal body
+  // modalBody.appendChild(paragraph);
+
+  //Set Function call when deleted
+  // confirmDeleteBtn.setAttribute('data-doc-id', docId);
+
+  // Show the modal
+  confirmResetStreakModal.show()
+}
+
+
+
+
+
+
 
 async function resetStrikeCount(docID){
   const userRef = doc(db, "users", docID)
