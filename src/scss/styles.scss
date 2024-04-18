@@ -441,13 +441,30 @@ header {
     transition: .5s;
 }
 
-.bxs-upvote {
-    color:#65a054
-}
-.bxs-downvote{
-    color: red
+.button-number{
+    margin-left: 1rem;
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: 0.3rem;
+    font-size: large;
+    transition: .5s;
 }
 
+.bxs-upvote {
+    color:#65a054;
+}
+.bxs-downvote{
+    color: red;
+}
+.bx-upvote:hover {
+    color: #65a054;
+    transform: scale(1.15);
+}
+
+.bx-downvote:hover {
+    color: red;
+    transform: scale(1.15);
+}
 
 .bx-heart:hover {
     color: red;
@@ -1506,12 +1523,12 @@ modal exercise .modal {
 
 
 .barcontainer {
-    margin: auto;
+    margin: 0.5rem auto;
     width: 72%;
     height: 15%;
     border-radius: 1rem;
-    background-color: lightgrey;
     position: relative;
+
   }
   
   .bar {
@@ -1526,6 +1543,8 @@ modal exercise .modal {
     height: 100%;
     float: left;
   }
+
+  
   
   .blue {
     background-color: #006E90;
@@ -1565,7 +1584,8 @@ modal exercise .modal {
 
   .bmip {
     margin-top: 0.4rem;
-    font-size: 0.7rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
   }
 
   .food_record, .generate_reports{
@@ -1586,3 +1606,4 @@ modal exercise .modal {
     margin: 0.5rem;
     cursor: pointer;
 }
+
