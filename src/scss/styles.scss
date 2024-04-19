@@ -58,7 +58,6 @@ ul.nav li.active a {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    /* Set the container height to the viewport height */
 }
 
 .header {
@@ -67,17 +66,12 @@ ul.nav li.active a {
 }
 
 .main_content {
-    //   flex: 1; /* This makes the main_content div expand to fill the remaining free space */
-    //   background-color: #F0F7EE;
-    //   padding: 10px;
     margin-left: 280px;
-    /* Adjust this margin to make room for the sidebar */
     padding: 1rem 20px 20px;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     height: 100%;
-    // padding-top: 1rem;
     text-align: center;
     min-width: 25rem;
     font-size: 0.7rem;
@@ -100,7 +94,6 @@ ul.nav li.active a {
 }
 
 .post_caption>h6 {
-    //min, actual,
     font-size: clamp(0.7rem, 1.5vw, 1.2rem);
     font-weight: 600;
 }
@@ -242,7 +235,6 @@ ul.nav li.active a {
 
 header {
     background-color: #F0F7EE;
-    /* background-color:yellow; */
     padding: 0.1rem;
     text-align: center;
     font-size: 35px;
@@ -268,34 +260,21 @@ header {
     width: 280px;
     height: 100%;
     background-color: #333;
-    /* Change as needed */
     color: #fff;
-    /* Change as needed */
     overflow-y: auto;
 }
 
 /* Styling for the main content */
 #main_content {
-    // height: 100vh;
     margin-left: 280px;
-    /* Make sure it matches the sidebar width */
     padding: 20px;
 }
 
 /* Add some basic styling for the content area */
 .content {
     margin-left: 280px;
-    /* Make sure it matches the sidebar width */
     padding: 20px;
 }
-
-// .main_content {
-//     padding-top: 1rem;
-//     text-align: center;
-//     min-width: 25rem;
-//     font-size: 0.7rem;
-    
-// }
 
 .container-b {
     height: auto;
@@ -307,10 +286,8 @@ header {
 .post {
     width: 60%;
     margin: 0 auto 1rem;
-    // border-bottom: 0.02rem solid #000;
     background-color: #FFFFFB;
 
-    /* background-color:#fff; */
 }
 
 .exercises-container {
@@ -389,19 +366,16 @@ header {
 }
 
 .post_caption {
-    // height:2rem;
     box-sizing: border-box;
     text-align: left;
     width: 100%;
     padding: 0.4rem 0.6rem;
 
-    //break word into a new line if word is too long
     word-wrap: break-word;
 
 }
 
 .info {
-    // min-height: 1.5rem;
     margin: 0;
     overflow: hidden;
     padding: 0;
@@ -410,7 +384,6 @@ header {
 .info>img {
     object-fit: contain;
 
-    //take the lesser value of the two
     width: min(100%, 25rem);
 }
 
@@ -421,7 +394,6 @@ header {
     text-align: left;
     width: 100%;
     padding: 0.4rem 0.6rem;
-    /* background-color:; */
 }
 
 .bx-heart,
@@ -437,7 +409,6 @@ header {
     vertical-align: middle;
     font-size: xx-large;
     padding-top: 0.3rem;
-    /* background-color:; */
     transition: .5s;
 }
 
@@ -675,9 +646,7 @@ article:has(:hover, :focus) {
 
 .bx-send:hover {
     transform: scale(1.2);
-    /* Enlarge the icon on hover */
     animation: tada 0.5s infinite;
-    /* Apply the tada animation */
 }
 
 @keyframes tada {
@@ -721,13 +690,9 @@ article:has(:hover, :focus) {
 //ExerciseForms Styling
 .formPage {
     padding: 20px;
-    /* Add padding for spacing inside the box */
     border: 1px solid #000;
-    /* Add a border for the box */
     border-radius: 5px;
-    /* Add rounded corners to the box */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    /* Add a subtle shadow for depth */
     width: 80%;
     height: 80%;
 }
@@ -741,7 +706,6 @@ article:has(:hover, :focus) {
     height: 100vh;
     flex: 1;
     
-    // margin: 1px, 1px, 1px, 1px;
 }
 
 //modified grid-container
@@ -753,7 +717,6 @@ article:has(:hover, :focus) {
     height: 90vh;
     flex: 1;
     gap: 1em;
-    // margin: 1px, 1px, 1px, 1px;
 }
 
 .chart-container {
@@ -768,44 +731,26 @@ article:has(:hover, :focus) {
     border: 2px solid #63A91F;
 }
 
-//modified chart-container
 .chartt-container {
     display: flex;
     max-width: 100%;
     position: relative;
 
-    //top-bottom left-right
     margin: .5em .5em;
     padding: .5em .5em;
 
     align-items: center;
     justify-content: center;
     overflow: visible;
-    // border-radius: 25px;
-    // border: 2px solid #63A91F;
 }
 
 .chartt-container-buttons {
-    // display: flex;
-    // max-width: 100%;
-    // position: relative;
-
-    // //top-bottom left-right
-    // margin: .5em .5em;
-    // padding: .5em .5em;
-
-    // align-items: center;
-    // justify-content: center;
-    // overflow: visible;
-    // // border-radius: 25px;
-    // // border: 2px solid #63A91F;
     display: flex;
-    flex-direction: column; /* Ensure items stack vertically */
+    flex-direction: column; 
     max-width: 100%;
     position: relative;
-    margin: .5em .5em; /* Adjust margins as needed */
-    padding: .5em .5em; /* Adjust padding as needed */
-    // align-items: center;
+    margin: .5em .5em;
+    padding: .5em .5em;
      justify-content: center;
     overflow: hidden;
 }
@@ -842,15 +787,9 @@ article:has(:hover, :focus) {
 }
 
 .chart-containercal {
-    // display: inline-block;
     margin: 1.5em;
     padding: 1em;
-    // align-items: center;
-    // justify-content: center;
-    // position: relative;
-    // max-height: 100%;
-    // vertical-align: middle;
-    // padding: 5px 20px 10px 10px;
+
 }
 
 .chart-container2 {
@@ -915,10 +854,8 @@ article:has(:hover, :focus) {
     display: grid;
     justify-content: space-evenly;
     grid-template-columns: 50% 50%;
-    // margin: 10px 5px 5px 5px;
 }
 
-//style for div inside charts-1
 .charts-1 div {
     padding: .3em;
     height: 100%;
@@ -934,8 +871,7 @@ article:has(:hover, :focus) {
 }
 
 .charts-large {
-    // margin: 0 auto;
-    // clear: both;
+
     display: flex;
     align-items: center;
     height: 100%;
@@ -952,13 +888,11 @@ article:has(:hover, :focus) {
     align-items: center;
 }
 
-//add to class to all elements whose children elements are
-//in vertical direction
+
 .flex-column {
     flex-direction: column;
 }
 
-//add to class to add little extra padding
 .padding-one {
     padding: 1em;
 }
@@ -1062,7 +996,6 @@ article:has(:hover, :focus) {
     width: 150px;
 }
 
-// Styles For 3 Dots
 
 .more {
     cursor: pointer;
@@ -1141,25 +1074,16 @@ article:has(:hover, :focus) {
 
 
 modal exercise .modal {
-    // display: none; /* Hidden by default */
     position: fixed;
-    /* Stay in place */
     z-index: 2;
-    /* Sit on top */
     padding-top: 50px;
-    /* Location of the box */
     left: 0;
     top: 0;
     width: 100%;
-    /* Full width */
     height: 100%;
-    /* Full height */
     overflow: auto;
-    /* Enable scroll if needed */
     background-color: rgb(0, 0, 0);
-    /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
 }
 
 /* Modal Content */
@@ -1225,10 +1149,7 @@ modal exercise .modal {
     color: white;
 }
 
-// .closeVideoBtn span{
-//     border:none;
-//     background-color: black;
-// }
+
 
 .row {
     display: flex;
@@ -1356,9 +1277,6 @@ modal exercise .modal {
 }
 
 .details {
-    // padding: 5px;
-    // display: flex;
-    // justify-content: flex-end;
 
     display: flex;
     justify-content: space-between;
@@ -1444,11 +1362,6 @@ modal exercise .modal {
     margin: 0;
 }
 
-//change color of calendar event
-
-// .fc-daygrid-day-events{
-//     background-color: #63A91F;
-// }
 
 .fc-daygrid-day-events{
     font-size: 1.3em;
