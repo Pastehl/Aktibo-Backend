@@ -125,17 +125,32 @@ window.addEventListener("scroll", async function () {
 });
 
 // get data from firestore
-let userPostRef = doc(db, "users", "0y9Kkgd303QrsKSuXzKvqG2DI4E2");
-const userRef = await getDoc(userPostRef);
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    let userPostRef = doc(db, "users", user.uid);
+    getDoc(userPostRef)
+      .then((doc) => {
+        if (doc.exists()) {
+          let posts = doc.data().posts;
+          getMomentsData(posts)
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  }
+});
 
-let lastVisible; // last loaded post
-getMomentsData(5); // first shown posts
-let hasNotShownLastPostToast = true; // for last post Toast message
 
-async function getMomentsData(amount) {
+
+
+
+
+async function getMomentsData(posts) {
   // Check if the userRef contains posts data
-  if (userRef.exists() && userRef.data().posts) {
-    const posts = userRef.data().posts;
 
     // Fetch moments for each momentId
     for (const post of posts) {
@@ -155,10 +170,7 @@ async function getMomentsData(amount) {
         console.log(`Moment with ID ${post["momentID"]} not found`);
       }
     }
-  } else {
-    console.log("User has no posts data");
   }
-}
 
 function toastMessage(message) {
   const toastElement = document.getElementById("liveToast");

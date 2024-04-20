@@ -403,13 +403,11 @@ header {
 .bxs-downvote,
 .bxs-heart,
 .bx-comment-detail {
-    cursor: pointer;
     margin-left: 1rem;
     display: inline-block;
     vertical-align: middle;
     font-size: xx-large;
     padding-top: 0.3rem;
-    transition: .5s;
 }
 
 .button-number{
@@ -450,10 +448,6 @@ header {
     margin-left: 5rem;
 }
 
-.bx-comment-detail:hover {
-    color: #63A91F;
-    transform: scale(1.15);
-}
 
 .containerB {
     background-color: blue;

@@ -195,7 +195,7 @@ function addResetButtonEventListener() {
     element.addEventListener("click", function (e) {
       console.log(element.dataset.docId);
       resetStrikeCount(element.dataset.docId)
-      toastMessage("Post has been disabled");
+      toastMessage("Strikes has been reset");
     });
   }
 }
