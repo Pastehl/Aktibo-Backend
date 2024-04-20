@@ -804,6 +804,10 @@ async function createNewExerciseDocument() {
     // Add a new document with the exercise data
     const docRef = await addDoc(collection(db, "exercises"), exerciseData);
     
+    setTimeout(function(){
+      window.location.reload();
+    }, 2000);
+
     showToast("Exercise Successfully Created.");
   } catch (error) {
     if (error.code === "already-exists") {
@@ -942,5 +946,9 @@ async function showConfirmDeleteModal(docId) {
 async function deleteExerciseRecord(docId){
   deleteDoc(doc(db, "exercises", docId));
   showToast("Exercise has been removed.");
+  setTimeout(function(){
+    window.location.reload();
+  }, 2000);
   confirmDeleteModal.hide();
 }
+
