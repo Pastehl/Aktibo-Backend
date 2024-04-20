@@ -135,7 +135,7 @@
         </div>
       </div>
       <!-- modal DonwloadBtn -->
-<div class="modal fade show" id="downloadChoiceModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+<!-- <div class="modal fade show" id="downloadChoiceModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
   <div class="modal-dialog" role="document"
     style="width: 30vw; height: 30vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="modal-content"
@@ -156,9 +156,32 @@
       </ol>
     </div>
   </div>
+</div> -->
+
+<div class="modal fade" id="downloadChoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Generate Report</h1>
+        <button type="button" id="closedownloadChoiceModalBtn" class="downloadChoiceModal modalCloseBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+      Select file format
+      </div>
+      <div class="modal-footer">
+        <button type="button" id ="downloadPDF" class="btn btn-danger" data-bs-dismiss="modal">PDF</button>
+        <button type="button" id ="downloadXLSX" class="btn btn-success">XLSX</button>
+      </div>
+    </div>
+  </div>
 </div>
-      <!-- modal recipe List -->
-<div class="modal fade show" id="viewRecipeModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+
+
+
+      <!-- old modal recipe List -->
+<!-- <div class="modal fade show" id="viewRecipeModal" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
   <div class="modal-dialog" role="document"
     style="width: 60vw; height: 60vh; max-width: 100%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="modal-content"
@@ -166,6 +189,54 @@
       <button type="button" id="viewRecipeModalBtn" class="viewRecipeModal modalCloseBtn">
         <span aria-hidden="true">&times;</span>
       </button>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="">
+            <div class="table-responsive">
+              <table class="table project-list-table table-nowrap align-middle table-hover" style="width: 97%;">
+                <thead class="table-dark">
+                  <tr class="row">
+                    <th class="col">Name</th>
+                    <th class="col">Calories</th>
+                    <th class="col">Carbohydrates</th>
+                    <th class="col">Protein</th>
+                    <th class="col">Fats</th>
+                    <th class="col">Instructions</th>
+                    <th class="col">Ingredients</th>
+                    <th class="col">Download PDF</th>
+                   
+                  </tr>
+                </thead>
+                <tbody id="recipeContent">
+                  <!-Recipe content goes here -->
+                  <!-- Example row: -->
+                  <!-- <tr>
+                    <td>Recipe Name</td>
+                    <td>Calories</td>
+                    <td>Carbohydrates</td>
+                    <td>Protein</td>
+                    <td>Fats</td>
+                    <td>Instructions</td>
+                  </tr> 
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="modal fade" id="viewRecipeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-width: 85rem;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Recipe</h1>
+        <button type="button" id="viewRecipeModalBtn" class="viewRecipeModal modalCloseBtn">
+        <span aria-hidden="true">&times;</span>
+      </div>
+      <div class="modal-body">
       <div class="row">
         <div class="col-lg-12">
           <div class="">
@@ -194,7 +265,7 @@
                     <td>Protein</td>
                     <td>Fats</td>
                     <td>Instructions</td>
-                  </tr> -->
+                  </tr>  -->
                 </tbody>
               </table>
             </div>
@@ -204,8 +275,6 @@
     </div>
   </div>
 </div>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
