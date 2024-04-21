@@ -195,7 +195,11 @@ function addResetButtonEventListener() {
     element.addEventListener("click", function (e) {
       console.log(element.dataset.docId);
       resetStrikeCount(element.dataset.docId)
+      confirmResetStreakModal.hide()
       toastMessage("Strikes has been reset");
+      setTimeout(function(){
+        window.location.reload();
+      }, 1500);
     });
   }
 }

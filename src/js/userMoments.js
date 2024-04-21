@@ -464,6 +464,9 @@ function addDeletePostButtonEventListener() {
     if (deletePostId && deletePostParent) {
       deletePost(deletePostId, deletePostParent);
       toastMessage("Post has been deleted.");
+      setTimeout(function(){
+        window.location.reload();
+      }, 1500);
     }
     deleteConfirmModal.hide(); // Close the modal after deletion
   });
@@ -728,4 +731,7 @@ async function updateCaptionFirebase(docId,caption) {
          caption: caption
   });
   toastMessage("Caption Updated Successfully")
+  setTimeout(function(){
+    window.location.reload();
+  }, 1500);
 }
