@@ -133,7 +133,13 @@ onAuthStateChanged(auth, (user) => {
       .then((doc) => {
         if (doc.exists()) {
           let posts = doc.data().posts;
-          getMomentsData(posts)
+          if (posts == undefined) {
+            noMomentsData()
+          }
+          else {
+            getMomentsData(posts)
+          }
+          
         } else {
           console.log("No such document!");
         }
@@ -147,7 +153,16 @@ onAuthStateChanged(auth, (user) => {
 
 
 
+function noMomentsData() {
 
+  main_content.innerHTML = 
+`<div class="post">
+  <div class="no-user-data">
+    <h1>You have 0 posts. You may create one on the mobile app.</h1>
+  </div>
+</div>
+`
+}
 
 async function getMomentsData(posts) {
   // Check if the userRef contains posts data
