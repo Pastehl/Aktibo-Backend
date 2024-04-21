@@ -109,7 +109,6 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     // User is signed in
     const uid = user.uid;
-    console.log(uid);
     const userRef = collection(db, "users");
     const docRef = await getDoc(doc(userRef, uid));
     if (!docRef.exists()) {
@@ -143,13 +142,14 @@ async function getUserRecord() {
       // User is signed in
       const uid = user.uid;
       const userRef = collection(db, "users");
-      const docRef = await getDoc(doc(userRef, uid));
-      //const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+      //const docRef = await getDoc(doc(userRef, uid));
+      const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
       setUserData(docRef);
     }
   });
 }
 function setUserData(docSnap) {
+  console.log(docSnap.id)
   let weight = docSnap.data().weight;
   let height = docSnap.data().height;
   let physicalActivityLevel = docSnap.data().physicalActivityLevel || 0;
@@ -180,7 +180,19 @@ function setUserData(docSnap) {
 
   //Get Extracted Values
   let weekStepData = getWeekStepData(dailyStepsCount); // Array Week Steps Count
-  let weekWeightData = getWeekWeightData(dailyWeightRecords); // Array Week Weight Count
+  // weekStepData = [      [
+  //       "Monday",
+  //       "Tuesday",
+  //       "Wednesday",
+  //       "Thursday",
+  //       "Friday",
+  //       "Saturday",
+  //       "Sunday",
+  //     ],[1,1,1,1,1,1]]
+  console.log("look steps",weekStepData)
+  //let weekWeightData = getWeekWeightData(dailyWeightRecords); // Array Week Weight Count
+  //console.log("look weight",weekWeightData)
+  let weekWeightData = [1,1,1,1,1,1,1]
   let macros = getTodayMealData(mealRecords); // Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
@@ -715,46 +727,105 @@ function getWeekStepData(data) {
   let steps = [];
 
   // Get current date
-  let currentDate = new Date();
-  // Calculate Monday of the current week
-  let monday = new Date(currentDate);
-  monday.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+let currentDate = new Date();
+
+let monday;
+
+switch (currentDate.getDay()) {
+  case 0: // Sunday
+    monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - 6); // Subtract 6 days to get Monday
+    break;
+  case 1: // Monday
+    monday = new Date(currentDate); // No need to adjust currentDate
+    break;
+  case 2: // Tuesday
+    monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - 1); // Subtract 1 day to get Monday
+    break;
+  case 3: // Wednesday
+    monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - 2); // Subtract 2 days to get Monday
+    break;
+  case 4: // Thursday
+    monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - 3); // Subtract 3 days to get Monday
+    break;
+  case 5: // Friday
+    monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - 4); // Subtract 4 days to get Monday
+    break;
+  case 6: // Saturday
+    monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - 5); // Subtract 5 days to get Monday
+    break;
+}
+
+console.log(monday); // Monday of the current week
+
+
   // Calculate Sunday of the current week
-  let sunday = new Date(currentDate);
-  sunday.setDate(currentDate.getDate() - currentDate.getDay() + 7);
+  let sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
 
   // Iterate over each day of the week
-  let currentDateIterator = new Date(monday);
-  while (currentDateIterator <= sunday) {
-    // Check if there is a corresponding entry in data for the current date
-    // console.log(currentDateIterator, "watch here");
-    let entry = data.find(
-      (item) =>
-        item.date.toDate().toDateString() == currentDateIterator.toDateString()
-    );
-    if (entry) {
-      // If entry exists, push steps into the steps array
-      steps.push(entry.steps);
-    } else {
-      // If no entry exists, push 0 steps for the current date
-      steps.push(0);
+  console.log(data, "srrrr")
+  let currentDay = monday;
+  let nextDateIterator = new Date(monday);
+  nextDateIterator.setDate(monday.getDate() + 1)
+// Loop through each day of the week
+while (currentDay <= sunday) {
+  currentDay.setHours(0, 0, 0, 0);
+  nextDateIterator.setHours(0, 0, 0, 0);
+  console.log("Loop Start");
+
+  // Flag to track if data is found for the current day
+  let found = false;
+
+  // Loop through each data point
+  for (let index = 0; index < data.length; index++) {
+    const element = data[index].date.toDate(); // Convert Firebase timestamp to JavaScript Date object
+    console.log(element, "ckckck");
+    console.log(currentDay);
+    console.log(nextDateIterator);
+
+    // Ensure the element's date is within the range of currentDay and nextDateIterator
+    if (
+      element.getFullYear() === currentDay.getFullYear() &&
+      element.getMonth() === currentDay.getMonth() &&
+      element.getDate() === currentDay.getDate()
+    ) {
+      steps.push(data[index].steps);
+      found = true; // Data found for the current day
     }
-    // Move to the next day
-    currentDateIterator.setDate(currentDateIterator.getDate() + 1);
   }
+
+  // If no data is found for the current day, push 0 to steps
+  if (!found) {
+    steps.push(0);
+  }
+
+  // Move currentDay and nextDateIterator to the next day
+  currentDay.setDate(currentDay.getDate() + 1);
+  nextDateIterator.setDate(nextDateIterator.getDate() + 1);
+}
+
+
 
   // Now you have an array containing steps for each day of the week
   //  console.log("Dates!!!:", days);
-  // console.log("Steps:", steps);
+  console.log("Steps:", steps);
   return [days, steps];
 }
+
 
 function getWeekWeightData(data) {
   if (data == undefined) {
     let val = [0, 0, 0, 0, 0, 0, 0];
     return val;
   }
-
+  console.log(data,"intialize")
   let lastWeightData = getLastEntryBeforeMonday(data);
 
   let currentDate = new Date();
@@ -789,7 +860,9 @@ function getWeekWeightData(data) {
     if (!found) {
       weekWeightData.push(lastValidWeight);
     }
+    console.log(weekWeightData,"in loop")
   }
+  console.log(weekWeightData,"kochi")
   if(weekWeightData[0] == 0 && lastWeightData != 0){
     weekWeightData[0] = lastWeightData;
   }
@@ -808,7 +881,8 @@ function getWeekWeightData(data) {
             weekWeightData[i] = weekWeightData[j];
         }
     }
-}
+  }
+  console.log("before return weight",weekWeightData)
   return weekWeightData;
 }
 
@@ -904,7 +978,7 @@ function getTodayMealData(mealRecords) {
 }
 
 function callCalendar(data) {
-  if (!Array.isArray(data)) {
+  if (!Array.isArray(data) || data == undefined) {
     console.error("Input is not an array.");
     return [];
   }
