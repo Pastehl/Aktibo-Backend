@@ -172,7 +172,10 @@ function showMoment(doc, uid) {
   var reportCount = doc.data().reportsCount
   let heartStyle = "bx-upvote";
   let downvoteStyle = "bx-downvote"
-
+  let isDeleted = doc.data().isDeleted
+  if (isDeleted == true) {
+    return;
+  }
   // Check if moment is disabled or user has reported it
   if (isDisabled || (reports && reports.includes(uid))) {
     return;
