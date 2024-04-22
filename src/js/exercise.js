@@ -424,9 +424,12 @@ function showExercise(doc, exerciseListContainer) {
   var reps_duration = doc.data().reps_duration;
   var est_time_min = doc.data().est_time_min;
   var est_time_sec = doc.data().est_time_sec;
-
+  let isDeleted = doc.data().isDeleted;
   let est_time = doc.data().est_time;
   //var video = doc.data().video
+  if (isDeleted == true) {
+    return
+  }
   if (est_time == undefined && est_time_min.length > 0) {
     est_time = est_time_min + " mins";
   }
@@ -942,7 +945,10 @@ async function showConfirmDeleteModal(docId) {
   confirmDeleteModal.show()
 }
 async function deleteExerciseRecord(docId){
-  deleteDoc(doc(db, "exercises", docId));
+    const exerciseRef = doc(db, "exercises", docId);
+        await updateDoc(exerciseRef, {
+         isDeleted: true
+  });
   showToast("Exercise has been removed.");
   setTimeout(function(){
     window.location.reload();

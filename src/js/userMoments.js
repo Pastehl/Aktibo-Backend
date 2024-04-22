@@ -208,10 +208,14 @@ function showMoment(doc, uid) {
   var usersLiked = doc.data().usersLiked;
   var usersDisliked = doc.data().usersDisliked;
   var reportCount = doc.data().reportsCount
+  let isDeleted = doc.data().isDeleted
   let heartStyle = "bx-upvote";
   let downvoteStyle = "bx-downvote"
 
   // Check if moment is disabled or user has reported it
+  if (isDeleted == true) {
+    return;
+  }
   if (isDisabled || (reports && reports.includes(uid))) {
     return;
   }
@@ -423,22 +427,6 @@ function loadPostModal(docID, h6Element) {
   editPostModal.show();
 }
 
-//OLD DELETE FUNCTION
-// function addDeletePostButtonEventListener() {
-//   let deleteBtn = document.getElementsByClassName("deleteBtn");
-//   removeAllListenersFromClass(deleteBtn);
-//   for (let index = 0; index < deleteBtn.length; index++) {
-//     const element = deleteBtn[index];
-//     element.addEventListener("click", function (e) {
-//       console.log(element.dataset.docId);
-//       console.log(element.innerHTML);
-//       console.log(element.parentNode.parentNode);
-//       deletePost(element.dataset.docId, element.parentNode.parentNode);
-//       toastMessage("Post has been reported.");
-//     });
-//   }
-// }
-
 // Initialize the modal
 var deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
 
@@ -646,18 +634,10 @@ async function deletePost(docId, dropDownContentContainerDiv, reason) {
     if (user) {
       try {
         // Delete the moment document directly using docId
-        await deleteDoc(doc(db, "moments", docId));
-
-        // Remove the deleted post from the user's posts array
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const updatedPosts = userData.posts.filter(
-            (post) => post.momentId !== docId
-          );
-          await setDoc(userRef, { posts: updatedPosts }, { merge: true });
-        }
+          const momentRef = doc(db, "moments", docId);
+        await updateDoc(momentRef, {
+              isDeleted: true
+        });
 
         // Remove the deleted post from the UI
         dropDownContentContainerDiv.remove();
