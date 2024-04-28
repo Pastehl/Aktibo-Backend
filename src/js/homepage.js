@@ -103,7 +103,7 @@ window.addEventListener("scroll", async function () {
 // get data from firestore
 let momentsRef = collection(db, "moments");
 let lastVisible; // last loaded post
-getMomentsData(10); // first shown posts
+getMomentsData(5);
 let hasNotShownLastPostToast = true; // for last post Toast message
 
 async function getMomentsData(amount) {
@@ -126,8 +126,8 @@ async function getMomentsData(amount) {
   if (documentSnapshots.docs.length > 0) {
     // still have posts left to show
     lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
     documentSnapshots.forEach((doc) => {
+
       onAuthStateChanged(auth, (user) => {
         if (user) {
           const uid = user.uid;
@@ -181,11 +181,14 @@ function showMoment(doc, uid) {
   if (isDisabled) {
     return;
   }
-for (let i = 0; i < reports.length; i++) {
-  if (reports[i].userId == uid) {
+
+  if (reports != "??") {
+    const hasReported = reports && reports.some(report => report.userId === uid);
+
+    if (hasReported) {
     return;
-  }
 }
+  }
 
 
   if (isNaN(likes) || likes == null ) {
