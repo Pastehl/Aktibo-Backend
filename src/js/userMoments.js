@@ -225,7 +225,7 @@ let userIDExists = false;
 for (let i = 0; i < reports.length; i++) {
   if (reports[i].userId == uid) {
     userIDExists = true;
-    break;
+    return;
   }
 }
 console.log(userIDExists)
