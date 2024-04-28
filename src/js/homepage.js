@@ -181,21 +181,9 @@ function showMoment(doc, uid) {
   if (isDisabled) {
     return;
   }
-  
-let userIDExists = false;
-
-for (let i = 0; i < reports.length; i++) {
-  if (reports[i].userId == uid) {
-    userIDExists = true;
-    break;
+  if (isDisabled || (reports && reports.includes(uid))) {
+    return
   }
-}
-console.log(userIDExists)
-if (userIDExists) {
-  // Logic to handle the case where userID exists in reports
-  // For example, you could return or perform some action here
-  return;
-}
 
   if (isNaN(likes) || likes == null ) {
     likes = 0;
