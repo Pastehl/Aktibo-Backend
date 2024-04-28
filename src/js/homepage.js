@@ -164,7 +164,7 @@ function showMoment(doc, uid) {
   var caption = doc.data().caption;
   var likes = doc.data().likes;
   var isDisabled = doc.data().isDisabled;
-  var reports = doc.data().reports;
+  var reports = doc.data().reports ?? "";
   var commentsList = doc.data().commentsList;
   var comments = doc.data().comments;
   var usersLiked = doc.data().usersLiked;
@@ -177,9 +177,25 @@ function showMoment(doc, uid) {
     return;
   }
   // Check if moment is disabled or user has reported it
-  if (isDisabled || (reports && reports.includes(uid))) {
+
+  if (isDisabled) {
     return;
   }
+  
+let userIDExists = false;
+
+for (let i = 0; i < reports.length; i++) {
+  if (reports[i].userId == uid) {
+    userIDExists = true;
+    break;
+  }
+}
+console.log(userIDExists)
+if (userIDExists) {
+  // Logic to handle the case where userID exists in reports
+  // For example, you could return or perform some action here
+  return;
+}
 
   if (isNaN(likes) || likes == null ) {
     likes = 0;
@@ -205,7 +221,6 @@ if (usersLiked && usersLiked.includes(uid)) {
 } else if (usersDisliked && usersDisliked.includes(uid)) {
   downvoteStyle = "bxs-downvote disliked";
 }
-   console.log(usersLiked.includes(uid),usersDisliked.includes(uid),"!!!")
   // Populate comments section
   let commentHTML = ``; 
 
