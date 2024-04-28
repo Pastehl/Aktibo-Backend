@@ -167,25 +167,27 @@ function noMomentsData() {
 async function getMomentsData(posts) {
   // Check if the userRef contains posts data
 
-    // Fetch moments for each momentId
-    for (const post of posts) {
-      const momentRef = doc(db, "moments", post["momentID"]);
-      const momentSnap = await getDoc(momentRef);
+  // Fetch moments for each momentId in reverse order
+  for (let i = posts.length - 1; i >= 0; i--) {
+    const post = posts[i];
+    const momentRef = doc(db, "moments", post["momentID"]);
+    const momentSnap = await getDoc(momentRef);
 
-      if (momentSnap.exists()) {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            const uid = user.uid;
-            showMoment(momentSnap, uid);
-          } else {
-            window.location.href = "index.html";
-          }
-        });
-      } else {
-        console.log(`Moment with ID ${post["momentID"]} not found`);
-      }
+    if (momentSnap.exists()) {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          showMoment(momentSnap, uid);
+        } else {
+          window.location.href = "index.html";
+        }
+      });
+    } else {
+      console.log(`Moment with ID ${post["momentID"]} not found`);
     }
   }
+}
+
 
 function toastMessage(message) {
   const toastElement = document.getElementById("liveToast");
