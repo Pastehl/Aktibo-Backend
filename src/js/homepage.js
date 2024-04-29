@@ -127,12 +127,10 @@ async function getMomentsData(amount) {
   if (documentSnapshots.docs.length > 0) {
     // still have posts left to show
     lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-    console.log("Last visible document:", lastVisible.id);
     
     const uid = auth.currentUser ? auth.currentUser.uid : null;
 
     documentSnapshots.forEach((doc) => {
-        console.log("Document ID:", doc.id);
 
         let isDeleted = doc.data().isDeleted;
         let isDisabled = doc.data().isDisabled;
