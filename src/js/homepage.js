@@ -103,8 +103,9 @@ window.addEventListener("scroll", async function () {
 // get data from firestore
 let momentsRef = collection(db, "moments");
 let lastVisible; // last loaded post
-getMomentsData(5);
+getMomentsData(20);
 let hasNotShownLastPostToast = true; // for last post Toast message
+
 
 async function getMomentsData(amount) {
   let q;
@@ -126,21 +127,28 @@ async function getMomentsData(amount) {
   if (documentSnapshots.docs.length > 0) {
     // still have posts left to show
     lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    console.log("Last visible document:", lastVisible.id);
+    
+    const uid = auth.currentUser ? auth.currentUser.uid : null;
+
     documentSnapshots.forEach((doc) => {
+        console.log("Document ID:", doc.id);
 
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const uid = user.uid;
-          showMoment(doc, uid);
-        } else {
-          window.location.href = "index.html";
+        let isDeleted = doc.data().isDeleted;
+        let isDisabled = doc.data().isDisabled;
+        let reports = doc.data().reports;
+
+        // Check if moment is deleted, disabled, or reported by the current user
+        if (isDeleted || isDisabled || (reports && reports.some(report => report.userId === uid))) {
+            // Skip this document
+            return;
         }
-      });
-    });
 
-    
-    
-  } else {
+        // Show the moment if it passes all checks
+        showMoment(doc, uid);
+    });
+}
+else {
     // no more posts to show
     if (hasNotShownLastPostToast) {
       toastMessage("No more additional posts.");
@@ -148,6 +156,7 @@ async function getMomentsData(amount) {
     }
   }
 }
+
 
 function toastMessage(message) {
   const toastElement = document.getElementById("liveToast");
@@ -173,22 +182,6 @@ function showMoment(doc, uid) {
   let heartStyle = "bx-upvote";
   let downvoteStyle = "bx-downvote"
   let isDeleted = doc.data().isDeleted
-  if (isDeleted == true) {
-    return;
-  }
-  // Check if moment is disabled or user has reported it
-
-  if (isDisabled) {
-    return;
-  }
-
-  if (reports != "??") {
-    const hasReported = reports && reports.some(report => report.userId === uid);
-
-    if (hasReported) {
-    return;
-}
-  }
 
 
   if (isNaN(likes) || likes == null ) {
