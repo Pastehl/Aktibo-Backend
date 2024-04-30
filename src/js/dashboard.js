@@ -80,7 +80,6 @@ downloadPDFBtn.addEventListener("click", function () {
     if (user) {
       // User is signed in
       const uid = user.uid;
-      console.log(uid);
       const userRef = collection(db, "users");
       const docRef = await getDoc(doc(userRef, uid));
       //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
@@ -94,7 +93,6 @@ downloadXLSX.addEventListener("click", function () {
     if (user) {
       // User is signed in
       const uid = user.uid;
-      console.log(uid);
       const userRef = collection(db, "users");
       const docRef = await getDoc(doc(userRef, uid));
       //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
@@ -143,13 +141,12 @@ async function getUserRecord() {
       const uid = user.uid;
       const userRef = collection(db, "users");
       const docRef = await getDoc(doc(userRef, uid));
-      //const docRef = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+      //const docRef = await getDoc(doc(userRef, "test"));
       setUserData(docRef);
     }
   });
 }
 function setUserData(docSnap) {
-  console.log(docSnap.id)
   let weight = docSnap.data().weight;
   let height = docSnap.data().height;
   let physicalActivityLevel = docSnap.data().physicalActivityLevel || 0;
@@ -181,7 +178,6 @@ function setUserData(docSnap) {
   //Get Extracted Values
   let weekStepData = getWeekStepData(dailyStepsCount); // Array Week Steps Count
   let weekWeightData = getWeekWeightData(dailyWeightRecords); // Array Week Weight Count
-  console.log("look weight",weekWeightData)
   let macros = getTodayMealData(mealRecords); // Daily Macros
   setBMI(bmi.toFixed(1));
   addgenerate_reportsBtnEventListener(docSnap.id);
@@ -807,12 +803,9 @@ while (currentDay <= DayToday) {
 
 function getWeekWeightData(data) {
   if (data == undefined) {
-    let val = [0, 0, 0, 0, 0, 0, 0];
-    return val;
+    return;
   }
-  console.log(data,"intialize")
   let lastWeightData = getLastEntryBeforeMonday(data);
-  console.log(lastWeightData)
   let currentDate = new Date();
 
   let monday;
@@ -852,7 +845,6 @@ function getWeekWeightData(data) {
   let sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
   let DayToday = new Date();
-  console.log("Day today:",DayToday)
 
   // Iterate over each day of the week
   let currentDay = monday;
@@ -988,7 +980,6 @@ function getTodayMealData(mealRecords) {
 
 function callCalendar(data) {
   if (!Array.isArray(data) || data == undefined) {
-    console.error("Input is not an array.");
     return [];
   }
 
@@ -1038,17 +1029,15 @@ async function getRecipesData(docId){
     if (user) {
       // User is signed in
       const uid = user.uid;
-      console.log(uid);
       const userRef = collection(db, "users");
-      //const docRef = await getDoc(doc(userRef, uid));
-      const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
+      const docRef = await getDoc(doc(userRef, uid));
+      //const docRef = await getDoc(doc(userRef, '0y9Kkgd303QrsKSuXzKvqG2DI4E2'));
       showBookmarks(docRef)
     }
   });
 }
 
 function showBookmarks(data) {
-  console.log(data);
   // Loop through each recipe object in the array
   var recipeContent = document.getElementById("recipeContent");
   recipeContent.innerHTML = ""
@@ -1115,11 +1104,19 @@ function downloadRecipeBtnAddEventlistener(){
   }
 }
 async function downloadRecipePDF(parentDiv, index) {
-  const dataDocId = parentDiv.getAttribute("data-doc-id");
-  const userRef = collection(db, "users");
-  const docSnap = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
-  const recipe = docSnap.data().bookmarkedRecipes[index];
-  recipePDFFunc(recipe);
+
+    onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      const dataDocId = parentDiv.getAttribute("data-doc-id");
+      const userRef = collection(db, "users");
+      const docSnap = await getDoc(doc(userRef, uid));
+      const recipe = docSnap.data().bookmarkedRecipes[index];
+      recipePDFFunc(recipe);
+    }
+  });
+
 }
 
 function recipePDFFunc(recipe) {
@@ -1128,7 +1125,6 @@ function recipePDFFunc(recipe) {
     alert("No data found");
     return
   }
-  console.log(recipe);
   // Now, let's use jsPDF to generate the PDF
  
 
@@ -1181,11 +1177,13 @@ async function modalContent(indexRecord,choice) {
   const modalBody = modal.querySelector(".modal-body");
 
   modalBody.innerHTML = "";
-
-  const userRef = collection(db, "users");
-  const docSnap = await getDoc(doc(userRef, "0y9Kkgd303QrsKSuXzKvqG2DI4E2"));
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      const uid = user.uid;
+      const userRef = collection(db, "users");
+  const docSnap = await getDoc(doc(userRef, uid));
   const recipe = docSnap.data().bookmarkedRecipes[indexRecord];
-  console.log(recipe,"CHECK ME")
   // Ensure indexRecord is within bounds
   if (indexRecord < 0 || indexRecord >= recipe.length) {
     const p = document.createElement('p');
@@ -1207,17 +1205,6 @@ async function modalContent(indexRecord,choice) {
 
   modalBody.appendChild(title);
 
-  // Display nutritional information
-  // const nutrition = document.createElement('ul');
-  // nutrition.innerHTML = `
-  //   <li>Calories: ${recipe.calories}</li>
-  //   <li>Carbs: ${recipe.carbs}</li>
-  //   <li>Protein: ${recipe.protein}</li>
-  //   <li>Fat: ${recipe.fat}</li>
-  // `;
-  // modalBody.appendChild(nutrition);
-
-  // Display instructions or ingredients based on choice
   if (choice == 1) {
     if (typeof recipe.instructions === 'string') {
       const instructions = document.createElement('p');
@@ -1257,6 +1244,9 @@ async function modalContent(indexRecord,choice) {
       modalBody.appendChild(noIngredients);
     }
   }
+    }
+  });
+  
 
   // Show the modal
   food_recordModal.hide();
