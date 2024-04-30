@@ -989,13 +989,11 @@ function callCalendar(data) {
   let firstDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    1
   );
   // Get the last day of the current month
   let lastDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
-    0
   );
 
   // Filter dates in the current month
