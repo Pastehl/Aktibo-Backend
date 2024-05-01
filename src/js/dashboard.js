@@ -276,9 +276,10 @@ function macrosCalCPF(weight,height,physicalActivityLevel,weightGoal) {
           // Handle other cases if needed
           break;
   }
-  carbs = Math.round(((totalEnergyRequirement * 0.60) / 4))
-  protein = Math.round(((totalEnergyRequirement*0.15)/4))
-  fats = Math.round(((totalEnergyRequirement * 0.25) / 4))
+  carbs = Math.floor(((totalEnergyRequirement * 0.60) / 4));
+  protein = Math.floor(((totalEnergyRequirement * 0.15) / 4));
+  fats = Math.floor(((totalEnergyRequirement * 0.25) / 4));
+
   return [progressBarCaloriesMax,carbs,protein,fats]
 }
 
