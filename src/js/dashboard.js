@@ -888,7 +888,7 @@ while (currentDay <= DayToday) {
   return weekWeightData;
 }
 
-function getLastEntryBeforeMonday(data) {
+export function getLastEntryBeforeMonday(data) {
   if (!data || data.length === 0) {
     return null; // Return null if data is empty or undefined
   }
@@ -946,7 +946,7 @@ function adjustArrayForWeekdays(array) {
 }
 
 
-function getTodayMealData(mealRecords) {
+export function getTodayMealData(mealRecords) {
   if (mealRecords == undefined) {
     return [0,0,0,0];
   }
@@ -979,7 +979,7 @@ function getTodayMealData(mealRecords) {
   return [parseFloat(calories.toFixed(1)), parseFloat(carbohydrates.toFixed(1)), parseFloat(protein.toFixed(1)), parseFloat(fat.toFixed(1))];
 }
 
-function callCalendar(data) {
+export function callCalendar(data) {
   if (!Array.isArray(data) || data == undefined) {
     return [];
   }
