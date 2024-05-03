@@ -34,6 +34,7 @@ import {
   uploadBytes,
 
 } from "firebase/storage";
+import { checkActiveLast3Months, geSnapShotFirebase } from "./admin.js"
 import * as bootstrap from "bootstrap";
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
 
@@ -94,12 +95,6 @@ document.getElementById("logout_btn").addEventListener("click", function () {
     });
 });
 
-async function geSnapShotFirebase() {
-  const userRef = collection(db, "users");
-  const querySnapshot = await getDocs(userRef);
-  return querySnapshot;
-}
-
 async function getUsers() {
   const querySnapshot = await geSnapShotFirebase(); // Await the result
 
@@ -144,29 +139,8 @@ async function getUsers() {
 
  getUsers();
 //'0y9Kkgd303QrsKSuXzKvqG2DI4E2'
-function checkActiveLast3Months(lastLogin) {
-  if (lastLogin === undefined) {
-    return false;
-  }
 
 
-  // Current date
-  const currentDate = new Date();
-
-  // Date 3 months ago
-  const threeMonthsAgo = new Date();
-  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-  threeMonthsAgo.setHours(0, 0, 0, 0); // Set time to 00:00:00 to ignore time part
-
-  // Assuming lastLogin is the timestamp
-  const lastLoggedInDate = lastLogin.toDate();
-  console.log(lastLoggedInDate);
-
-  // Check if the last logged-in date is within the last 3 months
-  const withinLast3Months = lastLoggedInDate >= threeMonthsAgo && lastLoggedInDate <= currentDate;
-
-  return withinLast3Months
-}
 function removeAllListenersFromClass(elements) {
   Array.from(elements).forEach(function (element) {
     var clonedElement = element.cloneNode(true);
@@ -220,11 +194,6 @@ async function showConfirmResetStreakModal(docId) {
 
   confirmResetStreakModal.show()
 }
-
-
-
-
-
 
 
 async function resetStrikeCount(docID){
