@@ -111,7 +111,6 @@ async function getUsers() {
     const userId = doc.id;
     const username = userData.username ?? "No Data";
     const reportsCount = userData.reportsCount ?? 0;
-    const email = userData.email ?? "No Data"
     const active = checkActiveLast3Months(userData.lastLoggedInTimestamp) ?? "No Data"
 
     // Check if user has logged in the last 3 months
@@ -122,7 +121,6 @@ async function getUsers() {
       <tr>
         <td class="col">${userId}</td>
         <td class="col">${username}</td>
-        <td class="col">${email}</td>
         <td class="col">${active ? 'Yes' : 'No'}</td>
         <td class="col">${reportsCount}</td>
         <td class="col"><button type="button" class="btn btn-secondary btn-sm resetBtn" data-doc-id="` + userId + `"><i class='bx bx-reset'></i></button></td>
