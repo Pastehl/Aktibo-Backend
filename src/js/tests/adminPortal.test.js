@@ -50,7 +50,7 @@ const firebaseConfig = {
   const db = getFirestore(app);
   const storage = getStorage();
 
-import { checkActiveLast3Months, geSnapShotFirebase } from '../admin.js'
+import { checkActiveLast3Months, geSnapShotFirebase } from '../adminPortalTest.js'
 import { QuerySnapshot, Timestamp } from 'firebase/firestore';
 
 test( 'checkActiveLast3Months: check if undefined', () => {

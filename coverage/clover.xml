@@ -1,31 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1714632707146" clover="3.2.0">
-  <project timestamp="1714632707146" name="All files">
-    <metrics statements="19" coveredstatements="19" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3" elements="26" coveredelements="26" complexity="0" loc="19" ncloc="19" packages="1" files="2" classes="2"/>
-    <file name="admin.js" path="D:\Projects\Aktibo-Backend-3\src\js\admin.js">
-      <metrics statements="18" coveredstatements="18" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
-      <line num="38" count="1" type="stmt"/>
+<coverage generated="1714750802827" clover="3.2.0">
+  <project timestamp="1714750802827" name="All files">
+    <metrics statements="60" coveredstatements="50" conditionals="22" coveredconditionals="15" methods="8" coveredmethods="8" elements="90" coveredelements="73" complexity="0" loc="60" ncloc="60" packages="1" files="2" classes="2"/>
+    <file name="adminPortalTest.js" path="C:\Users\maaas\OneDrive\Documents\Aktibo-Backend\Aktibo-Backend\src\js\adminPortalTest.js">
+      <metrics statements="17" coveredstatements="17" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="20" count="1" type="stmt"/>
+      <line num="21" count="1" type="stmt"/>
+      <line num="22" count="1" type="stmt"/>
+      <line num="25" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="26" count="1" type="stmt"/>
+      <line num="30" count="2" type="stmt"/>
+      <line num="33" count="2" type="stmt"/>
+      <line num="34" count="2" type="stmt"/>
+      <line num="35" count="2" type="stmt"/>
+      <line num="38" count="2" type="stmt"/>
+      <line num="39" count="2" type="stmt"/>
+      <line num="42" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="44" count="2" type="stmt"/>
       <line num="48" count="1" type="stmt"/>
       <line num="49" count="1" type="stmt"/>
       <line num="50" count="1" type="stmt"/>
+    </file>
+    <file name="dashboardTest.js" path="C:\Users\maaas\OneDrive\Documents\Aktibo-Backend\Aktibo-Backend\src\js\dashboardTest.js">
+      <metrics statements="43" coveredstatements="33" conditionals="18" coveredconditionals="11" methods="6" coveredmethods="6"/>
+      <line num="2" count="2" type="cond" truecount="4" falsecount="0"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="14" count="1" type="stmt"/>
+      <line num="20" count="1" type="stmt"/>
+      <line num="21" count="2" type="stmt"/>
+      <line num="22" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="27" count="1" type="stmt"/>
+      <line num="28" count="2" type="stmt"/>
+      <line num="29" count="2" type="stmt"/>
+      <line num="30" count="2" type="stmt"/>
+      <line num="31" count="2" type="stmt"/>
+      <line num="35" count="2" type="stmt"/>
+      <line num="42" count="1" type="stmt"/>
+      <line num="46" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="47" count="1" type="stmt"/>
+      <line num="50" count="1" type="stmt"/>
       <line num="51" count="1" type="stmt"/>
-      <line num="55" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="54" count="1" type="stmt"/>
+      <line num="55" count="1" type="stmt"/>
       <line num="56" count="1" type="stmt"/>
-      <line num="60" count="2" type="stmt"/>
-      <line num="63" count="2" type="stmt"/>
-      <line num="64" count="2" type="stmt"/>
-      <line num="65" count="2" type="stmt"/>
+      <line num="57" count="1" type="stmt"/>
+      <line num="60" count="1" type="stmt"/>
+      <line num="62" count="2" type="stmt"/>
+      <line num="65" count="2" type="cond" truecount="1" falsecount="1"/>
+      <line num="67" count="2" type="stmt"/>
       <line num="68" count="2" type="stmt"/>
       <line num="69" count="2" type="stmt"/>
-      <line num="72" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="74" count="2" type="stmt"/>
-      <line num="78" count="1" type="stmt"/>
-      <line num="79" count="1" type="stmt"/>
+      <line num="70" count="2" type="stmt"/>
+      <line num="75" count="1" type="stmt"/>
+      <line num="79" count="1" type="cond" truecount="2" falsecount="2"/>
       <line num="80" count="1" type="stmt"/>
-    </file>
-    <file name="sum.js" path="D:\Projects\Aktibo-Backend-3\src\js\sum.js">
-      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <line num="2" count="1" type="stmt"/>
+      <line num="83" count="0" type="stmt"/>
+      <line num="84" count="0" type="stmt"/>
+      <line num="85" count="0" type="stmt"/>
+      <line num="87" count="0" type="stmt"/>
+      <line num="90" count="0" type="stmt"/>
+      <line num="91" count="0" type="stmt"/>
+      <line num="92" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="93" count="0" type="stmt"/>
+      <line num="94" count="0" type="stmt"/>
+      <line num="98" count="0" type="cond" truecount="0" falsecount="2"/>
     </file>
   </project>
 </coverage>

@@ -34,7 +34,7 @@ import {
   uploadBytes,
 
 } from "firebase/storage";
-import { checkActiveLast3Months, geSnapShotFirebase } from "./admin.js"
+import { checkActiveLast3Months, geSnapShotFirebase } from "./adminPortalTest.js"
 import * as bootstrap from "bootstrap";
 // import {Modal} from "bootstrap/dist/js/bootstrap.bundle";
 

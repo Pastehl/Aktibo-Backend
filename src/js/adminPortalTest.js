@@ -1,39 +1,11 @@
-import { initializeApp,initializeFirestore } from "firebase/app";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import {
   getFirestore,
-  getUser,
-  addDoc,
   collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  setDoc,
-  updateDoc,
-  getDoc,
-  increment,
-  orderBy,
-  limit,
-  startAfter,
-  arrayUnion,
-  arrayRemove,
-  documentId,
-  deleteDoc,
-  CACHE_SIZE_UNLIMITED,
-  enablePersistence,
-  persistentMultipleTabManager,
-  deleteField,
+  getDocs
   
 } from "firebase/firestore";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  uploadBytes,
-
-} from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAH168KKUYGhSGV_GVX5SqDGfxm4vtYR7w",
@@ -48,8 +20,6 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth();
   const db = getFirestore(app);
-  const storage = getStorage();
-
 
 export function checkActiveLast3Months(lastLogin) {
     if (lastLogin === undefined) {
